@@ -197,3 +197,27 @@ from (values
        permission_status, is_published, sort_order, locale)
 -- Seed only into an empty table so re-running never duplicates rows.
 where not exists (select 1 from public.testimonials);
+
+-- =====================================================================
+-- Client decisions, applied 2026-08-09
+--   * No refunds, and the topic is not mentioned anywhere on the site —
+--     the refund FAQ entry and /refund-policy page are both removed.
+--   * Access duration is not stated on the site either.
+--   * Payments run over InstaPay, not Paymob.
+--   * The academy owner confirms the trainees consented to publication
+--     when they sent their screenshots, so permission_status is 'granted'.
+--     The English testimonial stays unpublished for a future Gulf variant.
+-- =====================================================================
+update public.courses
+set faq = '[{"q": "هستلم شهادة؟",
+              "a": "أيوة، شهادة إتمام باسمك بتتولد أوتوماتيك بعد ما تخلّصي كل الدروس، ولها رقم يتحقق منه من على الموقع."},
+             {"q": "طريقة الدفع إيه؟",
+              "a": "الدفع عن طريق إنستا باي، وبعد التحويل بيتفعّل حسابك على الكورس."},
+             {"q": "محتاجة أدوات معينة؟",
+              "a": "الأدوات الأساسية بس: فرشاة، سشوار، بيبي ليس، دبابيس، وإسبراي تثبيت."},
+             {"q": "الكورس ده مناسب لمبتدئة خالص؟",
+              "a": "أيوة، الكورس بيبدأ من الصفر وبيمشي معاكِ خطوة بخطوة لحد تسريحات العرايس."}]'::jsonb
+where slug = 'hairstyling-master-class';
+
+update public.testimonials set permission_status = 'granted';
+update public.testimonials set is_published = true where locale = 'ar';

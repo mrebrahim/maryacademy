@@ -43,8 +43,11 @@ export const mainNav = [
   { href: '/contact', labelAr: 'تواصلي معنا' },
 ] as const
 
+/**
+ * No refund-policy page: the client has decided there are no refunds and
+ * that the topic is not to appear on the site at all.
+ */
 export const legalNav = [
   { href: '/terms', labelAr: 'الشروط والأحكام' },
   { href: '/privacy', labelAr: 'سياسة الخصوصية' },
-  { href: '/refund-policy', labelAr: 'سياسة الاسترجاع' },
 ] as const
