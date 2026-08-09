@@ -1,12 +1,15 @@
 import { GraduationCap, MapPin, Trophy, Users } from 'lucide-react'
-import Link from 'next/link'
 import type { ComponentType } from 'react'
 
 import { CoursesGrid } from '@/components/home/courses-grid'
+import { CtaBand } from '@/components/home/cta-band'
+import { Faq } from '@/components/home/faq'
+import { Hero } from '@/components/home/hero'
+import { Instructor } from '@/components/home/instructor'
+import { LearningJourney } from '@/components/home/learning-journey'
 import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { WhyChooseUs } from '@/components/home/why-choose-us'
-import { Button } from '@/components/ui/button'
-import { academyStats, whatsappLink } from '@/config/site'
+import { academyStats } from '@/config/site'
 import { getCategories, getPublishedCourses, getTestimonials } from '@/lib/queries'
 
 // Marketing page: rebuild hourly so content edits appear without a deploy.
@@ -28,40 +31,7 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* ---- Hero (PRD §7.1.1) ---- */}
-      <section className="relative overflow-hidden bg-navy-900">
-        <div
-          className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,rgba(201,162,75,0.18),transparent_60%)]"
-          aria-hidden="true"
-        />
-
-        <div className="relative mx-auto max-w-6xl px-4 py-20 text-center sm:px-6 sm:py-28">
-          <p className="font-display text-sm tracking-[0.3em] text-gold-500">
-            أكاديمية ماري رجائي للتجميل
-          </p>
-
-          <h1 className="mx-auto mt-6 max-w-3xl text-3xl text-white sm:text-4xl md:text-5xl">
-            تعلمي باحتراف
-            <span className="mt-2 block text-gold-500">وابدئي مستقبلك في عالم الجمال</span>
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-loose text-cream-50/85 sm:text-lg">
-            أكاديمية متخصصة في تعليم كل ما يخص التجميل — من تسريحات الشعر والقص والصبغة والمزيد،
-            بمنهج عملي احترافي من خبرة سنين.
-          </p>
-
-          <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Button asChild size="lg" className="w-full sm:w-auto">
-              <Link href="/courses">استكشفي الدورات</Link>
-            </Button>
-            <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
-              <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-                تواصلي معنا
-              </a>
-            </Button>
-          </div>
-        </div>
-      </section>
+      <Hero />
 
       {/* ---- Stats bar (PRD §7.1.2) ----
           Values come from config, and every figure carries the
@@ -88,14 +58,13 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* ---- Courses grid (PRD §7.1.3) ---- */}
       <CoursesGrid courses={courses} categories={categories} />
-
-      {/* ---- Why choose us (PRD §7.1.4) ---- */}
+      <LearningJourney />
       <WhyChooseUs />
-
-      {/* ---- Testimonials (PRD §7.1.5 / §9.2) ---- */}
+      <Instructor />
       <TestimonialsSection testimonials={testimonials} />
+      <Faq />
+      <CtaBand />
     </>
   )
 }
