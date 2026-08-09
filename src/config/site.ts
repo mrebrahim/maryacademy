@@ -28,10 +28,11 @@ export const whatsappLink = (messageAr = 'السلام عليكم، عايزة �
  * numbers are never mistaken for online-course results (PRD §7.1, §9.2).
  */
 export const academyStats = [
-  { value: '+400', labelAr: 'متدربة ومتدرب', contextAr: 'في التدريب الحضوري' },
-  { value: '+40', labelAr: 'دورة تدريبية', contextAr: 'حضورية على مدار 5 سنين' },
-  { value: '5', labelAr: 'سنوات خبرة', contextAr: 'في التدريب والتجميل' },
-  { value: 'مصر', labelAr: 'جميع أنحاء مصر', contextAr: 'متدربات من كل المحافظات' },
+  { icon: 'graduation', value: '+400', labelAr: 'متدربة ومتدرب', contextAr: 'في التدريب الحضوري' },
+  { icon: 'users', value: '+40', labelAr: 'دورة تدريبية', contextAr: 'حضورية على مدار 5 سنين' },
+  { icon: 'trophy', value: '5', labelAr: 'سنوات خبرة', contextAr: 'في التدريب والتجميل' },
+  // No figure here — it is a place, not a count.
+  { icon: 'pin', value: null, labelAr: 'جميع أنحاء مصر', contextAr: 'متدربات من كل المحافظات' },
 ] as const
 
 export const mainNav = [

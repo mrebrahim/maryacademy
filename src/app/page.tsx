@@ -1,14 +1,31 @@
+import { GraduationCap, MapPin, Trophy, Users } from 'lucide-react'
 import Link from 'next/link'
+import type { ComponentType } from 'react'
 
+import { CoursesGrid } from '@/components/home/courses-grid'
+import { TestimonialsSection } from '@/components/home/testimonials-section'
+import { WhyChooseUs } from '@/components/home/why-choose-us'
 import { Button } from '@/components/ui/button'
 import { academyStats, whatsappLink } from '@/config/site'
+import { getCategories, getPublishedCourses, getTestimonials } from '@/lib/queries'
 
-/**
- * Phase 1 delivers the hero and the stats bar — sections 1 and 2 of the
- * homepage in PRD §7.1. The remaining sections (courses grid, why-us,
- * testimonials, newsletter) land in Phase 2.
- */
-export default function HomePage() {
+// Marketing page: rebuild hourly so content edits appear without a deploy.
+export const revalidate = 3600
+
+const STAT_ICONS: Record<string, ComponentType<{ className?: string }>> = {
+  graduation: GraduationCap,
+  users: Users,
+  trophy: Trophy,
+  pin: MapPin,
+}
+
+export default async function HomePage() {
+  const [courses, categories, testimonials] = await Promise.all([
+    getPublishedCourses(),
+    getCategories(),
+    getTestimonials(),
+  ])
+
   return (
     <>
       {/* ---- Hero (PRD §7.1.1) ---- */}
@@ -24,12 +41,13 @@ export default function HomePage() {
           </p>
 
           <h1 className="mx-auto mt-6 max-w-3xl text-3xl text-white sm:text-4xl md:text-5xl">
-            تعلمي باحتراف وابدئي مستقبلك في عالم الجمال
+            تعلمي باحتراف
+            <span className="mt-2 block text-gold-500">وابدئي مستقبلك في عالم الجمال</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-cream-50/85 sm:text-lg">
-            كورسات عملية أونلاين في تصفيف الشعر والمكياج والعناية بالبشرة، من خبرة أكتر من 5 سنين
-            تدريب حضوري لأكتر من 400 متدربة.
+          <p className="mx-auto mt-6 max-w-2xl text-base leading-loose text-cream-50/85 sm:text-lg">
+            أكاديمية متخصصة في تعليم كل ما يخص التجميل — من تسريحات الشعر والقص والصبغة والمزيد،
+            بمنهج عملي احترافي من خبرة سنين.
           </p>
 
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
@@ -48,19 +66,36 @@ export default function HomePage() {
       {/* ---- Stats bar (PRD §7.1.2) ----
           Values come from config, and every figure carries the
           in-person-training label required by PRD §9.2. */}
-      <section aria-label="أرقام الأكاديمية" className="bg-cream-50">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-14 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
-          {academyStats.map((stat) => (
-            <div key={stat.labelAr} className="text-center">
-              <p className="tabular font-display text-3xl text-gold-500 sm:text-4xl">
-                {stat.value}
-              </p>
-              <p className="mt-2 font-semibold text-navy-900">{stat.labelAr}</p>
-              <p className="mt-1 text-sm text-muted">{stat.contextAr}</p>
-            </div>
-          ))}
+      <section aria-label="أرقام الأكاديمية" className="border-y border-gold-500/20 bg-navy-800">
+        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:divide-x lg:divide-gold-500/20 rtl:lg:divide-x-reverse">
+          {academyStats.map((stat) => {
+            const Icon = STAT_ICONS[stat.icon]
+            return (
+              <div key={stat.labelAr} className="flex items-center justify-center gap-4">
+                <Icon className="size-9 shrink-0 text-gold-500" aria-hidden="true" />
+                <div className="text-start">
+                  {stat.value && (
+                    <p className="tabular font-display text-2xl text-gold-500 sm:text-3xl">
+                      {stat.value}
+                    </p>
+                  )}
+                  <p className="font-semibold text-white">{stat.labelAr}</p>
+                  <p className="mt-0.5 text-sm text-cream-50/65">{stat.contextAr}</p>
+                </div>
+              </div>
+            )
+          })}
         </div>
       </section>
+
+      {/* ---- Courses grid (PRD §7.1.3) ---- */}
+      <CoursesGrid courses={courses} categories={categories} />
+
+      {/* ---- Why choose us (PRD §7.1.4) ---- */}
+      <WhyChooseUs />
+
+      {/* ---- Testimonials (PRD §7.1.5 / §9.2) ---- */}
+      <TestimonialsSection testimonials={testimonials} />
     </>
   )
 }
