@@ -88,3 +88,82 @@ export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
     return degrade('getTestimonials', error, [])
   }
 }
+
+export type Lesson = Pick<
+  Tables<'lessons_public'>,
+  'id' | 'title_ar' | 'slug' | 'description_ar' | 'duration_seconds' | 'sort_order' | 'module_id'
+>
+
+export type CourseModule = Pick<Tables<'modules'>, 'id' | 'title_ar' | 'sort_order'> & {
+  lessons: Lesson[]
+}
+
+export type CourseDetail = Tables<'courses'> & { modules: CourseModule[] }
+
+/**
+ * Full sales-page payload for one course. Lessons come from `lessons_public`,
+ * never `lessons` — the view has no bunny_video_id and no attachments, so the
+ * video IDs cannot leak into the marketing HTML (PRD §5.2, §6.2).
+ */
+export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
+  try {
+    const supabase = await createClient()
+
+    const { data: course, error } = await supabase
+      .from('courses')
+      .select('*')
+      .eq('slug', slug)
+      .eq('status', 'published')
+      .maybeSingle()
+
+    if (error) throw error
+    if (!course) return null
+
+    const [{ data: modules }, { data: lessons }] = await Promise.all([
+      supabase
+        .from('modules')
+        .select('id, title_ar, sort_order')
+        .eq('course_id', course.id)
+        .order('sort_order'),
+      supabase
+        .from('lessons_public')
+        .select('id, title_ar, slug, description_ar, duration_seconds, sort_order, module_id')
+        .eq('course_id', course.id)
+        .order('sort_order'),
+    ])
+
+    return {
+      ...course,
+      modules: (modules ?? []).map((m) => ({
+        ...m,
+        lessons: (lessons ?? []).filter((l) => l.module_id === m.id),
+      })),
+    }
+  } catch (error) {
+    return degrade(`getCourseBySlug(${slug})`, error, null)
+  }
+}
+
+/** Slugs for generateStaticParams. */
+export async function getPublishedCourseSlugs(): Promise<string[]> {
+  const courses = await getPublishedCourses()
+  return courses.map((c) => c.slug)
+}
+
+export type Post = Pick<Tables<'posts'>, 'id' | 'title_ar' | 'slug' | 'excerpt_ar' | 'published_at'>
+
+export async function getPublishedPosts(): Promise<Post[]> {
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase
+      .from('posts')
+      .select('id, title_ar, slug, excerpt_ar, published_at')
+      .eq('status', 'published')
+      .order('published_at', { ascending: false })
+
+    if (error) throw error
+    return data ?? []
+  } catch (error) {
+    return degrade('getPublishedPosts', error, [])
+  }
+}
