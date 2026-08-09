@@ -1,23 +1,21 @@
 import Link from 'next/link'
 
-import { HeroSwirl, Ornament } from '@/components/ui/brand-mark'
+import { HeroSwirl } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
 import { whatsappLink } from '@/config/site'
 
 /** Closing conversion band, right before the footer. */
 export function CtaBand() {
   return (
-    <section aria-labelledby="cta-heading" className="relative overflow-hidden bg-navy-900">
+    <section aria-labelledby="cta-heading" className="relative overflow-hidden bg-navy-950">
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_120%_at_50%_0%,rgba(201,162,75,0.2),transparent_60%)]"
         aria-hidden="true"
       />
       <HeroSwirl className="pointer-events-none absolute -end-20 -bottom-32 h-96 w-96 text-gold-500 opacity-30" />
 
-      <div className="relative mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
-        <Ornament className="mx-auto h-8 w-64" />
-
-        <h2 id="cta-heading" className="mt-6 text-2xl text-white sm:text-3xl">
+      <div className="relative mx-auto max-w-3xl px-4 py-20 text-center sm:px-6 sm:py-28">
+        <h2 id="cta-heading" className="display text-4xl text-white sm:text-5xl">
           مستنية إيه؟
         </h2>
 

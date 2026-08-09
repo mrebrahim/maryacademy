@@ -38,11 +38,23 @@ const FAQS = [
 
 export function Faq() {
   return (
-    <section aria-labelledby="faq-heading" className="bg-white">
-      <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
-        <SectionHeading title="أسئلة بتتسأل كتير" />
+    <section aria-labelledby="faq-heading" className="bg-ivory">
+      <div className="mx-auto grid max-w-6xl gap-12 px-4 py-20 sm:px-6 sm:py-28 lg:grid-cols-[minmax(0,20rem)_1fr] lg:gap-20">
+        <SectionHeading
+          id="faq-heading"
+          kicker="أسئلة"
+          title={
+            <>
+              اللي بيتسأل
+              <br />
+              كتير
+            </>
+          }
+          subtitle="لو سؤالك مش هنا، ابعتيه على واتساب وهنرد."
+          className="lg:sticky lg:top-28 lg:self-start"
+        />
 
-        <div className="mt-12 divide-y divide-navy-900/10 border-y border-navy-900/10">
+        <div className="divide-y divide-navy-900/10 border-y border-navy-900/10">
           {FAQS.map((faq) => (
             <details key={faq.q} className="group py-5">
               <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-start">

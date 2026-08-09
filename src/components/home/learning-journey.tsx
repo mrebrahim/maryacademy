@@ -1,69 +1,81 @@
-import { CreditCard, GraduationCap, MonitorPlay, UserPlus } from 'lucide-react'
-
 import { SectionHeading } from '@/components/ui/section-heading'
 
 /**
- * "How it works". A self-paced course is an unfamiliar purchase for most of
- * this audience — spelling out the four steps removes the main hesitation
- * before checkout.
+ * "How it works".
+ *
+ * Typographic rather than iconographic: four oversized numerals carry the
+ * sequence. The previous version — an icon in a circle, a badge, a caption,
+ * repeated four times across an even grid — is the single most template-like
+ * shape on the web, and it was doing no work an ordinal doesn't do better.
+ *
+ * The steps are also staggered vertically so the row reads as a path instead
+ * of a set of matching tiles.
  */
 const STEPS = [
   {
-    icon: UserPlus,
+    n: '01',
     titleAr: 'اعملي حساب',
-    bodyAr: 'دقيقة واحدة — اسمك وإيميلك ورقمك وبس.',
+    bodyAr: 'دقيقة واحدة — اسمك وإيميلك ورقمك.',
   },
   {
-    icon: CreditCard,
+    n: '02',
     titleAr: 'احجزي مكانك',
-    bodyAr: 'حوّلي قيمة الكورس، ويتفعّل حسابك على طول.',
+    bodyAr: 'حوّلي قيمة الكورس على إنستا باي، ويتفعّل حسابك.',
   },
   {
-    icon: MonitorPlay,
+    n: '03',
     titleAr: 'اتفرجي واتدربي',
-    bodyAr: 'دروس مقسّمة بالترتيب، اتفرجي في وقتك وارجعي لأي درس وقت ما تحبي.',
+    bodyAr: 'دروس بالترتيب، بتتفرجي في وقتك وبترجعي لأي درس وقت ما تحبي.',
   },
   {
-    icon: GraduationCap,
+    n: '04',
     titleAr: 'استلمي شهادتك',
-    bodyAr: 'لما تخلّصي كل الدروس، الشهادة بتتولد باسمك برقم يتحقق منه.',
+    bodyAr: 'بعد آخر درس، الشهادة بتتولد باسمك برقم يتحقق منه.',
   },
 ] as const
 
 export function LearningJourney() {
   return (
-    <section aria-labelledby="journey-heading" className="bg-white">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <SectionHeading
-          title="إزاي بتذاكري معانا؟"
-          subtitle="أربع خطوات بس، من غير مواعيد ولا مواصلات ولا ضغط."
-        />
-
-        <ol className="relative mt-14 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
-          {/* Connecting hairline, desktop only */}
-          <span
-            className="absolute inset-x-0 top-7 hidden h-px bg-gradient-to-l from-transparent via-gold-500/35 to-transparent lg:block"
-            aria-hidden="true"
+    <section aria-labelledby="journey-heading" className="relative bg-ivory">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16">
+          <SectionHeading
+            id="journey-heading"
+            kicker="الطريقة"
+            title={
+              <>
+                إزاي بتذاكري
+                <br />
+                معانا؟
+              </>
+            }
           />
+          <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
+            من غير مواعيد، ولا مواصلات، ولا حد يستناكي. إنتي اللي بتحددي إمتى وقد إيه.
+          </p>
+        </div>
 
-          {STEPS.map((step, index) => {
-            const Icon = step.icon
-            return (
-              <li key={step.titleAr} className="relative text-center">
-                <span className="relative mx-auto grid size-14 place-items-center rounded-full border border-gold-500/40 bg-cream-50 text-gold-500">
-                  <Icon className="size-6" aria-hidden="true" />
-                  <span className="tabular absolute -top-1 -end-1 grid size-6 place-items-center rounded-full bg-navy-900 text-xs font-bold text-gold-500">
-                    {index + 1}
-                  </span>
-                </span>
-
-                <h3 className="mt-5 text-lg text-navy-900">{step.titleAr}</h3>
-                <p className="mx-auto mt-2 max-w-xs text-sm leading-relaxed text-muted">
+        <ol className="mt-16 grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+          {STEPS.map((step, index) => (
+            <li
+              key={step.n}
+              // Each step sits a little lower than the last, so the row reads
+              // as a descending path rather than four matching tiles.
+              className={
+                ['', 'lg:translate-y-6', 'lg:translate-y-12', 'lg:translate-y-18'][index]
+              }
+            >
+              <p className="tabular font-display text-5xl leading-none text-gold-500/35 sm:text-6xl">
+                {step.n}
+              </p>
+              <div className="mt-5 border-t border-navy-900/12 pt-5">
+                <h3 className="text-xl text-navy-900">{step.titleAr}</h3>
+                <p className="mt-2.5 max-w-[22ch] text-sm leading-loose text-muted">
                   {step.bodyAr}
                 </p>
-              </li>
-            )
-          })}
+              </div>
+            </li>
+          ))}
         </ol>
       </div>
     </section>

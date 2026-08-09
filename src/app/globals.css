@@ -1,35 +1,50 @@
 @import "tailwindcss";
 
 /* =====================================================================
-   Design tokens — PRD §3, derived from the approved homepage mockup.
-   Raw values live on :root; @theme exposes them as Tailwind utilities
-   (bg-navy-900, text-gold-500, font-display, …).
+   Design tokens — PRD §3, extended with the tonal steps the first pass
+   was missing. Two navies and one cream flattened everything into bands;
+   these give sections something to sit against.
    ===================================================================== */
 :root {
-  --navy-900: #0a1b3d; /* primary background, footer, dark bands */
-  --navy-800: #0e2450; /* cards on a dark background */
-  --gold-500: #c9a24b; /* primary accent, CTAs, icons, dividers */
-  --gold-300: #e3c77e; /* hover / highlights */
-  --cream-50: #f8f4ec; /* light section background */
+  --navy-950: #060f24; /* deepest — page ground under dark sections */
+  --navy-900: #0a1b3d; /* primary dark background */
+  --navy-800: #0e2450; /* raised surfaces on dark */
+  --navy-700: #16305f; /* hairlines and hover states on dark */
+
+  --gold-600: #a8842f; /* pressed / shadowed gold */
+  --gold-500: #c9a24b; /* primary accent */
+  --gold-300: #e3c77e; /* hover, highlights */
+  --gold-100: #f3e6c7; /* faint gold washes */
+
+  --ivory: #faf7f1; /* warm light section — replaces the greyish cream */
+  --cream-50: #f8f4ec;
   --white: #ffffff;
-  --text-dark: #1a1a1a;
+
+  --text-dark: #14161c;
   --text-muted: #6b6b6b;
 }
 
 @theme inline {
+  --color-navy-950: var(--navy-950);
   --color-navy-900: var(--navy-900);
   --color-navy-800: var(--navy-800);
+  --color-navy-700: var(--navy-700);
+
+  --color-gold-600: var(--gold-600);
   --color-gold-500: var(--gold-500);
   --color-gold-300: var(--gold-300);
+  --color-gold-100: var(--gold-100);
+
+  --color-ivory: var(--ivory);
   --color-cream-50: var(--cream-50);
   --color-ink: var(--text-dark);
   --color-muted: var(--text-muted);
 
-  --font-display: var(--font-almarai);
-  --font-sans: var(--font-cairo);
+  --font-display: var(--font-display);
+  --font-sans: var(--font-body);
+  --font-latin: var(--font-latin);
 
   --radius-card: 0.75rem;
-
   --shadow-soft: 0 8px 24px -12px rgb(10 27 61 / 0.18);
 }
 
@@ -43,34 +58,97 @@ html {
 body {
   background: var(--white);
   color: var(--text-dark);
-  font-family: var(--font-cairo), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-weight: 300;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Amiri is a naskh face: it sets small and needs generous leading, but at
+   display sizes it wants the leading pulled back in or headlines drift apart. */
 h1,
 h2,
 h3,
 h4 {
-  font-family: var(--font-almarai), var(--font-cairo), system-ui, sans-serif;
+  font-family: var(--font-display), serif;
   font-weight: 700;
-  line-height: 1.35; /* Arabic needs more leading than Latin */
+  line-height: 1.4;
 }
 
-/* Arabic numerals stay Latin-shaped — the mockup uses "+400", not "٤٠٠". */
+h1,
+.display {
+  line-height: 1.25;
+}
+
+/* Latin set inside Arabic copy — brand name, course names — picks up the
+   serif from the logo instead of falling back to the body face. */
+.latin {
+  font-family: var(--font-latin), serif;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* Arabic numerals stay Latin-shaped: the mockup uses "+400", not "٤٠٠". */
 .tabular {
   font-variant-numeric: tabular-nums;
   direction: ltr;
   unicode-bidi: isolate;
 }
 
+/* A kicker above a heading — small, letterspaced, gold. Used instead of
+   repeating the same ornament divider under every single title. */
+.kicker {
+  font-family: var(--font-body), sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  color: var(--gold-500);
+}
+
+/* ---------------------------------------------------------------------
+   Texture. A flat fill reads as a rendered surface; a faint grain reads
+   as printed. Kept very low so it never shows as noise on OLED.
+   --------------------------------------------------------------------- */
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Gold that behaves like leaf rather than paint. */
+.gold-text {
+  background: linear-gradient(100deg, var(--gold-300), var(--gold-500) 45%, var(--gold-300));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.rule-gold {
+  background: linear-gradient(90deg, transparent, var(--gold-500), transparent);
+}
+
 /* Visible focus everywhere — PRD §10 accessibility. */
 :focus-visible {
   outline: 2px solid var(--gold-500);
-  outline-offset: 2px;
+  outline-offset: 3px;
   border-radius: 2px;
 }
 
 ::selection {
   background: var(--gold-300);
   color: var(--navy-900);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

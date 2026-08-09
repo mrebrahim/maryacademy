@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { TestimonialsSection } from '@/components/home/testimonials-section'
-import { Ornament } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { siteConfig, whatsappLink } from '@/config/site'
@@ -217,9 +216,9 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
       </section>
 
       {/* ---------- Pain points ---------- */}
-      <section className="bg-cream-50">
+      <section className="bg-ivory">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
-          <SectionHeading title="لو ده بيحصلك، إنتي في المكان الصح" />
+          <SectionHeading kicker="المشكلة" title="لو ده بيحصلك، إنتي في المكان الصح" align="center" />
           <ul className="mt-10 space-y-4 text-start">
             {[
               'بتتعلمي من يوتيوب بقالك شهور ولسه مش عارفة تنفذي لوك كامل.',
@@ -244,8 +243,9 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
       <section className="bg-white">
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
           <SectionHeading
-            title="المنهج"
-            subtitle={`${course.lesson_count} درس مقسّمين على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
+            kicker="المنهج"
+            title="الدروس بالترتيب"
+            subtitle={`${course.lesson_count} درس على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
           />
 
           <div className="mt-12 space-y-4">
@@ -295,9 +295,9 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
       {/* ---------- What you'll learn ---------- */}
       {whatYouLearn.length > 0 && (
-        <section className="bg-navy-900">
+        <section className="bg-navy-950">
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
-            <SectionHeading title="هتتعلمي إيه؟" tone="dark" />
+            <SectionHeading kicker="المخرجات" title="هتتعلمي إيه؟" tone="dark" />
             <ul className="mt-12 grid gap-4 sm:grid-cols-2">
               {whatYouLearn.map((item) => (
                 <li
@@ -315,12 +315,12 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
       {/* ---------- Who it's for + requirements ---------- */}
       {(targetAudience.length > 0 || requirements.length > 0) && (
-        <section className="bg-cream-50">
+        <section className="bg-ivory">
           <div className="mx-auto grid max-w-5xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2">
             {targetAudience.length > 0 && (
               <div>
-                <h2 className="text-2xl text-navy-900">الكورس ده ليكي لو…</h2>
-                <Ornament className="mt-4 h-7 w-48" />
+                <h2 className="display text-2xl text-navy-900 sm:text-3xl">الكورس ده ليكي لو…</h2>
+                <span className="mt-4 block h-px w-24 bg-gold-500/60" aria-hidden="true" />
                 <ul className="mt-6 space-y-3">
                   {targetAudience.map((item) => (
                     <li key={item} className="flex items-start gap-3">
@@ -334,8 +334,8 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
             {requirements.length > 0 && (
               <div>
-                <h2 className="text-2xl text-navy-900">محتاجة إيه تبدئي؟</h2>
-                <Ornament className="mt-4 h-7 w-48" />
+                <h2 className="display text-2xl text-navy-900 sm:text-3xl">محتاجة إيه تبدئي؟</h2>
+                <span className="mt-4 block h-px w-24 bg-gold-500/60" aria-hidden="true" />
                 <ul className="mt-6 space-y-3">
                   {requirements.map((item) => (
                     <li key={item} className="flex items-start gap-3">
@@ -359,7 +359,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
       {faq.length > 0 && (
         <section className="bg-white">
           <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
-            <SectionHeading title="أسئلة شائعة" />
+            <SectionHeading kicker="أسئلة" title="أسئلة شائعة" />
             <div className="mt-12 divide-y divide-navy-900/10 border-y border-navy-900/10">
               {faq.map((item) => (
                 <details key={item.q} className="group py-5">

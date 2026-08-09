@@ -137,14 +137,16 @@ export function CoursesGrid({
   const liveCourse = courses[0]
 
   return (
-    <section aria-labelledby="courses-heading" className="bg-cream-50">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
-        <SectionHeading
-          title="دوراتنا"
-          subtitle="كورس واحد متاح دلوقتي، والباقي في الطريق — سجلي اهتمامك وهنبلغك أول ما ينزل."
-        />
+    <section aria-labelledby="courses-heading" className="bg-white">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+        <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16">
+          <SectionHeading id="courses-heading" kicker="الدورات" title="اللي بندرّبه" />
+          <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
+            كورس واحد متاح دلوقتي، والباقي بيتصوّر. سجلي اهتمامك في أي واحدة وهتكوني أول من يعرف.
+          </p>
+        </div>
 
-        <ul className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <ul className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {categories.map((category) => {
             const Icon = ICONS[category.icon ?? 'sparkles'] ?? Sparkles
             const isLive = category.slug === 'hair-styling' && Boolean(liveCourse)
@@ -180,7 +182,7 @@ export function CoursesGrid({
           })}
         </ul>
 
-        <div className="mt-12 flex justify-center">
+        <div className="mt-14 flex justify-center">
           <Button
             asChild
             variant="secondary"

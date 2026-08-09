@@ -2,7 +2,6 @@ import { CheckCircle2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { Ornament } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
 import { brandAssets, HAS_INSTRUCTOR_IMAGE } from '@/config/assets'
@@ -23,8 +22,8 @@ const CREDENTIALS = [
 
 export function Instructor() {
   return (
-    <section aria-labelledby="instructor-heading" className="bg-cream-50">
-      <div className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+    <section aria-labelledby="instructor-heading" className="bg-white">
+      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="grid items-center gap-12 lg:grid-cols-[0.85fr_1fr] lg:gap-16">
           {/* Portrait slot — replaced by the real photo when supplied. */}
           <div className="relative mx-auto w-full max-w-sm">
@@ -45,13 +44,14 @@ export function Instructor() {
           </div>
 
           <div className="text-center lg:text-start">
-            <p className="font-display text-sm tracking-[0.25em] text-gold-500">مدرّبة الأكاديمية</p>
+            <p className="kicker flex items-center gap-3 lg:justify-start">
+              <span className="h-px w-8 bg-gold-500/70" aria-hidden="true" />
+              مدرّبة الأكاديمية
+            </p>
 
-            <h2 id="instructor-heading" className="mt-4 text-2xl text-navy-900 sm:text-3xl">
+            <h2 id="instructor-heading" className="display mt-4 text-3xl text-navy-900 sm:text-4xl">
               ماري رجائي
             </h2>
-
-            <Ornament className="mx-auto mt-4 h-7 w-52 lg:mx-0" />
 
             <p className="mt-6 text-base leading-loose text-ink/80">
               بدأت من الصفر زي أي حد، واتعلمت بالتجربة والغلط قبل ما المجال يبقى فيه كورسات محترمة.

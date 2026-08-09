@@ -3,7 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { SiteHeader } from '@/components/layout/site-header'
 import { siteConfig } from '@/config/site'
-import { almarai, cairo } from '@/lib/fonts'
+import { amiri, cinzel, tajawal } from '@/lib/fonts'
 
 import './globals.css'
 
@@ -29,7 +29,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ar" dir="rtl" className={`${almarai.variable} ${cairo.variable} h-full`}>
+    <html lang="ar" dir="rtl" className={`${amiri.variable} ${tajawal.variable} ${cinzel.variable} h-full`}>
       <body className="flex min-h-full flex-col">
         <a
           href="#main"

@@ -1,6 +1,3 @@
-import { GraduationCap, MapPin, Trophy, Users } from 'lucide-react'
-import type { ComponentType } from 'react'
-
 import { CoursesGrid } from '@/components/home/courses-grid'
 import { CtaBand } from '@/components/home/cta-band'
 import { Faq } from '@/components/home/faq'
@@ -15,13 +12,6 @@ import { getCategories, getPublishedCourses, getTestimonials } from '@/lib/queri
 // Marketing page: rebuild hourly so content edits appear without a deploy.
 export const revalidate = 3600
 
-const STAT_ICONS: Record<string, ComponentType<{ className?: string }>> = {
-  graduation: GraduationCap,
-  users: Users,
-  trophy: Trophy,
-  pin: MapPin,
-}
-
 export default async function HomePage() {
   const [courses, categories, testimonials] = await Promise.all([
     getPublishedCourses(),
@@ -33,28 +23,35 @@ export default async function HomePage() {
     <>
       <Hero />
 
-      {/* ---- Stats bar (PRD §7.1.2) ----
-          Values come from config, and every figure carries the
-          in-person-training label required by PRD §9.2. */}
-      <section aria-label="أرقام الأكاديمية" className="border-y border-gold-500/20 bg-navy-800">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-10 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:divide-x lg:divide-gold-500/20 rtl:lg:divide-x-reverse">
-          {academyStats.map((stat) => {
-            const Icon = STAT_ICONS[stat.icon]
-            return (
-              <div key={stat.labelAr} className="flex items-center justify-center gap-4">
-                <Icon className="size-9 shrink-0 text-gold-500" aria-hidden="true" />
-                <div className="text-start">
-                  {stat.value && (
-                    <p className="tabular font-display text-2xl text-gold-500 sm:text-3xl">
-                      {stat.value}
-                    </p>
-                  )}
-                  <p className="font-semibold text-white">{stat.labelAr}</p>
-                  <p className="mt-0.5 text-sm text-cream-50/65">{stat.contextAr}</p>
-                </div>
+      {/* ---- Stats (PRD §7.1.2) ----
+          Figures come from config, and each carries the in-person-training
+          qualifier PRD §9.2 requires. Set as display type rather than in
+          icon cards: these are the strongest numbers the academy has and
+          they should read as a statement, not as a widget row. */}
+      <section aria-label="أرقام الأكاديمية" className="grain relative bg-navy-900">
+        <div className="relative mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
+          <div className="grid gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {academyStats.map((stat, i) => (
+              <div
+                key={stat.labelAr}
+                className={
+                  i > 0
+                    ? 'lg:border-e lg:border-white/10 lg:pe-8 ltr:lg:border-s ltr:lg:border-e-0'
+                    : undefined
+                }
+              >
+                {stat.value ? (
+                  <p className="tabular gold-text font-display text-5xl leading-none sm:text-6xl">
+                    {stat.value}
+                  </p>
+                ) : (
+                  <p className="gold-text font-display text-4xl leading-none sm:text-5xl">مصر</p>
+                )}
+                <p className="mt-4 text-base text-white">{stat.labelAr}</p>
+                <p className="mt-1 text-sm text-cream-50/55">{stat.contextAr}</p>
               </div>
-            )
-          })}
+            ))}
+          </div>
         </div>
       </section>
 

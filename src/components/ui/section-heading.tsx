@@ -1,46 +1,61 @@
 import { cn } from '@/lib/utils'
 
 /**
- * The mockup's section header: a thin gold hairline running out from a
- * diamond glyph on both sides of the title (PRD §3, shape language).
+ * Section heading.
+ *
+ * Deliberately *not* a centred title with the same ornament under it every
+ * time — repeating one motif nine times down a page is what makes a layout
+ * feel machine-assembled. The default is start-aligned with a gold kicker
+ * and a rule that runs off toward the margin; `align="center"` exists for
+ * the one or two moments that genuinely want to be symmetrical.
  */
 export function SectionHeading({
+  kicker,
   title,
   subtitle,
   tone = 'light',
+  align = 'start',
   className,
   as: Tag = 'h2',
+  id,
 }: {
-  title: string
+  kicker?: string
+  title: React.ReactNode
   subtitle?: string
   tone?: 'light' | 'dark'
+  align?: 'start' | 'center'
   className?: string
   as?: 'h1' | 'h2' | 'h3'
+  id?: string
 }) {
   const onDark = tone === 'dark'
+  const centered = align === 'center'
 
   return (
-    <div className={cn('text-center', className)}>
+    <div className={cn(centered && 'text-center', className)}>
+      {kicker && (
+        <p className={cn('kicker flex items-center gap-3', centered && 'justify-center')}>
+          <span className="h-px w-8 bg-gold-500/70" aria-hidden="true" />
+          {kicker}
+        </p>
+      )}
+
       <Tag
+        id={id}
         className={cn(
-          'text-2xl sm:text-3xl md:text-4xl',
+          'display mt-4 text-[1.75rem] sm:text-4xl lg:text-[2.75rem]',
           onDark ? 'text-white' : 'text-navy-900',
         )}
       >
         {title}
       </Tag>
 
-      <div className="mt-4 flex items-center justify-center gap-3" aria-hidden="true">
-        <span className="h-px w-12 bg-gold-500/60 sm:w-20" />
-        <span className="size-2 rotate-45 bg-gold-500" />
-        <span className="h-px w-12 bg-gold-500/60 sm:w-20" />
-      </div>
-
       {subtitle && (
         <p
           className={cn(
-            'mx-auto mt-4 max-w-2xl text-base leading-relaxed sm:text-lg',
-            onDark ? 'text-cream-50/80' : 'text-muted',
+            'mt-5 max-w-xl text-base leading-loose',
+            centered && 'mx-auto',
+            onDark ? 'text-cream-50/75' : 'text-muted',
           )}
         >
           {subtitle}

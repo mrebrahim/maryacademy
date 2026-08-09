@@ -33,7 +33,7 @@ export function BrandMark({ className }: { className?: string }) {
         y="112"
         textAnchor="middle"
         fill="url(#mr-gold)"
-        style={{ fontFamily: 'var(--font-almarai), serif', fontSize: '62px', fontWeight: 800 }}
+        style={{ fontFamily: 'var(--font-latin), serif', fontSize: '62px', fontWeight: 800 }}
       >
         MR
       </text>
@@ -47,7 +47,7 @@ export function BrandMark({ className }: { className?: string }) {
         y="156"
         textAnchor="middle"
         fill="#C9A24B"
-        style={{ fontFamily: 'var(--font-cairo), sans-serif', fontSize: '11px', letterSpacing: '3px' }}
+        style={{ fontFamily: 'var(--font-body), sans-serif', fontSize: '11px', letterSpacing: '3px' }}
       >
         BEAUTY ACADEMY
       </text>
