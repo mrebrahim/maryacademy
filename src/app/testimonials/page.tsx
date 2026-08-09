@@ -22,7 +22,7 @@ export default async function TestimonialsPage() {
       />
 
       {testimonials.length > 0 ? (
-        <TestimonialsSection testimonials={testimonials} />
+        <TestimonialsSection testimonials={testimonials} layout="all" />
       ) : (
         <section className="bg-cream-50">
           <div className="mx-auto max-w-xl px-4 py-20 text-center sm:px-6">

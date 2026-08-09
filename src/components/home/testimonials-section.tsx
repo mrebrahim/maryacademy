@@ -23,6 +23,18 @@ const SOURCE_LABEL: Record<Testimonial['source'], string> = {
   online_course: 'خريجة الكورس الأونلاين',
 }
 
+/**
+ * A testimonial body holds one line per original message — these were
+ * separate DMs and stories, and running them together would read as edited
+ * marketing copy rather than as what someone actually sent.
+ */
+function messages(body: string) {
+  return body
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean)
+}
+
 function initials(name: string) {
   return name
     .replace(/[^\p{L}\s]/gu, '')
@@ -82,10 +94,52 @@ function Attribution({
   )
 }
 
-export function TestimonialsSection({ testimonials }: { testimonials: Testimonial[] }) {
+export function TestimonialsSection({
+  testimonials,
+  /**
+   * `feature` — one pull-quote plus four supporting, for the homepage and
+   * the sales page, where testimonials are one section among many.
+   * `all` — every quote in full, for the dedicated /testimonials page,
+   * where cutting the list off would be the whole point of the page missed.
+   */
+  layout = 'feature',
+}: {
+  testimonials: Testimonial[]
+  layout?: 'feature' | 'all'
+}) {
   const [index, setIndex] = useState(0)
 
   if (testimonials.length === 0) return null
+
+  if (layout === 'all') {
+    return (
+      <section className="bg-white">
+        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
+          {/* Columns rather than a grid: quotes run from one line to four,
+              and equal-height cells would leave holes under the short ones. */}
+          <ul className="gap-x-12 md:columns-2 lg:columns-3">
+            {testimonials.map((testimonial) => (
+              <li
+                key={testimonial.id}
+                className="mb-10 break-inside-avoid border-t border-navy-900/10 pt-6"
+              >
+                <figure>
+                  <blockquote className="space-y-3">
+                    {messages(testimonial.body_ar).map((line, i) => (
+                      <p key={i} className="text-sm leading-loose text-ink/85">
+                        {line}
+                      </p>
+                    ))}
+                  </blockquote>
+                  <Attribution testimonial={testimonial} />
+                </figure>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    )
+  }
 
   // Navigation follows the order the academy set. The pull-quote opens on
   // the longest one, though: quotes run from 50 to 380 characters, and only
@@ -130,8 +184,12 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
               »
             </span>
 
-            <blockquote className="relative text-lg leading-loose text-ink/90 sm:text-xl sm:leading-loose">
-              {feature.body_ar}
+            <blockquote className="relative space-y-4">
+              {messages(feature.body_ar).map((line, i) => (
+                <p key={i} className="text-lg leading-loose text-ink/90 sm:text-xl sm:leading-loose">
+                  {line}
+                </p>
+              ))}
             </blockquote>
 
             <Attribution testimonial={feature} />
@@ -160,8 +218,12 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
             {supporting.map((testimonial) => (
               <li key={testimonial.id} className="py-6">
                 <figure>
-                  <blockquote className="line-clamp-4 text-sm leading-loose text-ink/75">
-                    {testimonial.body_ar}
+                  <blockquote className="space-y-2">
+                    {messages(testimonial.body_ar).map((line, i) => (
+                      <p key={i} className="line-clamp-3 text-sm leading-loose text-ink/75">
+                        {line}
+                      </p>
+                    ))}
                   </blockquote>
                   <figcaption className="mt-3 text-xs text-muted">
                     <span className="font-medium text-navy-900">{testimonial.name}</span>
