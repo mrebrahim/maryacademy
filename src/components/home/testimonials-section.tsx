@@ -87,11 +87,17 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
 
   if (testimonials.length === 0) return null
 
-  // The longest quote makes the best pull-quote — it is the one with a story
-  // in it rather than a one-line thank-you.
-  const ranked = [...testimonials].sort((a, b) => b.body_ar.length - a.body_ar.length)
-  const feature = ranked[index % ranked.length]
-  const supporting = ranked.filter((t) => t.id !== feature.id).slice(0, 4)
+  // Navigation follows the order the academy set. The pull-quote opens on
+  // the longest one, though: quotes run from 50 to 380 characters, and only
+  // the long ones have a story in them rather than a one-line thank-you.
+  const ordered = testimonials
+  const longest = ordered.reduce(
+    (best, t, i) => (t.body_ar.length > ordered[best].body_ar.length ? i : best),
+    0,
+  )
+  const active = (longest + index) % ordered.length
+  const feature = ordered[active]
+  const supporting = ordered.filter((t) => t.id !== feature.id).slice(0, 4)
 
   return (
     <section aria-labelledby="testimonials-heading" className="relative bg-white">
@@ -130,20 +136,18 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
 
             <Attribution testimonial={feature} />
 
-            {ranked.length > 1 && (
+            {ordered.length > 1 && (
               <div className="mt-8 flex items-center gap-2">
-                {ranked.slice(0, Math.min(ranked.length, 6)).map((t, i) => (
+                {ordered.map((t, i) => (
                   <button
                     key={t.id}
                     type="button"
-                    onClick={() => setIndex(i)}
+                    onClick={() => setIndex((i - longest + ordered.length) % ordered.length)}
                     aria-label={`رأي ${i + 1}`}
-                    aria-current={i === index % ranked.length}
+                    aria-current={i === active}
                     className={cn(
                       'h-px transition-all',
-                      i === index % ranked.length
-                        ? 'w-10 bg-gold-500'
-                        : 'w-5 bg-navy-900/20 hover:bg-navy-900/40',
+                      i === active ? 'w-10 bg-gold-500' : 'w-4 bg-navy-900/20 hover:bg-navy-900/45',
                     )}
                   />
                 ))}
@@ -156,7 +160,7 @@ export function TestimonialsSection({ testimonials }: { testimonials: Testimonia
             {supporting.map((testimonial) => (
               <li key={testimonial.id} className="py-6">
                 <figure>
-                  <blockquote className="text-sm leading-loose text-ink/75">
+                  <blockquote className="line-clamp-4 text-sm leading-loose text-ink/75">
                     {testimonial.body_ar}
                   </blockquote>
                   <figcaption className="mt-3 text-xs text-muted">

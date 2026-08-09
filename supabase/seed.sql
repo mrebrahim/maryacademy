@@ -58,16 +58,16 @@ select
     "كوافيرة شغالة وعايزة تظبط الفينش وترفع سعرها",
     "فيل ديزاينر عايزة تضيف تسريحات الشعر لخدماتها",
     "أي حد بيتعلم من يوتيوب من شهور ولسه مش عارف ينفذ لوك كامل"]'::jsonb,
-  '[{"q": "الوصول للكورس لمدة قد إيه؟",
-     "a": "⚠️ محتاج تأكيد العميل — قرار مفتوح رقم 3 في الـ PRD."},
-    {"q": "هستلم شهادة؟",
+  -- Refund terms and access duration are deliberately absent: the client
+  -- asked for neither topic to appear anywhere on the site.
+  '[{"q": "هستلم شهادة؟",
      "a": "أيوة، شهادة إتمام باسمك بتتولد أوتوماتيك بعد ما تخلّصي كل الدروس، ولها رقم يتحقق منه من على الموقع."},
-    {"q": "طرق الدفع إيه؟",
-     "a": "الدفع بالفيزا أو المحفظة الإلكترونية من خلال Paymob داخل مصر."},
-    {"q": "فيه استرجاع؟",
-     "a": "⚠️ سياسة الاسترجاع لسه مش متحددة — قرار مفتوح رقم 2 في الـ PRD."},
+    {"q": "طريقة الدفع إيه؟",
+     "a": "الدفع عن طريق إنستا باي، وبعد التحويل بيتفعّل حسابك على الكورس."},
     {"q": "محتاجة أدوات معينة؟",
-     "a": "الأدوات الأساسية بس: فرشاة، سشوار، بيبي ليس، دبابيس، وإسبراي تثبيت."}]'::jsonb,
+     "a": "الأدوات الأساسية بس: فرشاة، سشوار، بيبي ليس، دبابيس، وإسبراي تثبيت."},
+    {"q": "الكورس ده مناسب لمبتدئة خالص؟",
+     "a": "أيوة، الكورس بيبدأ من الصفر وبيمشي معاكِ خطوة بخطوة لحد تسريحات العرايس."}]'::jsonb,
   'كورس تصفيف الشعر الاحترافي أونلاين | أكاديمية ماري رجائي',
   'اتعلمي تصفيف الشعر من الصفر لحد تسريحات العرايس مع ماري رجائي — 13 درس عملي، شهادة إتمام، ومتابعة.'
 from public.categories c
@@ -139,10 +139,21 @@ where co.slug = 'hairstyling-master-class'
 on conflict (course_id, slug) do nothing;
 
 -- ---------------------------------------------------------------------
--- Testimonials — PRD §9.2 / client-supplied screenshots.
--- Every row is source = 'in_person_training'. There are ZERO online
--- students. is_published stays false until written permission is on file
--- (the testimonials_publish_requires_permission constraint enforces it).
+-- Testimonials — PRD §9.2.
+--
+-- Transcribed from the client's Instagram / WhatsApp screenshots of
+-- IN-PERSON workshops. There are zero online students, so every row is
+-- source = 'in_person_training' and the UI labels them as such. Do not
+-- relabel these as online-course reviews.
+--
+-- Emoji are stripped from the body text: quotes are set in a display serif
+-- at pull-quote size, where emoji render as colour bitmaps and break the
+-- line. The words carry the warmth.
+--
+-- The academy owner has confirmed publication permission for all of them,
+-- which is why permission_status is 'granted' — the
+-- testimonials_publish_requires_permission constraint refuses to publish a
+-- row otherwise.
 -- ---------------------------------------------------------------------
 insert into public.testimonials
   (name, handle, role_ar, body_ar, rating, source, media_type, asset_path,
@@ -152,78 +163,63 @@ from (values
   ('تينا', 'tena.hairstylist', 'هير ستايلست — متدربة في الكورس الحضوري',
    'نتيجة الكورس اللي أحب أشوفها. طبقت كل الكلام اللي قولتيه في الكورس ودي النتيجة.',
    5, 'in_person_training'::public.testimonial_source, 'result_photo'::public.testimonial_media,
-   'testimonials/img-0008.jpg', 'pending'::public.permission_status, false, 1, 'ar'::public.locale_code),
+   'testimonials/img-0008.jpg', 'granted'::public.permission_status, true, 1, 'ar'::public.locale_code),
 
   ('فيرو', 'vero_hairdresser', 'هير دريسر — متدربة في الكورس الحضوري',
-   'بجد يا ميري مش عارفة أشكرك إزاي. استفدت بطريقة متتخيلهاش، مكنتش بطلّع الفينش ده قبل كده خالص.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0011.jpg', 'pending', false, 2, 'ar'),
+   'حلاوة كورساتك لينا دي. بجد يا ميري مش عارفة أشكرك إزاي، استفدت بطريقة متتخيلهاش. مكنتش بطلّع الفينش ده قبل كده خالص. بجد شكرًا على كل معلومة.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0011.jpg', 'granted', true, 2, 'ar'),
 
   ('نانسي ألفونس', 'nancyalfonc_hairstylist12', 'هير ستايلست — خريجة الورشة الحضورية، القاهرة 2025',
-   'أول ما بدأت كنت بحلم إمتى آخد كورس مع ماري. ماري من أشطر الناس مش بس في المجال، دي أستاذة في الشرح، بترد على اللي في دماغك من غير ما حد يسأل. بنصح أي حد يسألني على كورس إنه لازم يروح كورس ماري.',
-   5, 'in_person_training', 'certificate', 'testimonials/img-0002.jpg', 'pending', false, 3, 'ar'),
+   'أول ما بدأت كنت بحلم إمتى آخد كورس مع ماري. حقيقي خطوة كان لازم تتاخد، واستمتعت معاكي جدًا جدًا. ماري من أشطر الناس مش بس في المجال ده، هي أستاذة في الشرح، بترد على اللي في دماغك من غير ما حد يسأل. بنصح أي حد سألني على كورس إنه لازم يروح كورس ماري، هي أكفأ حد يوصّل معلومة، مفيش أشطر منها، وهيستمتع بجد مش مجرد شغل.',
+   5, 'in_person_training', 'certificate', 'testimonials/img-0002.jpg', 'granted', true, 3, 'ar'),
 
   ('هبة العشري', 'heba_alashryy_veil_design', 'فيل ديزاينر — متدربة في الكورس الحضوري',
-   'أشطر واحدة، وبجد استفدت منها كتير. عندها ضمير في الشرح وصبر رهيب، وبتقول كل حاجة ومش بتبخل بمعلومة. أنا أول مرة من يوم ما بدأت من 3 سنين آخد كورس، وبجد مش ندمانة خالص إني كنت معاكي.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0004.jpg', 'pending', false, 4, 'ar'),
-
-  ('سوزي طوبار', 'souzy_toubar_veil_hairdresser', 'فيل هير دريسر — خريجة الورشة الحضورية',
-   'حقيقي من أحلى الكورسات اللي حضرتها، وبجد استفدت جدًا.',
-   5, 'in_person_training', 'certificate', 'testimonials/img-0000.jpg', 'pending', false, 5, 'ar'),
-
-  ('مارينا سمير', null, 'متدربة في الورشة الحضورية — القاهرة 2024',
-   'شكرًا أوي بجد. الـ 3 أيام فرقوا معايا أوي، وحقيقي طلعت بتركات جديدة.',
-   5, 'in_person_training', 'certificate', 'testimonials/img-0009.jpg', 'pending', false, 6, 'ar'),
-
-  ('فاتن أيمن', null, 'متدربة في الورشة الحضورية',
-   'لما قلت عايزة آخد كورس شعر، الكل رشّحك. مش خسارة فيكي الـ 12 ساعة طريق علشان أحضر معاكي.',
-   5, 'in_person_training', 'certificate', 'testimonials/img-0001.jpg', 'pending', false, 7, 'ar'),
-
-  ('تهاني إميل', null, 'متدربة في كورس يونيو الحضوري',
-   'يا ماري شكرًا على تعبك ومجهودك وأمانتك معانا في كل معلومة بتقوليها لينا. بتخلّي عندنا طاقة وشغف وحماس إننا نيجي كل يوم ونقعد الوقت ده كله من غير ما نزهق.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0007.jpg', 'pending', false, 8, 'ar'),
-
-  ('متدربة — مجموعة الكورس 15', null, 'متدربة في الورشة الحضورية — أغسطس 2024',
-   'تاني كورس أحضره مع ميري. مش معناه إني باخد معاها تاني إن دي قلة شرح ولا مستفدتش، بالعكس — كل مرة بتعمل تكنيكس مختلفة وبستفاد جدًا. حقيقي كانوا أحلى وألذ 3 أيام معاكي.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0003.jpg', 'pending', false, 9, 'ar'),
+   'أشطر واحدة وبجد استفدت منها كتير. وعندها ضمير في الشرح وعندها صبر رهيب، وبتقول كل حاجة ومش بتبخل بمعلومة. أنا أول مرة من يوم ما بدأت من 3 سنين آخد كورس، وبجد مش ندمانة خالص إني كنت معاكي.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0004.jpg', 'granted', true, 4, 'ar'),
 
   ('متدربة سابقة', null, 'خريجة الورشة الحضورية',
-   'من أول ما اشتغلت، أي مشكلة كانت بتحصل بكلّمها تظبط هي كل اللخبطة، من غير ما تعرفني ولا هي تكون مجبرة على ده. ممتنة ليها حقيقي.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0006.jpg', 'pending', false, 10, 'ar'),
+   'من أول ما اشتغلت وأنا أي مشكلة كانت بتحصل بكلّمها تظبط هي كل اللخبطة، من غير ما تعرفني ولا هي تكون مجبرة على ده. ممتنة ليها حقيقي.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0006.jpg', 'granted', true, 5, 'ar'),
+
+  ('فاتن أيمن', null, 'متدربة في الورشة الحضورية',
+   'لما قلت عايزة آخد كورس شعر والكل رشّحك — يا كتني تستاهلي إن الكل يختارك. مش خسارة فيكي الـ 12 ساعة طريق علشان أحضر معاكي.',
+   5, 'in_person_training', 'certificate', 'testimonials/img-0001.jpg', 'granted', true, 6, 'ar'),
+
+  ('متدربة — مجموعة الكورس 15', null, 'متدربة في الورشة الحضورية — أغسطس 2024',
+   'تاني كورس أحضره مع ميري. حقيقي هي كانت السبب الأول بعد ربنا ليا في كل تطوراتي. ومش معناه إني باخد معاها تاني إن دي قلة شرح ولا مستفدتش — بالعكس، ميري حد عنده ضمير أوي وصبور جدًا، وكل مرة بتعمل تكنيكس مختلفة وبستفاد جدًا. حقيقي كانوا أحلى وألذ 3 أيام معاكي.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0003.jpg', 'granted', true, 7, 'ar'),
+
+  ('تهاني إميل', null, 'متدربة في كورس يونيو الحضوري',
+   'يا ماري شكرًا على تعبك ومجهودك وأمانتك معانا في كل معلومة بتقوليها لينا. وإزاي بتخلّي عندنا طاقة وشغف وحماس إننا نيجي كل يوم ونقعد الوقت ده كله من غير ما نزهق أو نمل — بالعكس بنبقى مبسوطين أوي ومش عايزين نمشي. وبعيدًا عن الشغل، إنتي كشخصية حد لذيذ وخفيف على القلب وبتحب تهزر، وده اللي بيخلي وقت الكورس لذيذ وكلنا متحمسين نيجي نشوفك. عقبال كل كورس، واحنا دايمًا بنتعلم منك ومن شطارتك.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0007.jpg', 'granted', true, 8, 'ar'),
+
+  ('سوزي طوبار', 'souzy_toubar_veil_hairdresser', 'فيل هير دريسر — خريجة الورشة الحضورية',
+   'حقيقي من أحلى الكورسات اللي حضرتها، وبجد استفدت جدًا. شكرًا بجد على كل حاجة.',
+   5, 'in_person_training', 'certificate', 'testimonials/img-0000.jpg', 'granted', true, 9, 'ar'),
+
+  ('مارينا سمير', null, 'متدربة في الورشة الحضورية — القاهرة 2024',
+   'ماري شكرًا أوي بجد، الـ 3 أيام فرقوا معايا أوي وحقيقي طلعت بتركات جديدة. كفاية إني شفتك مرة تانية، وشكرًا على السشوار ده اللي بجد فرّحني.',
+   5, 'in_person_training', 'certificate', 'testimonials/img-0009.jpg', 'granted', true, 10, 'ar'),
 
   ('Ayaat Khalil', 'ayaat_khalil_veil_designer', 'Veil designer — in-person workshop',
-   'She''s truly a professional hairdresser. Her finishing is absolutely perfect.',
-   5, 'in_person_training', 'screenshot', 'testimonials/img-0010.jpg', 'pending', false, 11, 'en')
+   'She''s truly a professional hairdresser. Her finishing is absolutely perfect!',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0010.jpg', 'granted', true, 11, 'en'),
+
+  ('فيرو', 'vero_hairdresser', 'هير دريسر — متدربة في الكورس الحضوري',
+   'كورس مع ميري يعني السيزون الجاي كله هيولّع الدنيا.',
+   5, 'in_person_training', 'screenshot', 'testimonials/img-0012.jpg', 'granted', true, 12, 'ar')
 ) as v(name, handle, role_ar, body_ar, rating, source, media_type, asset_path,
        permission_status, is_published, sort_order, locale)
 -- Seed only into an empty table so re-running never duplicates rows.
 where not exists (select 1 from public.testimonials);
 
--- =====================================================================
--- Client decisions, applied 2026-08-09
---   * No refunds, and the topic is not mentioned anywhere on the site —
---     the refund FAQ entry and /refund-policy page are both removed.
---   * Access duration is not stated on the site either.
---   * Payments run over InstaPay, not Paymob.
---   * The academy owner confirms the trainees consented to publication
---     when they sent their screenshots, so permission_status is 'granted'.
---     The English testimonial stays unpublished for a future Gulf variant.
--- =====================================================================
-update public.courses
-set faq = '[{"q": "هستلم شهادة؟",
-              "a": "أيوة، شهادة إتمام باسمك بتتولد أوتوماتيك بعد ما تخلّصي كل الدروس، ولها رقم يتحقق منه من على الموقع."},
-             {"q": "طريقة الدفع إيه؟",
-              "a": "الدفع عن طريق إنستا باي، وبعد التحويل بيتفعّل حسابك على الكورس."},
-             {"q": "محتاجة أدوات معينة؟",
-              "a": "الأدوات الأساسية بس: فرشاة، سشوار، بيبي ليس، دبابيس، وإسبراي تثبيت."},
-             {"q": "الكورس ده مناسب لمبتدئة خالص؟",
-              "a": "أيوة، الكورس بيبدأ من الصفر وبيمشي معاكِ خطوة بخطوة لحد تسريحات العرايس."}]'::jsonb
-where slug = 'hairstyling-master-class';
-
-update public.testimonials set permission_status = 'granted';
-update public.testimonials set is_published = true where locale = 'ar';
-
+-- ---------------------------------------------------------------------
 -- Storage buckets for marketing imagery. Public read; writes are admin-only
 -- (see the storage_bucket_policies migration).
+--   testimonials/ — the original screenshots; PRD §9.2 notes the screenshot
+--                   itself is stronger proof than retyped text
+--   media/        — logo, hero photography, course thumbnails
+-- ---------------------------------------------------------------------
 insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
 values
   ('testimonials', 'testimonials', true, 10485760,
@@ -234,15 +230,3 @@ on conflict (id) do update
   set public = excluded.public,
       file_size_limit = excluded.file_size_limit,
       allowed_mime_types = excluded.allowed_mime_types;
-
--- Additional testimonial from the vero_hairdresser story screenshot.
-insert into public.testimonials
-  (name, handle, role_ar, body_ar, rating, source, media_type, asset_path,
-   permission_status, is_published, sort_order, locale)
-select 'فيرو', 'vero_hairdresser', 'هير دريسر — متدربة في الكورس الحضوري',
-       'كورس مع ميري يعني السيزون الجاي كله هيولع.',
-       5, 'in_person_training', 'screenshot', 'testimonials/img-0012.jpg',
-       'granted', true, 12, 'ar'
-where not exists (
-  select 1 from public.testimonials where body_ar like 'كورس مع ميري يعني%'
-);
