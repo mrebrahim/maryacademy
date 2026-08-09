@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+/* =====================================================================
+   Design tokens — PRD §3, derived from the approved homepage mockup.
+   Raw values live on :root; @theme exposes them as Tailwind utilities
+   (bg-navy-900, text-gold-500, font-display, …).
+   ===================================================================== */
+:root {
+  --navy-900: #0a1b3d; /* primary background, footer, dark bands */
+  --navy-800: #0e2450; /* cards on a dark background */
+  --gold-500: #c9a24b; /* primary accent, CTAs, icons, dividers */
+  --gold-300: #e3c77e; /* hover / highlights */
+  --cream-50: #f8f4ec; /* light section background */
+  --white: #ffffff;
+  --text-dark: #1a1a1a;
+  --text-muted: #6b6b6b;
+}
+
+@theme inline {
+  --color-navy-900: var(--navy-900);
+  --color-navy-800: var(--navy-800);
+  --color-gold-500: var(--gold-500);
+  --color-gold-300: var(--gold-300);
+  --color-cream-50: var(--cream-50);
+  --color-ink: var(--text-dark);
+  --color-muted: var(--text-muted);
+
+  --font-display: var(--font-almarai);
+  --font-sans: var(--font-cairo);
+
+  --radius-card: 0.75rem;
+
+  --shadow-soft: 0 8px 24px -12px rgb(10 27 61 / 0.18);
+}
+
+/* ---------------------------------------------------------------------
+   Base
+   --------------------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--white);
+  color: var(--text-dark);
+  font-family: var(--font-cairo), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-almarai), var(--font-cairo), system-ui, sans-serif;
+  font-weight: 700;
+  line-height: 1.35; /* Arabic needs more leading than Latin */
+}
+
+/* Arabic numerals stay Latin-shaped — the mockup uses "+400", not "٤٠٠". */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+/* Visible focus everywhere — PRD §10 accessibility. */
+:focus-visible {
+  outline: 2px solid var(--gold-500);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+::selection {
+  background: var(--gold-300);
+  color: var(--navy-900);
+}
