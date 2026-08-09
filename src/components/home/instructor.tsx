@@ -1,8 +1,11 @@
 import { CheckCircle2 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
-import { BrandMark, Ornament } from '@/components/ui/brand-mark'
+import { Ornament } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
+import { brandAssets, HAS_INSTRUCTOR_IMAGE } from '@/config/assets'
 
 /**
  * Instructor block. On a teaching site the trainer is the product, so this
@@ -27,7 +30,17 @@ export function Instructor() {
           <div className="relative mx-auto w-full max-w-sm">
             <div className="absolute -inset-3 rounded-card border border-gold-500/30" aria-hidden="true" />
             <div className="relative grid aspect-4/5 place-items-center overflow-hidden rounded-card bg-gradient-to-b from-navy-800 to-navy-900">
-              <BrandMark className="size-2/3 opacity-90" />
+              {HAS_INSTRUCTOR_IMAGE ? (
+                <Image
+                  src={brandAssets.instructor}
+                  alt="ماري رجائي"
+                  fill
+                  sizes="(min-width: 1024px) 30vw, 90vw"
+                  className="object-cover"
+                />
+              ) : (
+                <Logo variant="full" className="size-2/3 opacity-90" />
+              )}
             </div>
           </div>
 

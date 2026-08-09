@@ -1,9 +1,11 @@
 import { ArrowLeft, BookOpen, Clock, Droplet, Palette, Scissors, Sparkles, Wand2 } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import type { ComponentType } from 'react'
 
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { courseThumbnails } from '@/config/assets'
 import type { Category, Course } from '@/lib/queries'
 import { cn, formatDuration } from '@/lib/utils'
 
@@ -31,6 +33,7 @@ function CourseCard({
   live,
   href,
   meta,
+  thumbnail,
 }: {
   icon: ComponentType<{ className?: string }>
   latinName: string
@@ -38,6 +41,7 @@ function CourseCard({
   live: boolean
   href: string
   meta?: { lessons: number; minutes: number }
+  thumbnail?: string
 }) {
   return (
     <article
@@ -48,13 +52,25 @@ function CourseCard({
           : 'ring-navy-900/8 hover:-translate-y-1 hover:shadow-soft',
       )}
     >
-      {/* Thumbnail slot. Real 16:9 photography drops in here unchanged. */}
+      {/* Real 16:9 photography when available, patterned placeholder otherwise. */}
       <div className="relative aspect-video overflow-hidden bg-gradient-to-bl from-navy-800 via-navy-900 to-navy-900">
-        <div
-          className="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,#C9A24B_0,#C9A24B_1px,transparent_1px,transparent_11px)]"
-          aria-hidden="true"
-        />
-        <Icon className="absolute start-1/2 top-1/2 size-12 -translate-x-1/2 -translate-y-1/2 text-gold-500/35 transition-transform duration-300 group-hover:scale-110 rtl:translate-x-1/2" />
+        {thumbnail ? (
+          <Image
+            src={thumbnail}
+            alt=""
+            fill
+            sizes="(min-width: 1280px) 20vw, (min-width: 640px) 45vw, 90vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <>
+            <div
+              className="absolute inset-0 opacity-[0.07] [background-image:repeating-linear-gradient(135deg,#C9A24B_0,#C9A24B_1px,transparent_1px,transparent_11px)]"
+              aria-hidden="true"
+            />
+            <Icon className="absolute start-1/2 top-1/2 size-12 -translate-x-1/2 -translate-y-1/2 text-gold-500/35 transition-transform duration-300 group-hover:scale-110 rtl:translate-x-1/2" />
+          </>
+        )}
 
         {live && (
           <span className="absolute end-3 top-3 rounded-full bg-gold-500 px-3 py-1 text-[11px] font-bold text-navy-900">
@@ -152,6 +168,11 @@ export function CoursesGrid({
                           minutes: liveCourse.total_duration_minutes,
                         }
                       : undefined
+                  }
+                  // A thumbnail uploaded to Storage wins over the static file.
+                  thumbnail={
+                    (isLive ? liveCourse.thumbnail_url : null) ??
+                    courseThumbnails[category.slug]
                   }
                 />
               </li>

@@ -1,6 +1,7 @@
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
 import { mainNav, siteConfig, whatsappLink } from '@/config/site'
 
 export function SiteHeader() {
@@ -8,9 +9,7 @@ export function SiteHeader() {
     <header className="sticky top-0 z-50 border-b border-white/10 bg-navy-900/95 backdrop-blur">
       <div className="mx-auto flex h-18 max-w-6xl items-center justify-between gap-6 px-4 sm:px-6">
         <Link href="/" className="flex items-center gap-3">
-          <span className="grid size-10 place-items-center rounded-full border border-gold-500 text-gold-500">
-            <span className="font-display text-lg leading-none">م</span>
-          </span>
+          <Logo variant="mark" priority className="size-11 shrink-0" />
           <span className="font-display text-base text-white sm:text-lg">
             {siteConfig.shortNameAr}
           </span>

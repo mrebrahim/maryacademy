@@ -1,8 +1,11 @@
 import { Award, Clock, Infinity as InfinityIcon, PlayCircle } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
-import { BrandMark, HeroSwirl } from '@/components/ui/brand-mark'
+import { HeroSwirl } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
+import { Logo } from '@/components/ui/logo'
+import { brandAssets, HAS_HERO_IMAGE } from '@/config/assets'
 import { whatsappLink } from '@/config/site'
 
 const TRUST = [
@@ -68,16 +71,38 @@ export function Hero() {
         </div>
 
         {/* ---- Visual ----
-            Placeholder composition until the client supplies the hero
-            photography and the real logo file. */}
+            The photograph takes over once it exists; until then the brand
+            lockup holds the composition on its own. */}
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <div className="relative aspect-square">
-            <div
-              className="absolute inset-6 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.22),transparent_65%)] blur-xl"
-              aria-hidden="true"
-            />
-            <BrandMark className="relative size-full drop-shadow-[0_0_40px_rgba(201,162,75,0.25)]" />
-          </div>
+          {HAS_HERO_IMAGE ? (
+            <div className="relative aspect-4/5 overflow-hidden rounded-card ring-1 ring-gold-500/25">
+              <Image
+                src={brandAssets.hero}
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 40vw, 90vw"
+                priority
+                className="object-cover"
+              />
+              <div
+                className="absolute inset-0 bg-gradient-to-t from-navy-900/70 via-transparent to-transparent"
+                aria-hidden="true"
+              />
+              <Logo variant="full" className="absolute inset-x-6 bottom-6 w-2/5" />
+            </div>
+          ) : (
+            <div className="relative aspect-square">
+              <div
+                className="absolute inset-6 rounded-full bg-[radial-gradient(circle,rgba(201,162,75,0.22),transparent_65%)] blur-xl"
+                aria-hidden="true"
+              />
+              <Logo
+                variant="full"
+                priority
+                className="relative size-full drop-shadow-[0_0_40px_rgba(201,162,75,0.25)]"
+              />
+            </div>
+          )}
         </div>
       </div>
     </section>

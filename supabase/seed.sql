@@ -221,3 +221,28 @@ where slug = 'hairstyling-master-class';
 
 update public.testimonials set permission_status = 'granted';
 update public.testimonials set is_published = true where locale = 'ar';
+
+-- Storage buckets for marketing imagery. Public read; writes are admin-only
+-- (see the storage_bucket_policies migration).
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values
+  ('testimonials', 'testimonials', true, 10485760,
+   array['image/jpeg','image/png','image/webp','image/avif']),
+  ('media', 'media', true, 10485760,
+   array['image/jpeg','image/png','image/webp','image/avif','image/svg+xml'])
+on conflict (id) do update
+  set public = excluded.public,
+      file_size_limit = excluded.file_size_limit,
+      allowed_mime_types = excluded.allowed_mime_types;
+
+-- Additional testimonial from the vero_hairdresser story screenshot.
+insert into public.testimonials
+  (name, handle, role_ar, body_ar, rating, source, media_type, asset_path,
+   permission_status, is_published, sort_order, locale)
+select 'فيرو', 'vero_hairdresser', 'هير دريسر — متدربة في الكورس الحضوري',
+       'كورس مع ميري يعني السيزون الجاي كله هيولع.',
+       5, 'in_person_training', 'screenshot', 'testimonials/img-0012.jpg',
+       'granted', true, 12, 'ar'
+where not exists (
+  select 1 from public.testimonials where body_ar like 'كورس مع ميري يعني%'
+);
