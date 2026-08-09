@@ -5,6 +5,7 @@ import { useFormStatus } from 'react-dom'
 
 import type { ContactFormState } from '@/app/actions/interest'
 import { Button } from '@/components/ui/button'
+import { latinAwareDir } from '@/lib/rtl'
 import { cn } from '@/lib/utils'
 
 const field =
@@ -43,7 +44,15 @@ export function LeadForm({
         <label htmlFor="lead-email" className="mb-1.5 block text-sm font-semibold text-navy-900">
           البريد الإلكتروني
         </label>
-        <input id="lead-email" name="email" type="email" required dir="ltr" className={field} />
+        <input
+          id="lead-email"
+          name="email"
+          type="email"
+          required
+          dir="rtl"
+          onInput={latinAwareDir}
+          className={field}
+        />
       </div>
 
       <div>
@@ -54,7 +63,8 @@ export function LeadForm({
           id="lead-phone"
           name="phone"
           type="tel"
-          dir="ltr"
+          dir="rtl"
+          onInput={latinAwareDir}
           inputMode="numeric"
           placeholder="01xxxxxxxxx"
           className={field}

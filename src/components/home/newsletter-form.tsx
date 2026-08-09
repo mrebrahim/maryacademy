@@ -5,6 +5,7 @@ import { useActionState } from 'react'
 import { useFormStatus } from 'react-dom'
 
 import { subscribeToNewsletter, type LeadFormState } from '@/app/actions/leads'
+import { latinAwareDir } from '@/lib/rtl'
 import { cn } from '@/lib/utils'
 
 function SubmitButton() {
@@ -35,9 +36,10 @@ export function NewsletterForm() {
           name="email"
           type="email"
           required
-          dir="ltr"
+          dir="rtl"
+          onInput={latinAwareDir}
           placeholder="اكتبي بريدك الإلكتروني"
-          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-ink outline-none placeholder:text-start placeholder:text-muted"
+          className="min-w-0 flex-1 bg-transparent px-3 text-sm text-ink outline-none placeholder:text-muted"
         />
         <SubmitButton />
       </form>
