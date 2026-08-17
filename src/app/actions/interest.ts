@@ -14,6 +14,9 @@ const schema = z.object({
     .optional()
     .or(z.literal('')),
   message: z.string().trim().max(1000).optional(),
+  // Landing pages pass the course so the lead is attributable to an offer
+  // rather than landing in an undifferentiated pile.
+  courseId: z.uuid().optional().or(z.literal('')),
 })
 
 export type ContactFormState = { ok: boolean; messageAr: string } | null
@@ -27,13 +30,14 @@ async function insertLead(
     email: formData.get('email'),
     phone: formData.get('phone') ?? '',
     message: formData.get('message') ?? '',
+    courseId: formData.get('courseId') ?? '',
   })
 
   if (!parsed.success) {
     return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'يرجى مراجعة البيانات' }
   }
 
-  const { name, email, phone, message } = parsed.data
+  const { name, email, phone, message, courseId } = parsed.data
 
   try {
     const supabase = await createClient()
@@ -43,6 +47,7 @@ async function insertLead(
       // Stored E.164 so it matches the profiles.phone format.
       phone: phone ? `+20${phone.replace(/^0/, '')}` : null,
       message: message || null,
+      course_id: courseId || null,
       source,
     })
 

@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import { LandingCta } from '@/components/landing/landing-cta'
+import { LeadCapture } from '@/components/landing/lead-capture'
 import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { landingCopy } from '@/config/landing/hairstyling'
@@ -294,6 +295,8 @@ export default async function HairstylingLandingPage() {
           </div>
         </div>
       </section>
+
+      <LeadCapture courseId={course.id} />
 
       {/* ---------- Close ---------- */}
       <section className="grain relative overflow-hidden bg-navy-950">
