@@ -7,8 +7,8 @@ import { getTestimonials } from '@/lib/queries'
 export const revalidate = 3600
 
 export const metadata: Metadata = {
-  title: 'آراء المتدربات',
-  description: 'كلام متدربات حضروا ورش ماري رجائي الحضورية بنفسهم.',
+  title: 'آراء المتدربين',
+  description: 'آراء متدربين حضروا التدريب الحضوري في أكاديمية ماري رجائي.',
 }
 
 export default async function TestimonialsPage() {
@@ -17,8 +17,8 @@ export default async function TestimonialsPage() {
   return (
     <>
       <PageHeader
-        title="آراء المتدربات"
-        subtitle="كل رأي هنا من متدربة حضرت ورشة حضورية بنفسها. مفيش تقييمات مدفوعة ولا مكتوبة."
+        title="آراء المتدربين"
+        subtitle="كل رأي هنا لمتدرب أو متدربة حضر التدريب بنفسه. لا تقييمات مدفوعة ولا مكتوبة."
       />
 
       {testimonials.length > 0 ? (
@@ -26,7 +26,7 @@ export default async function TestimonialsPage() {
       ) : (
         <section className="bg-cream-50">
           <div className="mx-auto max-w-xl px-4 py-20 text-center sm:px-6">
-            <p className="text-muted">مفيش آراء منشورة دلوقتي.</p>
+            <p className="text-muted">لا توجد آراء منشورة حاليًا.</p>
           </div>
         </section>
       )}

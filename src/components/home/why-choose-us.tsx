@@ -4,39 +4,36 @@ import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
 
 /**
- * Differentiators.
+ * What the academy stands for.
  *
- * Five identical icon cards in an even row said "template" louder than
- * anything else on the page, so the grid is gone. What replaces it is an
- * editorial list: the first item is given real weight because it is the
- * actual differentiator — she does not hold information back — and the rest
- * sit under it as a plain numbered list.
- *
- * Every line traces to something a trainee wrote in the screenshots, not to
- * a generic feature vocabulary.
+ * Written as principles of the academy rather than praise of one person:
+ * the founder's position is that the academy is larger than her. The
+ * substance still comes from what trainees repeatedly wrote — that nothing
+ * is held back, that follow-up outlives the course — but it is stated as
+ * method, not as biography.
  */
 const LEAD = {
-  titleAr: 'مش بتبخل بمعلومة',
+  titleAr: 'المعلومة كاملة، بلا استثناء',
   bodyAr:
-    'أكتر حاجة بتتكرر في كلام المتدربات إن المعلومة بتتقال كاملة. مفيش خطوة بتتخبّى عشان ترجعي تاني، ومفيش «ده سر المهنة».',
+    'المنهج قائم على مبدأ واحد: لا خطوة تُختصر، ولا تفصيلة تُؤجَّل لدورة قادمة. أكثر ما يتكرر في رسائل المتدربين أن المعلومة وصلت كاملة — وهذا ليس أسلوب مدرّب واحد، بل شرط في كل دورة تحمل اسم الأكاديمية.',
 }
 
 const REST = [
   {
-    titleAr: 'المتابعة مش بتقف',
-    bodyAr: 'بعد الكورس بشهور، لسه بترد على أسئلة متدربات بدأوا شغل وواجهوا مشكلة.',
+    titleAr: 'المتابعة لا تنتهي بانتهاء الدورة',
+    bodyAr: 'الأسئلة بعد التخرّج تجد إجابة، حتى بعد شهور من آخر درس.',
   },
   {
-    titleAr: 'شغل حقيقي، مش نظري',
-    bodyAr: 'كل درس بيتنفّذ على شعر حقيقي من أول التقسيم لآخر لمسة فينش.',
+    titleAr: 'تطبيق عملي، لا شرح نظري',
+    bodyAr: 'كل درس يُنفَّذ على شعر حقيقي، من التقسيم حتى اللمسة الأخيرة.',
   },
   {
-    titleAr: 'الفينش هو الفرق',
-    bodyAr: 'التسريحة اللي بتقع بعد ساعتين مش تسريحة. التثبيت بياخد وقته في الشرح.',
+    titleAr: 'الفرق في التفاصيل',
+    bodyAr: 'التسريحة التي لا تثبت ليست تسريحة. التثبيت والفينش يأخذان حقّهما.',
   },
   {
-    titleAr: 'من الصفر لو محتاجة',
-    bodyAr: 'مفيش افتراض إنك عارفة حاجة. الكورس بيبدأ من إمساك الفرشاة.',
+    titleAr: 'من الصفر عند الحاجة',
+    bodyAr: 'لا نفترض معرفة سابقة. البداية من الأساسيات لمن يحتاجها.',
   },
 ] as const
 
@@ -51,13 +48,13 @@ export function WhyChooseUs() {
       <div className="relative mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <SectionHeading
           id="why-heading"
-          kicker="ليه إحنا"
+          kicker="لماذا الأكاديمية"
           tone="dark"
           title={
             <>
-              مش أكتر أكاديمية،
+              معايير نلتزم بها
               <br />
-              بس اللي بتقول كل حاجة
+              في كل دورة
             </>
           }
         />
@@ -77,7 +74,7 @@ export function WhyChooseUs() {
             </p>
 
             <Button asChild variant="secondary" size="md" className="mt-9">
-              <Link href="/about">اعرفي أكتر</Link>
+              <Link href="/about">عن الأكاديمية</Link>
             </Button>
           </div>
 

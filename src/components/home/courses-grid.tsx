@@ -74,7 +74,7 @@ function CourseCard({
 
         {live && (
           <span className="absolute end-3 top-3 rounded-full bg-gold-500 px-3 py-1 text-[11px] font-bold text-navy-900">
-            متاح دلوقتي
+            متاح حاليًا
           </span>
         )}
       </div>
@@ -104,7 +104,7 @@ function CourseCard({
           {live ? (
             <Button asChild variant="tertiary" size="sm" className="w-full">
               <Link href={href}>
-                اعرفي المزيد
+                تفاصيل الدورة
                 <ArrowLeft className="size-4" aria-hidden="true" />
               </Link>
             </Button>
@@ -115,7 +115,7 @@ function CourseCard({
               size="sm"
               className="w-full border border-navy-900/15 text-navy-900 hover:border-gold-500 hover:bg-gold-500/10"
             >
-              <Link href={href}>سجلي اهتمامك</Link>
+              <Link href={href}>تسجيل الاهتمام</Link>
             </Button>
           )}
         </div>
@@ -140,9 +140,10 @@ export function CoursesGrid({
     <section aria-labelledby="courses-heading" className="bg-white">
       <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 sm:py-28">
         <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16">
-          <SectionHeading id="courses-heading" kicker="الدورات" title="اللي بندرّبه" />
+          <SectionHeading id="courses-heading" kicker="الدورات" title="برامجنا التدريبية" />
           <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
-            كورس واحد متاح دلوقتي، والباقي بيتصوّر. سجلي اهتمامك في أي واحدة وهتكوني أول من يعرف.
+            دورة واحدة متاحة حاليًا، وبقية الدورات قيد الإعداد. سجّل اهتمامك بأي منها لتصلك أخبارها
+            فور إتاحتها.
           </p>
         </div>
 

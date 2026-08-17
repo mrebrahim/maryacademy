@@ -1,47 +1,55 @@
 /**
  * Site-wide configuration.
  *
- * PRD §7.1 requires the homepage stats to come from a config file rather
- * than being hardcoded in JSX, and PRD §9.2 requires every social-proof
- * number to be labelled as in-person training — the academy has zero
- * online students. `context` below carries that label; do not drop it.
+ * Voice: Modern Standard Arabic, addressing men and women alike. The first
+ * pass was Egyptian colloquial in the feminine throughout ("تعلمي",
+ * "اعملي") — that excluded half the audience and read informally for a
+ * brand positioning itself as an academy. Calls to action use verbal nouns
+ * (تصفّح، إنشاء، تسجيل) because those carry no gender at all.
+ *
+ * The one exception is testimonial text, which stays exactly as each
+ * trainee wrote it. Those are real messages, not copy.
+ *
+ * PRD §7.1 requires the homepage stats to live here rather than in JSX, and
+ * PRD §9.2 requires every social-proof figure to be labelled as in-person
+ * training — the academy has no online graduates yet.
  */
 
 export const siteConfig = {
+  nameEn: 'Marie Ragaie Beauty Academy',
   nameAr: 'أكاديمية ماري رجائي للتجميل',
   shortNameAr: 'ماري رجائي',
-  taglineAr: 'تعلمي باحتراف وابدئي مستقبلك في عالم الجمال',
+  founderEn: 'Marie Ragaie',
+  /** The academy is a collective under its founder, not one trainer. */
+  positioningAr:
+    'أكاديمية تجمع نخبة من المتخصصين في مختلف مجالات الجمال، تحت إشراف المؤسِّسة Marie Ragaie.',
   descriptionAr:
-    'أكاديمية تدريب أونلاين لتصفيف الشعر والمكياج والعناية بالبشرة، بخبرة أكتر من 5 سنين تدريب حضوري.',
+    'أكاديمية تدريب أونلاين في تصفيف الشعر والمكياج والعناية بالبشرة، بخبرة تتجاوز خمس سنوات من التدريب الحضوري.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   locale: 'ar_EG',
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '',
 } as const
 
-export const whatsappLink = (messageAr = 'السلام عليكم، عايزة أعرف تفاصيل الكورسات') =>
+export const whatsappLink = (messageAr = 'السلام عليكم، أرغب في معرفة تفاصيل الدورات') =>
   siteConfig.whatsappNumber
     ? `https://wa.me/${siteConfig.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(messageAr)}`
     : '/contact'
 
-/**
- * Homepage stats bar. `context` is rendered under each figure so the
- * numbers are never mistaken for online-course results (PRD §7.1, §9.2).
- */
 export const academyStats = [
-  { icon: 'graduation', value: '+400', labelAr: 'متدربة ومتدرب', contextAr: 'في التدريب الحضوري' },
-  { icon: 'users', value: '+40', labelAr: 'دورة تدريبية', contextAr: 'حضورية على مدار 5 سنين' },
-  { icon: 'trophy', value: '5', labelAr: 'سنوات خبرة', contextAr: 'في التدريب والتجميل' },
-  // No figure here — it is a place, not a count.
-  { icon: 'pin', value: null, labelAr: 'جميع أنحاء مصر', contextAr: 'متدربات من كل المحافظات' },
+  { value: '+400', labelAr: 'متدرب ومتدربة', contextAr: 'في التدريب الحضوري' },
+  { value: '+40', labelAr: 'دورة تدريبية', contextAr: 'حضورية على مدار 5 سنوات' },
+  { value: '5', labelAr: 'سنوات خبرة', contextAr: 'في التدريب والتجميل' },
+  // A place, not a count — rendered without a figure.
+  { value: null, labelAr: 'جميع محافظات مصر', contextAr: 'متدربون من مختلف المحافظات' },
 ] as const
 
 export const mainNav = [
   { href: '/', labelAr: 'الرئيسية' },
   { href: '/courses', labelAr: 'الدورات' },
   { href: '/about', labelAr: 'عن الأكاديمية' },
-  { href: '/testimonials', labelAr: 'آراء المتدربات' },
+  { href: '/testimonials', labelAr: 'آراء المتدربين' },
   { href: '/blog', labelAr: 'المدونة' },
-  { href: '/contact', labelAr: 'تواصلي معنا' },
+  { href: '/contact', labelAr: 'تواصل معنا' },
 ] as const
 
 /**

@@ -15,14 +15,14 @@ function Submit({ label }: { label: string }) {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" size="lg" disabled={pending} className="w-full">
-      {pending ? 'جاري الإرسال…' : label}
+      {pending ? 'جارٍ الإرسال…' : label}
     </Button>
   )
 }
 
 export function LeadForm({
   action,
-  submitLabel = 'ابعتي',
+  submitLabel = 'إرسال',
   withMessage = true,
 }: {
   action: (prev: ContactFormState, formData: FormData) => Promise<ContactFormState>
@@ -57,7 +57,7 @@ export function LeadForm({
 
       <div>
         <label htmlFor="lead-phone" className="mb-1.5 block text-sm font-semibold text-navy-900">
-          رقم الموبايل <span className="font-normal text-muted">(اختياري)</span>
+          رقم الهاتف <span className="font-normal text-muted">(اختياري)</span>
         </label>
         <input
           id="lead-phone"
@@ -77,7 +77,7 @@ export function LeadForm({
             htmlFor="lead-message"
             className="mb-1.5 block text-sm font-semibold text-navy-900"
           >
-            رسالتك
+            الرسالة
           </label>
           <textarea id="lead-message" name="message" rows={4} maxLength={1000} className={field} />
         </div>

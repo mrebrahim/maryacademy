@@ -16,21 +16,25 @@ export function CtaBand() {
 
       <div className="relative mx-auto max-w-3xl px-4 py-20 text-center sm:px-6 sm:py-28">
         <h2 id="cta-heading" className="display text-4xl text-white sm:text-5xl">
-          مستنية إيه؟
+          الخطوة الأولى تبدأ من هنا
         </h2>
 
         <p className="mx-auto mt-5 max-w-xl text-base leading-loose text-cream-50/85">
-          كل يوم بيعدي وإنتي بتتفرجي على فيديوهات مبعثرة، هو يوم ممكن تكوني اتعلمتي فيه حاجة صح
-          وخدتي عليها شهادة. ابدئي دلوقتي.
+          كل يوم يمر في متابعة فيديوهات متفرقة، هو يوم كان يمكن أن يكون تعلّمًا منظّمًا ينتهي
+          بشهادة. ابدأ الآن.
         </p>
 
         <div className="mt-9 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Button asChild size="lg" className="w-full sm:w-auto">
-            <Link href="/courses">ابدئي دلوقتي</Link>
+            <Link href="/courses">تصفّح الدورات</Link>
           </Button>
           <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
-            <a href={whatsappLink('السلام عليكم، عايزة أستفسر عن الكورس')} target="_blank" rel="noopener noreferrer">
-              اسألي الأول
+            <a
+              href={whatsappLink('السلام عليكم، لديّ استفسار عن الدورة')}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              لديّ استفسار
             </a>
           </Button>
         </div>

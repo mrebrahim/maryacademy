@@ -33,7 +33,7 @@ export function SiteFooter() {
         <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-4">
           {/* Newsletter — PRD §7.1.6, writes to `leads` */}
           <div className="lg:order-1">
-            <p className="font-display text-lg text-white">اشتركي في نشرتنا البريدية</p>
+            <p className="font-display text-lg text-white">اشترك في النشرة البريدية</p>
             <p className="mt-2 text-sm">للحصول على آخر العروض والدورات الجديدة</p>
             <div className="mt-4">
               <NewsletterForm />
@@ -41,7 +41,7 @@ export function SiteFooter() {
           </div>
 
           <div className="lg:order-2">
-            <p className="font-display text-base text-gold-500">تواصلي معنا</p>
+            <p className="font-display text-base text-gold-500">تواصل معنا</p>
             <ul className="mt-4 space-y-3 text-sm">
               <li className="flex items-center gap-2">
                 <Phone className="size-4 shrink-0 text-gold-500" aria-hidden="true" />

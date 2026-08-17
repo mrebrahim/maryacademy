@@ -38,7 +38,7 @@ export function NewsletterForm() {
           required
           dir="rtl"
           onInput={latinAwareDir}
-          placeholder="اكتبي بريدك الإلكتروني"
+          placeholder="أدخل بريدك الإلكتروني"
           className="min-w-0 flex-1 bg-transparent px-3 text-sm text-ink outline-none placeholder:text-muted"
         />
         <SubmitButton />

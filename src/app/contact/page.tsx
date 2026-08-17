@@ -8,30 +8,30 @@ import { Button } from '@/components/ui/button'
 import { siteConfig, whatsappLink } from '@/config/site'
 
 export const metadata: Metadata = {
-  title: 'تواصلي معنا',
-  description: 'عندك سؤال عن الدورات؟ كلمينا على واتساب أو ابعتيلنا رسالة.',
+  title: 'تواصل معنا',
+  description: 'لديك استفسار عن الدورات؟ تواصل معنا عبر واتساب أو أرسل رسالة.',
 }
 
 export default function ContactPage() {
   return (
     <>
       <PageHeader
-        title="تواصلي معنا"
-        subtitle="أي سؤال عن الدورات أو الحجز، إحنا موجودين. أسرع طريقة هي واتساب."
+        title="تواصل معنا"
+        subtitle="أي استفسار عن الدورات أو الحجز، نحن هنا. أسرع وسيلة للتواصل هي واتساب."
       />
 
       <section className="bg-cream-50">
         <div className="mx-auto grid max-w-5xl gap-10 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <h2 className="text-xl text-navy-900">أسرع طريقة</h2>
+            <h2 className="text-xl text-navy-900">أسرع وسيلة</h2>
             <p className="mt-3 text-sm leading-loose text-muted">
-              ابعتيلنا على واتساب وهنرد عليكي في أقرب وقت.
+              أرسل رسالتك على واتساب وسنرد في أقرب وقت.
             </p>
 
             <Button asChild size="lg" className="mt-5 w-full sm:w-auto">
               <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
                 <MessageCircle className="size-5" aria-hidden="true" />
-                كلمينا على واتساب
+                مراسلتنا على واتساب
               </a>
             </Button>
 
@@ -50,9 +50,9 @@ export default function ContactPage() {
           </div>
 
           <div className="rounded-card bg-white p-6 shadow-soft ring-1 ring-navy-900/5 sm:p-8">
-            <h2 className="text-xl text-navy-900">أو ابعتيلنا رسالة</h2>
+            <h2 className="text-xl text-navy-900">أو أرسل رسالة</h2>
             <div className="mt-5">
-              <LeadForm action={submitContactForm} submitLabel="ابعتي الرسالة" />
+              <LeadForm action={submitContactForm} submitLabel="إرسال الرسالة" />
             </div>
           </div>
         </div>

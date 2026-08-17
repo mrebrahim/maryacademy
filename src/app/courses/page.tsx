@@ -9,7 +9,7 @@ export const revalidate = 3600
 export const metadata: Metadata = {
   title: 'الدورات',
   description:
-    'دورات أونلاين في تصفيف الشعر والصبغة والقص والمكياج والعناية بالبشرة، بمنهج عملي خطوة بخطوة.',
+    'دورات أونلاين في تصفيف الشعر والصبغة والقص والمكياج والعناية بالبشرة، بمنهج عملي متدرّج.',
 }
 
 export default async function CoursesPage() {
@@ -19,7 +19,7 @@ export default async function CoursesPage() {
     <>
       <PageHeader
         title="الدورات"
-        subtitle="بنبدأ بكورس تصفيف الشعر الاحترافي، وباقي الدورات في الطريق. سجلي اهتمامك في أي دورة وهنبلغك أول ما تنزل."
+        subtitle="نبدأ بدورة تصفيف الشعر الاحترافي، وبقية الدورات قيد الإعداد. سجّل اهتمامك بأي دورة لتصلك أخبارها فور إتاحتها."
       />
       <CoursesGrid courses={courses} categories={categories} />
     </>

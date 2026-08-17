@@ -6,19 +6,19 @@ import { HeroSwirl } from '@/components/ui/brand-mark'
 import { Button } from '@/components/ui/button'
 import { Logo } from '@/components/ui/logo'
 import { brandAssets, HAS_HERO_IMAGE } from '@/config/assets'
-import { whatsappLink } from '@/config/site'
+import { siteConfig, whatsappLink } from '@/config/site'
 
 const TRUST = [
   { icon: PlayCircle, labelAr: 'دروس عملية بالفيديو' },
-  { icon: Clock, labelAr: 'اتعلمي في وقتك' },
+  { icon: Clock, labelAr: 'تعلّم في وقتك' },
   { icon: Award, labelAr: 'شهادة إتمام' },
-  { icon: InfinityIcon, labelAr: 'وصول للمحتوى' },
+  { icon: InfinityIcon, labelAr: 'وصول دائم للمحتوى' },
 ] as const
 
 export function Hero() {
   return (
     <section className="relative overflow-hidden bg-navy-900">
-      {/* Layered decoration: radial glow, gold swirls, and a soft vignette. */}
+      {/* Layered decoration: radial glow, gold swirls, soft vignette. */}
       <div
         className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_15%_0%,rgba(201,162,75,0.22),transparent_55%)]"
         aria-hidden="true"
@@ -29,34 +29,37 @@ export function Hero() {
       <div className="relative mx-auto grid max-w-6xl items-center gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1.1fr_1fr] lg:gap-16 lg:py-24">
         {/* ---- Copy ---- */}
         <div className="text-center lg:text-start">
-          <p className="inline-flex items-center gap-2 rounded-full border border-gold-500/35 bg-gold-500/10 px-4 py-1.5 text-xs font-semibold tracking-wide text-gold-300">
-            <span className="size-1.5 rotate-45 bg-gold-500" aria-hidden="true" />
-            أكاديمية ماري رجائي للتجميل
-          </p>
+          {/* The brand name leads in Latin, set in the same serif as the
+              logo wordmark. The Arabic positioning line carries the meaning
+              — and the Arabic keywords — directly underneath. */}
+          <p className="latin text-sm tracking-[0.35em] text-gold-500 uppercase">Welcome to</p>
 
-          <h1 className="mt-6 text-3xl leading-tight text-white sm:text-4xl lg:text-[3.25rem]">
-            تعلمي باحتراف
-            <span className="mt-2 block text-gold-500">وابدئي مستقبلك في عالم الجمال</span>
+          <h1 className="latin mt-4 text-[2rem] leading-tight text-white sm:text-5xl lg:text-[3.5rem]">
+            Marie Ragaie
+            <span className="mt-1 block text-gold-500">Beauty Academy</span>
           </h1>
 
-          <p className="mx-auto mt-6 max-w-xl text-base leading-loose text-cream-50/85 sm:text-lg lg:mx-0">
-            كورسات عملية بالفيديو في تصفيف الشعر والمكياج والعناية بالبشرة — بنفس المنهج اللي اتدرب
-            بيه أكتر من <span className="tabular font-semibold text-gold-300">400</span> متدربة
-            حضوريًا، بس دلوقتي من بيتك وفي وقتك.
+          <p className="mx-auto mt-7 max-w-xl text-base leading-loose text-gold-300 sm:text-lg lg:mx-0">
+            {siteConfig.positioningAr}
+          </p>
+
+          <p className="mx-auto mt-5 max-w-xl text-base leading-loose text-cream-50/80 lg:mx-0">
+            خبرة تم نقلها لأكثر من <span className="tabular font-medium text-white">400</span> متدرب
+            ومتدربة من مختلف محافظات مصر، والآن أصبحت متاحة لك أونلاين، من أي مكان وفي الوقت الذي
+            يناسبك.
           </p>
 
           <div className="mt-9 flex flex-col items-center gap-4 sm:flex-row sm:justify-center lg:justify-start">
             <Button asChild size="lg" className="w-full sm:w-auto">
-              <Link href="/courses">استكشفي الدورات</Link>
+              <Link href="/courses">تصفّح الدورات</Link>
             </Button>
             <Button asChild variant="secondary" size="lg" className="w-full sm:w-auto">
               <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-                تواصلي معنا
+                تواصل معنا
               </a>
             </Button>
           </div>
 
-          {/* Trust row */}
           <ul className="mt-10 grid grid-cols-2 gap-x-6 gap-y-4 border-t border-white/10 pt-7 sm:grid-cols-4">
             {TRUST.map((item) => {
               const Icon = item.icon

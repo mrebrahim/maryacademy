@@ -5,8 +5,8 @@ import { LeadForm } from '@/components/forms/lead-form'
 import { PageHeader } from '@/components/layout/page-header'
 
 export const metadata: Metadata = {
-  title: 'سجلي اهتمامك',
-  description: 'سجلي اهتمامك بالدورات الجاية وهنبلغك أول ما تنزل.',
+  title: 'تسجيل الاهتمام',
+  description: 'سجّل اهتمامك بالدورات القادمة لتصلك أخبارها فور إتاحتها.',
   robots: { index: false },
 }
 
@@ -14,8 +14,8 @@ export default function CourseInterestPage() {
   return (
     <>
       <PageHeader
-        title="سجلي اهتمامك"
-        subtitle="الدورة دي لسه بنجهزها. سيبي بياناتك وهنبلغك أول ما تنزل، وهيكون ليكي أولوية في العرض الأول."
+        title="تسجيل الاهتمام"
+        subtitle="هذه الدورة قيد الإعداد. سجّل بياناتك لتصلك أخبارها فور إتاحتها، مع أولوية في العرض الأول."
       />
 
       <section className="bg-cream-50">
@@ -23,7 +23,7 @@ export default function CourseInterestPage() {
           <div className="rounded-card bg-white p-6 shadow-soft ring-1 ring-navy-900/5 sm:p-8">
             <LeadForm
               action={submitCourseInterest}
-              submitLabel="سجلي اهتمامك"
+              submitLabel="تسجيل الاهتمام"
               withMessage={false}
             />
           </div>

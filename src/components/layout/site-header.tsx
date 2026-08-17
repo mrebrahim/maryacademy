@@ -36,7 +36,7 @@ export function SiteHeader() {
           </Button>
           <Button asChild size="sm">
             <a href={whatsappLink()} target="_blank" rel="noopener noreferrer">
-              تواصلي معنا
+              تواصل معنا
             </a>
           </Button>
         </div>

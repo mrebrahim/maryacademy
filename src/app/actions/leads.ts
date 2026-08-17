@@ -5,7 +5,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 
 const newsletterSchema = z.object({
-  email: z.email({ error: 'اكتبي إيميل صحيح' }),
+  email: z.email({ error: 'يرجى إدخال بريد إلكتروني صحيح' }),
 })
 
 export type LeadFormState = { ok: boolean; messageAr: string } | null
@@ -22,7 +22,7 @@ export async function subscribeToNewsletter(
   const parsed = newsletterSchema.safeParse({ email: formData.get('email') })
 
   if (!parsed.success) {
-    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'اكتبي إيميل صحيح' }
+    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'يرجى إدخال بريد إلكتروني صحيح' }
   }
 
   try {
@@ -32,9 +32,9 @@ export async function subscribeToNewsletter(
       .insert({ email: parsed.data.email, source: 'newsletter' })
 
     if (error) throw error
-    return { ok: true, messageAr: 'تمام! هنبعتلك كل جديد على الإيميل ده.' }
+    return { ok: true, messageAr: 'تم الاشتراك. ستصلك أخبار الدورات الجديدة على هذا البريد.' }
   } catch (error) {
     console.error('[subscribeToNewsletter]', error)
-    return { ok: false, messageAr: 'حصلت مشكلة، جربي تاني بعد شوية.' }
+    return { ok: false, messageAr: 'تعذّر إتمام العملية، يرجى المحاولة بعد قليل.' }
   }
 }

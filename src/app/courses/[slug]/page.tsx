@@ -126,7 +126,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
           <div>
             <p className="inline-flex items-center gap-2 rounded-full border border-gold-500/35 bg-gold-500/10 px-4 py-1.5 text-xs font-semibold text-gold-300">
               <span className="size-1.5 rotate-45 bg-gold-500" aria-hidden="true" />
-              كورس أونلاين
+              دورة أونلاين
             </p>
 
             <h1 className="mt-6 text-3xl leading-tight text-white sm:text-4xl">
@@ -142,7 +142,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
             <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-cream-50/80">
               <li className="flex items-center gap-2">
                 <BookOpen className="size-4 text-gold-500" aria-hidden="true" />
-                <span className="tabular">{course.lesson_count}</span> درس
+                <span className="tabular">{course.lesson_count}</span> درسًا
               </li>
               <li className="flex items-center gap-2">
                 <Clock className="size-4 text-gold-500" aria-hidden="true" />
@@ -156,7 +156,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
               )}
               <li className="flex items-center gap-2">
                 <InfinityIcon className="size-4 text-gold-500" aria-hidden="true" />
-                ارجعي للدروس وقت ما تحبي
+                رجوع للدروس في أي وقت
               </li>
             </ul>
           </div>
@@ -182,34 +182,34 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
               </div>
             ) : (
               <p className="mt-6 text-base font-semibold text-gold-300">
-                للاستفسار عن السعر والحجز، كلمينا على واتساب.
+                للاستفسار عن السعر والحجز، تواصل معنا عبر واتساب.
               </p>
             )}
 
             <div className="mt-6 space-y-3">
               {hasPrice ? (
                 <Button asChild size="lg" className="w-full">
-                  <Link href={`/checkout/${course.slug}`}>احجزي مكانك دلوقتي</Link>
+                  <Link href={`/checkout/${course.slug}`}>احجز مقعدك الآن</Link>
                 </Button>
               ) : (
                 <Button asChild size="lg" className="w-full">
                   <a
-                    href={whatsappLink(`السلام عليكم، عايزة أعرف تفاصيل ${course.title_ar}`)}
+                    href={whatsappLink(`السلام عليكم، أرغب في معرفة تفاصيل ${course.title_ar}`)}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    احجزي عن طريق واتساب
+                    الحجز عبر واتساب
                   </a>
                 </Button>
               )}
 
               <Button asChild variant="secondary" size="md" className="w-full">
-                <Link href="/contact">عندي سؤال</Link>
+                <Link href="/contact">لديّ استفسار</Link>
               </Button>
             </div>
 
             <p className="mt-5 text-center text-xs text-cream-50/60">
-              الدفع عن طريق إنستا باي، والحساب بيتفعّل بعد التحويل.
+              الدفع عبر إنستا باي، ويُفعَّل الحساب بعد التحويل.
             </p>
           </aside>
         </div>
@@ -218,14 +218,14 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
       {/* ---------- Pain points ---------- */}
       <section className="bg-ivory">
         <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
-          <SectionHeading kicker="المشكلة" title="لو ده بيحصلك، إنتي في المكان الصح" align="center" />
+          <SectionHeading kicker="المشكلة" title="إذا كان هذا يحدث معك، فأنت في المكان الصحيح" align="center" />
           <ul className="mt-10 space-y-4 text-start">
             {[
-              'بتتعلمي من يوتيوب بقالك شهور ولسه مش عارفة تنفذي لوك كامل.',
-              'بتعملي التسريحة وتبان حلوة، وبعد ساعتين تقع.',
-              'خدتي كورس قبل كده والمدرّبة خبّت عليكي نص المعلومات.',
-              'خلّصتي كورس ومحدش رد عليكي لما وقفتي في حاجة.',
-              'شغالة بالفعل بس مش عارفة ترفعي سعرك لأن الفينش مش مقنعك.',
+              'تتابع فيديوهات يوتيوب منذ شهور، ولا تستطيع حتى الآن تنفيذ لوك كامل.',
+              'تنفّذ التسريحة فتبدو جيدة، ثم تسقط بعد ساعتين.',
+              'التحقت بدورة سابقة وشعرت أن نصف المعلومات لم يُقَل.',
+              'أنهيت دورة، ثم لم تجد من يرد عليك حين واجهتك مشكلة.',
+              'تعمل بالفعل، لكن لا تستطيع رفع سعرك لأن الفينش لا يقنعك.',
             ].map((pain) => (
               <li
                 key={pain}
@@ -244,8 +244,8 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
         <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
           <SectionHeading
             kicker="المنهج"
-            title="الدروس بالترتيب"
-            subtitle={`${course.lesson_count} درس على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
+            title="محتوى الدورة"
+            subtitle={`${course.lesson_count} درسًا على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
           />
 
           <div className="mt-12 space-y-4">
@@ -297,7 +297,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
       {whatYouLearn.length > 0 && (
         <section className="bg-navy-950">
           <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 sm:py-20">
-            <SectionHeading kicker="المخرجات" title="هتتعلمي إيه؟" tone="dark" />
+            <SectionHeading kicker="المخرجات" title="ماذا ستتعلم؟" tone="dark" />
             <ul className="mt-12 grid gap-4 sm:grid-cols-2">
               {whatYouLearn.map((item) => (
                 <li
@@ -319,7 +319,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
           <div className="mx-auto grid max-w-5xl gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2">
             {targetAudience.length > 0 && (
               <div>
-                <h2 className="display text-2xl text-navy-900 sm:text-3xl">الكورس ده ليكي لو…</h2>
+                <h2 className="display text-2xl text-navy-900 sm:text-3xl">هذه الدورة مناسبة لك إذا…</h2>
                 <span className="mt-4 block h-px w-24 bg-gold-500/60" aria-hidden="true" />
                 <ul className="mt-6 space-y-3">
                   {targetAudience.map((item) => (
@@ -334,7 +334,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
             {requirements.length > 0 && (
               <div>
-                <h2 className="display text-2xl text-navy-900 sm:text-3xl">محتاجة إيه تبدئي؟</h2>
+                <h2 className="display text-2xl text-navy-900 sm:text-3xl">ما تحتاجه للبدء</h2>
                 <span className="mt-4 block h-px w-24 bg-gold-500/60" aria-hidden="true" />
                 <ul className="mt-6 space-y-3">
                   {requirements.map((item) => (
@@ -386,19 +386,19 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
               {formatPrice(course.price_egp)}
             </span>
           ) : (
-            <span className="text-sm text-cream-50/80">اسألي عن السعر</span>
+            <span className="text-sm text-cream-50/80">للاستفسار عن السعر</span>
           )}
 
           <Button asChild size="md" className="flex-1">
             {hasPrice ? (
-              <Link href={`/checkout/${course.slug}`}>احجزي دلوقتي</Link>
+              <Link href={`/checkout/${course.slug}`}>احجز الآن</Link>
             ) : (
               <a
-                href={whatsappLink(`السلام عليكم، عايزة أعرف تفاصيل ${course.title_ar}`)}
+                href={whatsappLink(`السلام عليكم، أرغب في معرفة تفاصيل ${course.title_ar}`)}
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                احجزي على واتساب
+                الحجز عبر واتساب
               </a>
             )}
           </Button>

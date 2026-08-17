@@ -19,8 +19,8 @@ import { cn } from '@/lib/utils'
  * pull-quote and lets the others sit beside it as plain attributed text.
  */
 const SOURCE_LABEL: Record<Testimonial['source'], string> = {
-  in_person_training: 'متدربة في الكورسات الحضورية',
-  online_course: 'خريجة الكورس الأونلاين',
+  in_person_training: 'من التدريب الحضوري',
+  online_course: 'من الدورات الأونلاين',
 }
 
 /**
@@ -159,18 +159,18 @@ export function TestimonialsSection({
         <div className="grid gap-6 lg:grid-cols-[auto_1fr] lg:items-end lg:gap-16">
           <SectionHeading
             id="testimonials-heading"
-            kicker="كلامهم مش كلامنا"
+            kicker="آراء المتدربين"
             title={
               <>
-                اللي بيقولوه
+                ماذا قالوا
                 <br />
-                عننا
+                عن التجربة
               </>
             }
           />
           <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
-            كل كلمة تحت دي من رسالة بعتتها متدربة حضرت ورشة بنفسها. مفيش تقييم واحد مدفوع أو
-            مكتوب.
+            كل ما يلي مقتبس من رسائل بعثها متدربون حضروا التدريب بأنفسهم. لا تقييمات مدفوعة ولا
+            مكتوبة.
           </p>
         </div>
 

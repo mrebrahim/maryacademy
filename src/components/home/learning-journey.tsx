@@ -3,34 +3,34 @@ import { SectionHeading } from '@/components/ui/section-heading'
 /**
  * "How it works".
  *
- * Typographic rather than iconographic: four oversized numerals carry the
- * sequence. The previous version — an icon in a circle, a badge, a caption,
- * repeated four times across an even grid — is the single most template-like
- * shape on the web, and it was doing no work an ordinal doesn't do better.
+ * Step titles are verbal nouns — إنشاء، تأكيد، مشاهدة، استلام — rather than
+ * imperatives, so they read the same to a man and a woman. Arabic
+ * imperatives are gendered and the first pass was feminine throughout.
  *
- * The steps are also staggered vertically so the row reads as a path instead
- * of a set of matching tiles.
+ * Typographic rather than iconographic: four oversized numerals carry the
+ * sequence, staggered so the row reads as a descending path instead of four
+ * matching tiles.
  */
 const STEPS = [
   {
     n: '01',
-    titleAr: 'اعملي حساب',
-    bodyAr: 'دقيقة واحدة — اسمك وإيميلك ورقمك.',
+    titleAr: 'إنشاء حساب',
+    bodyAr: 'دقيقة واحدة: الاسم، البريد الإلكتروني، ورقم الهاتف.',
   },
   {
     n: '02',
-    titleAr: 'احجزي مكانك',
-    bodyAr: 'حوّلي قيمة الكورس على إنستا باي، ويتفعّل حسابك.',
+    titleAr: 'تأكيد الحجز',
+    bodyAr: 'تحويل قيمة الدورة عبر إنستا باي، ويُفعَّل الحساب مباشرة.',
   },
   {
     n: '03',
-    titleAr: 'اتفرجي واتدربي',
-    bodyAr: 'دروس بالترتيب، بتتفرجي في وقتك وبترجعي لأي درس وقت ما تحبي.',
+    titleAr: 'المشاهدة والتطبيق',
+    bodyAr: 'دروس مرتّبة تُشاهَد في أي وقت، مع إمكانية الرجوع لأي درس.',
   },
   {
     n: '04',
-    titleAr: 'استلمي شهادتك',
-    bodyAr: 'بعد آخر درس، الشهادة بتتولد باسمك برقم يتحقق منه.',
+    titleAr: 'استلام الشهادة',
+    bodyAr: 'بعد إتمام الدروس تصدر شهادة باسمك، برقم يمكن التحقق منه.',
   },
 ] as const
 
@@ -44,14 +44,14 @@ export function LearningJourney() {
             kicker="الطريقة"
             title={
               <>
-                إزاي بتذاكري
+                كيف تسير
                 <br />
-                معانا؟
+                رحلة التعلّم؟
               </>
             }
           />
           <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
-            من غير مواعيد، ولا مواصلات، ولا حد يستناكي. إنتي اللي بتحددي إمتى وقد إيه.
+            بلا مواعيد ثابتة، وبلا التزام بمكان. أنت من يحدد الوقت والوتيرة.
           </p>
         </div>
 
@@ -61,18 +61,14 @@ export function LearningJourney() {
               key={step.n}
               // Each step sits a little lower than the last, so the row reads
               // as a descending path rather than four matching tiles.
-              className={
-                ['', 'lg:translate-y-6', 'lg:translate-y-12', 'lg:translate-y-18'][index]
-              }
+              className={['', 'lg:translate-y-6', 'lg:translate-y-12', 'lg:translate-y-18'][index]}
             >
               <p className="tabular font-display text-5xl leading-none text-gold-500/35 sm:text-6xl">
                 {step.n}
               </p>
               <div className="mt-5 border-t border-navy-900/12 pt-5">
                 <h3 className="text-xl text-navy-900">{step.titleAr}</h3>
-                <p className="mt-2.5 max-w-[22ch] text-sm leading-loose text-muted">
-                  {step.bodyAr}
-                </p>
+                <p className="mt-2.5 max-w-[24ch] text-sm leading-loose text-muted">{step.bodyAr}</p>
               </div>
             </li>
           ))}

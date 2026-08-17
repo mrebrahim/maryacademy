@@ -5,12 +5,12 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 
 const schema = z.object({
-  name: z.string().trim().min(2, 'اكتبي اسمك').max(120),
-  email: z.email('اكتبي إيميل صحيح'),
+  name: z.string().trim().min(2, 'يرجى إدخال الاسم').max(120),
+  email: z.email('يرجى إدخال بريد إلكتروني صحيح'),
   phone: z
     .string()
     .trim()
-    .regex(/^01[0-25]\d{8}$/, 'اكتبي رقم موبايل مصري صحيح (11 رقم)')
+    .regex(/^01[0-25]\d{8}$/, 'يرجى إدخال رقم هاتف مصري صحيح (11 رقمًا)')
     .optional()
     .or(z.literal('')),
   message: z.string().trim().max(1000).optional(),
@@ -30,7 +30,7 @@ async function insertLead(
   })
 
   if (!parsed.success) {
-    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجعي البيانات' }
+    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'يرجى مراجعة البيانات' }
   }
 
   const { name, email, phone, message } = parsed.data
@@ -47,10 +47,10 @@ async function insertLead(
     })
 
     if (error) throw error
-    return { ok: true, messageAr: 'وصلنا! هنتواصل معاكي في أقرب وقت.' }
+    return { ok: true, messageAr: 'تم استلام رسالتك. سنتواصل معك في أقرب وقت.' }
   } catch (error) {
     console.error(`[insertLead:${source}]`, error)
-    return { ok: false, messageAr: 'حصلت مشكلة، جربي تاني بعد شوية.' }
+    return { ok: false, messageAr: 'تعذّر إتمام العملية، يرجى المحاولة بعد قليل.' }
   }
 }
 

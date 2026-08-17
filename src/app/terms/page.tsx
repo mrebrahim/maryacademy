@@ -22,8 +22,8 @@ export default function TermsPage() {
           <div className="rounded-card border border-gold-500/40 bg-cream-50 p-6">
             <p className="font-semibold text-navy-900">⚠️ النص القانوني لسه مش جاهز</p>
             <p className="mt-3 text-sm leading-loose text-ink/80">
-              الصفحة دي محتاجة نص من صاحب الأكاديمية قبل إطلاق الموقع. لحد ما ده يحصل، لو عندك أي
-              استفسار عن شروط الاشتراك، تواصلي معانا مباشرة.
+              هذه الصفحة بانتظار النص القانوني من إدارة الأكاديمية قبل إطلاق الموقع. حتى ذلك الحين، لأي
+              استفسار عن شروط الاشتراك يرجى التواصل معنا مباشرة.
             </p>
           </div>
         </div>

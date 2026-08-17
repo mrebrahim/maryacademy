@@ -10,7 +10,7 @@ import './globals.css'
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: `${siteConfig.nameAr} — ${siteConfig.taglineAr}`,
+    default: `${siteConfig.nameEn} | ${siteConfig.nameAr}`,
     template: `%s | ${siteConfig.nameAr}`,
   },
   description: siteConfig.descriptionAr,
