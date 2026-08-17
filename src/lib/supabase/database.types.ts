@@ -17,6 +17,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_allowlist: {
+        Row: {
+          created_at: string
+          email: string
+          note: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          note?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          note?: string | null
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
