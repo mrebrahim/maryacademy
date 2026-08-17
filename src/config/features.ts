@@ -8,8 +8,8 @@
  * only moves to checkout when the payment flow is actually live.
  */
 
-/** Flip when /checkout is built and InstaPay settlement is wired. */
-export const CHECKOUT_ENABLED = false
+/** Checkout is live: InstaPay transfer, then admin confirmation. */
+export const CHECKOUT_ENABLED = true
 
 /** Flip when the enrolled area and the video player are ready. */
 export const LEARN_ENABLED = false

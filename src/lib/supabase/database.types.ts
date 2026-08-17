@@ -626,9 +626,15 @@ export type Database = {
       }
     }
     Functions: {
+      confirm_order: { Args: { p_order_id: string }; Returns: undefined }
+      create_pending_order: {
+        Args: { p_course_id: string; p_coupon_code?: string; p_reference?: string }
+        Returns: string
+      }
       generate_certificate_serial: { Args: never; Returns: string }
       has_course_access: { Args: { p_course_id: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
+      reject_order: { Args: { p_order_id: string; p_reason?: string }; Returns: undefined }
       validate_coupon: { Args: { p_code: string; p_course_id: string }; Returns: Json }
     }
     Enums: {
