@@ -5,6 +5,7 @@ import { useFormStatus } from 'react-dom'
 
 import { requestOtp, verifyOtp, type OtpState } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
+import { OTP_LENGTH } from '@/config/auth'
 import { latinAwareDir } from '@/lib/rtl'
 
 const field =
@@ -61,7 +62,7 @@ export function RequestOtpForm({ next }: { next?: string }) {
       <FormError state={state} />
 
       <p className="text-center text-xs leading-relaxed text-cream-50/50">
-        هيوصلك كود من 6 أرقام على بريدك. مفيش كلمة سر تحفظها.
+        هيوصلك كود من {OTP_LENGTH} أرقام على بريدك. مفيش كلمة سر تحفظها.
       </p>
     </form>
   )
@@ -84,10 +85,10 @@ export function VerifyOtpForm({ email, next }: { email: string; next?: string })
           name="token"
           inputMode="numeric"
           autoComplete="one-time-code"
-          maxLength={6}
+          maxLength={OTP_LENGTH}
           required
           dir="ltr"
-          placeholder="000000"
+          placeholder={'0'.repeat(OTP_LENGTH)}
           className={`${field} text-center font-display text-2xl tracking-[0.5em]`}
         />
       </div>

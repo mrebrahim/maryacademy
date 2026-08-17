@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { redirect } from 'next/navigation'
 
 import { VerifyOtpForm } from '@/components/auth/otp-form'
+import { OTP_LENGTH } from '@/config/auth'
 
 export const metadata: Metadata = {
   title: 'تأكيد الدخول',
@@ -24,7 +25,7 @@ export default async function VerifyPage({
     <>
       <h1 className="display text-center text-2xl text-white">اكتب الكود</h1>
       <p className="mt-3 text-center text-sm leading-relaxed text-cream-50/65">
-        بعتنا كود من 6 أرقام على
+        بعتنا كود من {OTP_LENGTH} أرقام على
         <br />
         <span dir="ltr" className="text-gold-300">
           {email}

@@ -4,12 +4,13 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import { OTP_LENGTH } from '@/config/auth'
 import { createClient } from '@/lib/supabase/server'
 
 /**
  * Email OTP sign-in — one flow for students, trainers and admins.
  *
- * A six-digit code rather than a magic link: links break when the mail app
+ * A typed code rather than a magic link: links break when the mail app
  * opens them in its own in-app browser, which loses the session and is a
  * common support complaint on Android. A code can be typed into the tab the
  * person already has open.
@@ -70,7 +71,7 @@ const verifySchema = z.object({
   token: z
     .string()
     .trim()
-    .regex(/^\d{6}$/, 'الكود مكوّن من 6 أرقام'),
+    .regex(new RegExp(`^\\d{${OTP_LENGTH}}$`), `الكود مكوّن من ${OTP_LENGTH} أرقام`),
   next: z.string().optional(),
 })
 
