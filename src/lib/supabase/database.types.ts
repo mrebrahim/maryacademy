@@ -133,6 +133,7 @@ export type Database = {
           id: string
           lesson_count: number
           level: Database['public']['Enums']['course_level']
+          pain_points: Json
           price_egp: number
           price_usd: number | null
           promo_video_id: string | null
@@ -161,6 +162,7 @@ export type Database = {
           id?: string
           lesson_count?: number
           level?: Database['public']['Enums']['course_level']
+          pain_points?: Json
           price_egp?: number
           price_usd?: number | null
           promo_video_id?: string | null
@@ -189,6 +191,7 @@ export type Database = {
           id?: string
           lesson_count?: number
           level?: Database['public']['Enums']['course_level']
+          pain_points?: Json
           price_egp?: number
           price_usd?: number | null
           promo_video_id?: string | null

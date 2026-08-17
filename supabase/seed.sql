@@ -29,7 +29,7 @@ insert into public.courses (
   title_ar, slug, subtitle_ar, description_ar, category_id, level,
   price_egp, compare_at_price_egp, status, published_at,
   certificate_enabled, sequential_unlock,
-  what_you_learn, requirements, target_audience, faq,
+  what_you_learn, requirements, target_audience, pain_points, faq,
   seo_title, seo_description
 )
 select
@@ -58,6 +58,13 @@ select
     "العاملون في الكوافير الراغبون في إتقان الفينش ورفع أسعارهم",
     "مصممو الطرح الراغبون في إضافة تسريحات الشعر لخدماتهم",
     "كل من تابع فيديوهات متفرقة لشهور دون الوصول إلى تنفيذ لوك كامل"]'::jsonb,
+  -- Sales-page pain block. Specific to this course: the template renders
+  -- whatever the course carries, so a makeup course gets its own.
+  '["تتابع فيديوهات متفرقة منذ شهور، ولا تستطيع حتى الآن تنفيذ لوك كامل.",
+    "تنفّذ التسريحة فتبدو جيدة، ثم تسقط بعد ساعتين.",
+    "التحقت بدورة سابقة وشعرت أن نصف المعلومات لم يُقَل.",
+    "أنهيت دورة، ثم لم تجد من يرد عليك حين واجهتك مشكلة.",
+    "تعمل بالفعل، لكن لا تستطيع رفع سعرك لأن الفينش لا يقنعك."]'::jsonb,
   -- Refund terms and access duration are deliberately absent: the client
   -- asked for neither topic to appear anywhere on the site.
   '[{"q": "هل أحصل على شهادة؟",

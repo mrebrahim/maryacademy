@@ -56,6 +56,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
   const whatYouLearn = asStrings(course.what_you_learn)
   const requirements = asStrings(course.requirements)
   const targetAudience = asStrings(course.target_audience)
+  const painPoints = asStrings(course.pain_points)
   const faq = asFaq(course.faq)
 
   // The price is not set yet, so the page asks the visitor to get in touch
@@ -215,29 +216,32 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
         </div>
       </section>
 
-      {/* ---------- Pain points ---------- */}
-      <section className="bg-ivory">
-        <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
-          <SectionHeading kicker="المشكلة" title="إذا كان هذا يحدث معك، فأنت في المكان الصحيح" align="center" />
-          <ul className="mt-10 space-y-4 text-start">
-            {[
-              'تتابع فيديوهات يوتيوب منذ شهور، ولا تستطيع حتى الآن تنفيذ لوك كامل.',
-              'تنفّذ التسريحة فتبدو جيدة، ثم تسقط بعد ساعتين.',
-              'التحقت بدورة سابقة وشعرت أن نصف المعلومات لم يُقَل.',
-              'أنهيت دورة، ثم لم تجد من يرد عليك حين واجهتك مشكلة.',
-              'تعمل بالفعل، لكن لا تستطيع رفع سعرك لأن الفينش لا يقنعك.',
-            ].map((pain) => (
-              <li
-                key={pain}
-                className="flex items-start gap-3 rounded-card bg-white p-4 shadow-soft ring-1 ring-navy-900/5"
-              >
-                <span className="mt-1 size-2 shrink-0 rotate-45 bg-gold-500" aria-hidden="true" />
-                <span className="text-sm leading-loose text-ink/85">{pain}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      {/* ---------- Pain points ----------
+          Content comes from the course record, not this template: the
+          academy is adding trainers in other beauty fields, and hardcoded
+          hairstyling copy would follow them onto every new sales page. */}
+      {painPoints.length > 0 && (
+        <section className="bg-ivory">
+          <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+            <SectionHeading
+              kicker="المشكلة"
+              title="إذا كان هذا يحدث معك، فأنت في المكان الصحيح"
+              align="center"
+            />
+            <ul className="mt-10 space-y-4 text-start">
+              {painPoints.map((pain) => (
+                <li
+                  key={pain}
+                  className="flex items-start gap-3 rounded-card bg-white p-4 shadow-soft ring-1 ring-navy-900/5"
+                >
+                  <span className="mt-1 size-2 shrink-0 rotate-45 bg-gold-500" aria-hidden="true" />
+                  <span className="text-sm leading-loose text-ink/85">{pain}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
 
       {/* ---------- Curriculum ---------- */}
       <section className="bg-white">
