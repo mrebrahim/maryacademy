@@ -6,6 +6,7 @@ import { notFound } from 'next/navigation'
 import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { CHECKOUT_ENABLED } from '@/config/features'
 import { siteConfig, whatsappLink } from '@/config/site'
 import { getCourseBySlug, getPublishedCourseSlugs, getTestimonials } from '@/lib/queries'
 import { formatDuration, formatPrice } from '@/lib/utils'
@@ -63,6 +64,9 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
   // rather than displaying a placeholder number. PRD §6.1: never show or
   // trust a price that did not come from the database.
   const hasPrice = course.price_egp > 0
+  // The price shows as soon as it is set; the button only moves to checkout
+  // once the payment flow exists, so it never points at a missing route.
+  const canCheckout = hasPrice && CHECKOUT_ENABLED
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -187,8 +191,14 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
               </p>
             )}
 
+            {hasPrice && !CHECKOUT_ENABLED && (
+              <p className="mt-3 text-xs text-cream-50/60">
+                الحجز حاليًا عبر واتساب — الدفع الإلكتروني قيد التجهيز.
+              </p>
+            )}
+
             <div className="mt-6 space-y-3">
-              {hasPrice ? (
+              {canCheckout ? (
                 <Button asChild size="lg" className="w-full">
                   <Link href={`/checkout/${course.slug}`}>احجز مقعدك الآن</Link>
                 </Button>
@@ -394,7 +404,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
           )}
 
           <Button asChild size="md" className="flex-1">
-            {hasPrice ? (
+            {canCheckout ? (
               <Link href={`/checkout/${course.slug}`}>احجز الآن</Link>
             ) : (
               <a

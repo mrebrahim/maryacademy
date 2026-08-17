@@ -1,6 +1,7 @@
 import 'server-only'
 
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 import { env } from '@/lib/env'
@@ -35,4 +36,22 @@ export async function createClient() {
       },
     },
   )
+}
+
+/**
+ * Cookie-free anon client for public content.
+ *
+ * `createClient()` above reads cookies, which opts a page out of static
+ * rendering — every homepage request becomes SSR. Marketing pages show the
+ * same published content to everyone, so they have no reason to look at a
+ * session. This client lets them stay static/ISR, which is what PRD §10
+ * asks for.
+ *
+ * RLS still applies: this is the anon role, so it sees exactly what a
+ * logged-out visitor sees.
+ */
+export function createAnonClient() {
+  return createSupabaseClient<Database>(env.supabaseUrl, env.supabaseAnonKey, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  })
 }

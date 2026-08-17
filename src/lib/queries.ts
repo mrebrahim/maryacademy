@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { createClient } from '@/lib/supabase/server'
+import { createAnonClient } from '@/lib/supabase/server'
 import type { Tables } from '@/lib/supabase/database.types'
 
 export type Course = Pick<
@@ -35,7 +35,7 @@ function degrade<T>(where: string, error: unknown, fallback: T): T {
 
 export async function getPublishedCourses(): Promise<Course[]> {
   try {
-    const supabase = await createClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('courses')
       .select(
@@ -53,7 +53,7 @@ export async function getPublishedCourses(): Promise<Course[]> {
 
 export async function getCategories(): Promise<Category[]> {
   try {
-    const supabase = await createClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('categories')
       .select('id, name_ar, slug, icon, sort_order')
@@ -74,7 +74,7 @@ export async function getCategories(): Promise<Category[]> {
  */
 export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
   try {
-    const supabase = await createClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('testimonials')
       .select('id, name, role_ar, body_ar, rating, avatar_url, source')
@@ -107,7 +107,7 @@ export type CourseDetail = Tables<'courses'> & { modules: CourseModule[] }
  */
 export async function getCourseBySlug(slug: string): Promise<CourseDetail | null> {
   try {
-    const supabase = await createClient()
+    const supabase = createAnonClient()
 
     const { data: course, error } = await supabase
       .from('courses')
@@ -154,7 +154,7 @@ export type Post = Pick<Tables<'posts'>, 'id' | 'title_ar' | 'slug' | 'excerpt_a
 
 export async function getPublishedPosts(): Promise<Post[]> {
   try {
-    const supabase = await createClient()
+    const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('posts')
       .select('id, title_ar, slug, excerpt_ar, published_at')

@@ -1,8 +1,9 @@
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
-import type { CourseDetail } from '@/lib/queries'
+import { CHECKOUT_ENABLED } from '@/config/features'
 import { whatsappLink } from '@/config/site'
+import type { CourseDetail } from '@/lib/queries'
 import { cn, formatPrice } from '@/lib/utils'
 
 /**
@@ -24,11 +25,19 @@ export function LandingCta({
   compact?: boolean
 }) {
   const hasPrice = course.price_egp > 0
+  // Price and payment are separate switches: show the price the moment it
+  // exists, but keep the button on WhatsApp until checkout is real.
+  const canCheckout = hasPrice && CHECKOUT_ENABLED
 
-  if (!hasPrice) {
+  if (!canCheckout) {
     return (
-      <div className={cn(!compact && 'inline-flex flex-col items-center')}>
-        <Button asChild size="lg" className={cn(compact ? 'w-full' : 'px-10')}>
+      <div className={cn(compact ? 'flex items-center gap-3' : 'inline-flex flex-col items-center')}>
+        {compact && hasPrice && (
+          <span className="tabular font-display text-xl text-gold-500">
+            {formatPrice(course.price_egp)}
+          </span>
+        )}
+        <Button asChild size="lg" className={cn(compact ? 'flex-1' : 'px-10')}>
           <a
             href={whatsappLink(`السلام عليكم، عايز أحجز في ${course.title_ar}`)}
             target="_blank"
@@ -38,7 +47,22 @@ export function LandingCta({
           </a>
         </Button>
         {!compact && (
-          <span className="mt-3 text-xs text-cream-50/55">الحجز والاستفسار عن السعر على واتساب</span>
+          <span className="mt-3 flex items-baseline gap-2 text-sm text-cream-50/70">
+            {hasPrice ? (
+              <>
+                <span className="tabular font-display text-lg text-gold-500">
+                  {formatPrice(course.price_egp)}
+                </span>
+                {course.compare_at_price_egp ? (
+                  <span className="tabular text-cream-50/45 line-through">
+                    {formatPrice(course.compare_at_price_egp)}
+                  </span>
+                ) : null}
+              </>
+            ) : (
+              <span className="text-xs text-cream-50/55">الحجز والاستفسار عن السعر على واتساب</span>
+            )}
+          </span>
         )}
       </div>
     )
