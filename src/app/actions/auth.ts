@@ -1,5 +1,6 @@
 'use server'
 
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
@@ -31,6 +32,12 @@ export async function requestOtp(_prev: OtpState, formData: FormData): Promise<O
   const email = parsed.data.toLowerCase().trim()
   const fullName = String(formData.get('fullName') ?? '').trim()
 
+  // Taken from the request rather than an env var so preview deployments,
+  // the production domain and localhost each point the link at themselves.
+  const requestHeaders = await headers()
+  const host = requestHeaders.get('host')
+  const proto = host?.startsWith('localhost') ? 'http' : 'https'
+
   try {
     const supabase = await createClient()
     const { error } = await supabase.auth.signInWithOtp({
@@ -39,6 +46,11 @@ export async function requestOtp(_prev: OtpState, formData: FormData): Promise<O
         shouldCreateUser: true,
         // Read by handle_new_user() to fill the profile on first sign-in.
         data: fullName ? { full_name: fullName } : undefined,
+        // Only used if the Supabase email template sends a link rather than
+        // the six-digit code; harmless otherwise. Without it the link falls
+        // back to the project's Site URL, which lands on a page that has no
+        // handler for the code it carries.
+        emailRedirectTo: host ? `${proto}://${host}/auth/callback` : undefined,
       },
     })
 
