@@ -52,7 +52,7 @@ export async function updateSession(request: NextRequest) {
     url.searchParams.set('next', pathname === '/' ? '/learn' : pathname)
     return NextResponse.redirect(url)
   }
-  const isProtected = ['/learn', '/account', '/admin', '/checkout', '/community'].some((p) =>
+  const isProtected = ['/learn', '/account', '/admin', '/checkout'].some((p) =>
     pathname.startsWith(p),
   )
 

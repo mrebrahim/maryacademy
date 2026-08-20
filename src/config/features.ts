@@ -11,9 +11,5 @@
 /** Checkout is live: InstaPay transfer, then admin confirmation. */
 export const CHECKOUT_ENABLED = true
 
-/**
- * The player and progress tracking are live at /watch. Nothing reads this
- * flag any more — the player gates itself per lesson, on enrolment and on
- * the free-preview flag, which is a truer test than a global switch.
- */
-export const LEARN_ENABLED = true
+/** Flip when the enrolled area and the video player are ready. */
+export const LEARN_ENABLED = false

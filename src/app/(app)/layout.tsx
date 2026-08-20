@@ -29,12 +29,6 @@ export default async function AppLayout({ children }: { children: React.ReactNod
           </Link>
 
           <div className="flex items-center gap-4">
-            <Link href="/learn" className="text-sm text-cream-50/70 hover:text-gold-300">
-              دوراتي
-            </Link>
-            <Link href="/community" className="text-sm text-cream-50/70 hover:text-gold-300">
-              المجتمع
-            </Link>
             {profile?.role === 'admin' && (
               <Link href="/admin" className="text-sm text-gold-300 hover:text-gold-500">
                 لوحة التحكم

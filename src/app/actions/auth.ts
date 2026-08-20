@@ -31,6 +31,7 @@ export async function requestOtp(_prev: OtpState, formData: FormData): Promise<O
   }
 
   const email = parsed.data.toLowerCase().trim()
+  const fullName = String(formData.get('fullName') ?? '').trim()
 
   // Taken from the request rather than an env var so preview deployments,
   // the production domain and localhost each point the link at themselves.
@@ -44,6 +45,8 @@ export async function requestOtp(_prev: OtpState, formData: FormData): Promise<O
       email,
       options: {
         shouldCreateUser: true,
+        // Read by handle_new_user() to fill the profile on first sign-in.
+        data: fullName ? { full_name: fullName } : undefined,
         // Only used if the Supabase email template sends a link rather than
         // the six-digit code; harmless otherwise. Without it the link falls
         // back to the project's Site URL, which lands on a page that has no

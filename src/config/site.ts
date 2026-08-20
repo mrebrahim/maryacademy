@@ -27,13 +27,7 @@ export const siteConfig = {
     'أكاديمية تدريب أونلاين في تصفيف الشعر والمكياج والعناية بالبشرة، بخبرة تتجاوز خمس سنوات من التدريب الحضوري.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   locale: 'ar_EG',
-  /**
-   * International format, no plus sign — that is what wa.me expects.
-   * The env var overrides it; the literal is the fallback so the CTAs work
-   * on a deployment where nobody remembered to set the variable. They were
-   * quietly falling back to /contact before this had a value.
-   */
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || '201027555789',
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '',
 } as const
 
 export const whatsappLink = (messageAr = 'السلام عليكم، أرغب في معرفة تفاصيل الدورات') =>
@@ -52,7 +46,6 @@ export const academyStats = [
 export const mainNav = [
   { href: '/', labelAr: 'الرئيسية' },
   { href: '/courses', labelAr: 'الدورات' },
-  { href: '/pricing', labelAr: 'الأسعار' },
   { href: '/about', labelAr: 'عن الأكاديمية' },
   { href: '/testimonials', labelAr: 'آراء المتدربين' },
   { href: '/blog', labelAr: 'المدونة' },
