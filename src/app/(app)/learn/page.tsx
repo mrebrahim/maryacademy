@@ -1,4 +1,4 @@
-import { BookOpen } from 'lucide-react'
+import { ArrowLeft, BookOpen } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -54,9 +54,20 @@ export default async function LearnPage() {
                     style={{ width: `${enrollment.progress_percent}%` }}
                   />
                 </div>
-                <p className="tabular mt-2 text-xs text-muted">
-                  {enrollment.progress_percent}% مكتمل
-                </p>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
+                  <p className="tabular text-xs text-muted">
+                    {enrollment.progress_percent}% مكتمل
+                  </p>
+                  {course?.slug && (
+                    <Button asChild size="sm">
+                      {/* /watch/[slug] resolves to the first unfinished lesson. */}
+                      <Link href={`/watch/${course.slug}`}>
+                        {enrollment.progress_percent > 0 ? 'أكمل الدورة' : 'ابدأ الدورة'}
+                        <ArrowLeft className="size-4" aria-hidden="true" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </li>
             )
           })}

@@ -286,20 +286,48 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
                 </summary>
 
                 <ul className="divide-y divide-navy-900/5">
-                  {module.lessons.map((lesson) => (
-                    <li
-                      key={lesson.id}
-                      className="flex items-center justify-between gap-4 px-5 py-3.5"
-                    >
-                      <span className="flex min-w-0 items-center gap-3">
-                        <PlayCircle className="size-4 shrink-0 text-gold-500" aria-hidden="true" />
-                        <span className="truncate text-sm text-ink/85">{lesson.title_ar}</span>
-                      </span>
-                      <span className="tabular shrink-0 text-xs text-muted">
-                        {formatDuration(lesson.duration_seconds ?? 0)}
-                      </span>
-                    </li>
-                  ))}
+                  {module.lessons.map((lesson) => {
+                    // A preview lesson is a link — the strongest thing this
+                    // page can offer is letting someone watch before paying.
+                    const preview = lesson.is_free_preview && lesson.slug
+
+                    const row = (
+                      <>
+                        <span className="flex min-w-0 items-center gap-3">
+                          <PlayCircle
+                            className={`size-4 shrink-0 ${preview ? 'text-gold-600' : 'text-gold-500'}`}
+                            aria-hidden="true"
+                          />
+                          <span className="truncate text-sm text-ink/85">{lesson.title_ar}</span>
+                          {preview && (
+                            <span className="shrink-0 rounded-full bg-gold-500/15 px-2 py-0.5 text-[11px] font-semibold text-gold-600">
+                              معاينة مجانية
+                            </span>
+                          )}
+                        </span>
+                        <span className="tabular shrink-0 text-xs text-muted">
+                          {formatDuration(lesson.duration_seconds ?? 0)}
+                        </span>
+                      </>
+                    )
+
+                    return (
+                      <li key={lesson.id}>
+                        {preview ? (
+                          <Link
+                            href={`/watch/${course.slug}/${lesson.slug}`}
+                            className="flex items-center justify-between gap-4 px-5 py-3.5 transition hover:bg-gold-500/5"
+                          >
+                            {row}
+                          </Link>
+                        ) : (
+                          <span className="flex items-center justify-between gap-4 px-5 py-3.5">
+                            {row}
+                          </span>
+                        )}
+                      </li>
+                    )
+                  })}
                 </ul>
               </details>
             ))}

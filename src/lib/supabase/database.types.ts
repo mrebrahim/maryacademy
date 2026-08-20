@@ -35,6 +35,99 @@ export type Database = {
         }
         Relationships: []
       }
+      community_groups: {
+        Row: {
+          audience: Database['public']['Enums']['community_audience']
+          created_at: string
+          description_ar: string | null
+          id: string
+          is_active: boolean
+          is_general: boolean
+          name_ar: string
+          slug: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          audience: Database['public']['Enums']['community_audience']
+          created_at?: string
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          is_general?: boolean
+          name_ar: string
+          slug: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: Database['public']['Enums']['community_audience']
+          created_at?: string
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          is_general?: boolean
+          name_ar?: string
+          slug?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_group_courses: {
+        Row: { course_id: string; group_id: string }
+        Insert: { course_id: string; group_id: string }
+        Update: { course_id?: string; group_id?: string }
+        Relationships: []
+      }
+      community_posts: {
+        Row: {
+          author_id: string
+          body_ar: string | null
+          created_at: string
+          group_id: string
+          id: string
+          kind: Database['public']['Enums']['community_post_kind']
+          link_url: string | null
+          moderated_at: string | null
+          moderated_by: string | null
+          moderation_note: string | null
+          status: Database['public']['Enums']['community_post_status']
+          title_ar: string
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          body_ar?: string | null
+          created_at?: string
+          group_id: string
+          id?: string
+          kind: Database['public']['Enums']['community_post_kind']
+          link_url?: string | null
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_note?: string | null
+          status?: Database['public']['Enums']['community_post_status']
+          title_ar: string
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          body_ar?: string | null
+          created_at?: string
+          group_id?: string
+          id?: string
+          kind?: Database['public']['Enums']['community_post_kind']
+          link_url?: string | null
+          moderated_at?: string | null
+          moderated_by?: string | null
+          moderation_note?: string | null
+          status?: Database['public']['Enums']['community_post_status']
+          title_ar?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       audit_log: {
         Row: {
           action: string
@@ -649,13 +742,26 @@ export type Database = {
         Args: { p_course_id: string; p_coupon_code?: string; p_reference?: string }
         Returns: string
       }
+      can_see_group: { Args: { p_group_id: string }; Returns: boolean }
       generate_certificate_serial: { Args: never; Returns: string }
+      get_lesson_video: { Args: { p_lesson_id: string }; Returns: string | null }
       has_course_access: { Args: { p_course_id: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
+      mark_lesson_complete: {
+        Args: { p_lesson_id: string; p_watched_seconds?: number }
+        Returns: undefined
+      }
+      moderate_post: {
+        Args: { p_post_id: string; p_approve: boolean; p_note?: string }
+        Returns: undefined
+      }
       reject_order: { Args: { p_order_id: string; p_reason?: string }; Returns: undefined }
       validate_coupon: { Args: { p_code: string; p_course_id: string }; Returns: Json }
     }
     Enums: {
+      community_audience: 'enrolled' | 'not_enrolled' | 'everyone'
+      community_post_kind: 'question' | 'discussion' | 'resource'
+      community_post_status: 'pending' | 'approved' | 'rejected'
       content_status: 'draft' | 'published' | 'archived'
       coupon_type: 'percent' | 'fixed'
       course_level: 'beginner' | 'intermediate' | 'advanced'
@@ -664,7 +770,7 @@ export type Database = {
       lead_source: 'newsletter' | 'contact_form' | 'course_interest'
       locale_code: 'ar' | 'en'
       order_status: 'pending' | 'paid' | 'failed' | 'refunded'
-      payment_provider: 'paymob' | 'stripe' | 'manual'
+      payment_provider: 'paymob' | 'stripe' | 'manual' | 'instapay'
       permission_status: 'pending' | 'granted' | 'denied'
       testimonial_media: 'text' | 'screenshot' | 'result_photo' | 'certificate'
       testimonial_source: 'in_person_training' | 'online_course'

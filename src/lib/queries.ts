@@ -91,7 +91,14 @@ export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
 
 export type Lesson = Pick<
   Tables<'lessons_public'>,
-  'id' | 'title_ar' | 'slug' | 'description_ar' | 'duration_seconds' | 'sort_order' | 'module_id'
+  | 'id'
+  | 'title_ar'
+  | 'slug'
+  | 'description_ar'
+  | 'duration_seconds'
+  | 'sort_order'
+  | 'module_id'
+  | 'is_free_preview'
 >
 
 export type CourseModule = Pick<Tables<'modules'>, 'id' | 'title_ar' | 'sort_order'> & {
@@ -127,7 +134,9 @@ export async function getCourseBySlug(slug: string): Promise<CourseDetail | null
         .order('sort_order'),
       supabase
         .from('lessons_public')
-        .select('id, title_ar, slug, description_ar, duration_seconds, sort_order, module_id')
+        .select(
+          'id, title_ar, slug, description_ar, duration_seconds, sort_order, module_id, is_free_preview',
+        )
         .eq('course_id', course.id)
         .order('sort_order'),
     ])
