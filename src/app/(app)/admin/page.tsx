@@ -84,6 +84,18 @@ export default async function AdminPage() {
         >
           مراجعة الطلبات
         </Link>
+        <Link
+          href="/admin/community"
+          className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
+        >
+          المجتمع والمراجعة
+        </Link>
+        <Link
+          href="/admin/media"
+          className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
+        >
+          صور الدورات
+        </Link>
       </div>
     </div>
   )
