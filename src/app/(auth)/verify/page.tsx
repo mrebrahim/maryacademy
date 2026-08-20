@@ -36,10 +36,13 @@ export default async function VerifyPage({
         <VerifyOtpForm email={email} next={next} />
       </div>
 
-      <p className="mt-6 text-center text-xs text-cream-50/45">
-        الكود ما وصلش؟{' '}
+      {/* A mistyped address is the common failure here — it is still a valid
+          address, so nothing rejects it and the code simply goes nowhere.
+          The way out has to be visible on this screen, not guessed at. */}
+      <p className="mt-6 text-center text-xs leading-relaxed text-cream-50/45">
+        الكود ما وصلش، أو البريد مكتوب غلط؟{' '}
         <Link href="/login" className="text-gold-300 hover:text-gold-500">
-          اطلب كود جديد
+          ارجع وصحّح البريد
         </Link>
       </p>
     </>

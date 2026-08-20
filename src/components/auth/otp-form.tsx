@@ -32,15 +32,11 @@ function FormError({ state }: { state: OtpState }) {
 export function RequestOtpForm({ next }: { next?: string }) {
   const [state, action] = useActionState<OtpState, FormData>(requestOtp, null)
 
+  // One field only. The name was here to seed the profile, but asking for it
+  // before anyone is signed in adds a step to the shortest path in the
+  // product; it is collected in /account instead, where it can be edited.
   return (
     <form action={action} className="space-y-4">
-      <div>
-        <label htmlFor="fullName" className="mb-1.5 block text-sm text-cream-50/80">
-          الاسم
-        </label>
-        <input id="fullName" name="fullName" maxLength={120} className={field} />
-      </div>
-
       <div>
         <label htmlFor="email" className="mb-1.5 block text-sm text-cream-50/80">
           البريد الإلكتروني
