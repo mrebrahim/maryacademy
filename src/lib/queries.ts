@@ -1,5 +1,6 @@
 import 'server-only'
 
+import { fallbackTestimonials } from '@/config/testimonials-fallback'
 import { createAnonClient } from '@/lib/supabase/server'
 import type { Tables } from '@/lib/supabase/database.types'
 
@@ -72,6 +73,16 @@ export async function getCategories(): Promise<Category[]> {
  * `source` comes back with every row so the UI can label it honestly
  * (PRD §9.2) — do not drop it from the select.
  */
+/**
+ * Published testimonials, newest-ordered by `sort_order`.
+ *
+ * This is the one fetcher that does not degrade to empty. The testimonials
+ * section renders nothing when it has no rows, so an unreachable database
+ * silently stripped the social proof out of the sales pages — the single
+ * most persuasive thing on them — and left the pages looking intentionally
+ * bare. The copy is fixed and already in the repository, so it falls back
+ * to that rather than to nothing. See src/config/testimonials-fallback.ts.
+ */
 export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
   try {
     const supabase = createAnonClient()
@@ -83,9 +94,12 @@ export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
       .limit(limit)
 
     if (error) throw error
-    return data ?? []
+    // An empty result is treated the same as a failed one: either way there
+    // is nothing to show, and the fallback is better than a missing section.
+    if (!data || data.length === 0) return fallbackTestimonials.slice(0, limit)
+    return data
   } catch (error) {
-    return degrade('getTestimonials', error, [])
+    return degrade('getTestimonials', error, fallbackTestimonials.slice(0, limit))
   }
 }
 
