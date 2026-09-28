@@ -34,7 +34,7 @@ function Submit() {
  * which does not exist on the phones most of this audience is browsing on,
  * and it interrupts the people who were still reading.
  */
-export function LeadCapture({ courseId }: { courseId: string }) {
+export function LeadCapture({ courseId }: { courseId: string | null }) {
   const [state, action] = useActionState<ContactFormState, FormData>(submitCourseInterest, null)
 
   return (
@@ -55,7 +55,7 @@ export function LeadCapture({ courseId }: { courseId: string }) {
             </p>
           ) : (
             <form action={action} className="mt-7 space-y-3">
-              <input type="hidden" name="courseId" value={courseId} />
+              <input type="hidden" name="courseId" value={courseId ?? ''} />
 
               <label htmlFor="lc-name" className="sr-only">
                 الاسم

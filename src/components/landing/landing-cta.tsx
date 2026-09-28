@@ -14,32 +14,40 @@ import { cn, formatPrice } from '@/lib/utils'
  * WhatsApp — which is where Marie already closes every sale today. The
  * moment `price_egp` is set in the database the same component starts
  * showing the price and pointing at checkout, with no edit here.
+ *
+ * `course` may be null when the database could not be reached. This is a
+ * paid-traffic page, so it still has to sell: it falls back to the WhatsApp
+ * route rather than rendering nothing.
  */
 export function LandingCta({
   course,
   label,
   compact = false,
 }: {
-  course: CourseDetail
+  course: CourseDetail | null
   label: string
   compact?: boolean
 }) {
-  const hasPrice = course.price_egp > 0
+  const hasPrice = (course?.price_egp ?? 0) > 0
   // Price and payment are separate switches: show the price the moment it
   // exists, but keep the button on WhatsApp until checkout is real.
-  const canCheckout = hasPrice && CHECKOUT_ENABLED
+  const canCheckout = Boolean(course) && hasPrice && CHECKOUT_ENABLED
 
   if (!canCheckout) {
     return (
       <div className={cn(compact ? 'flex items-center gap-3' : 'inline-flex flex-col items-center')}>
         {compact && hasPrice && (
           <span className="tabular font-display text-xl text-gold-500">
-            {formatPrice(course.price_egp)}
+            {formatPrice(course!.price_egp)}
           </span>
         )}
         <Button asChild size="lg" className={cn(compact ? 'flex-1' : 'px-10')}>
           <a
-            href={whatsappLink(`السلام عليكم، عايز أحجز في ${course.title_ar}`)}
+            href={whatsappLink(
+              course
+                ? `السلام عليكم، عايز أحجز في ${course.title_ar}`
+                : 'السلام عليكم، عايز أحجز في كورس تصفيف الشعر',
+            )}
             target="_blank"
             rel="noopener noreferrer"
           >
@@ -51,11 +59,11 @@ export function LandingCta({
             {hasPrice ? (
               <>
                 <span className="tabular font-display text-lg text-gold-500">
-                  {formatPrice(course.price_egp)}
+                  {formatPrice(course!.price_egp)}
                 </span>
-                {course.compare_at_price_egp ? (
+                {course!.compare_at_price_egp ? (
                   <span className="tabular text-cream-50/45 line-through">
-                    {formatPrice(course.compare_at_price_egp)}
+                    {formatPrice(course!.compare_at_price_egp)}
                   </span>
                 ) : null}
               </>
@@ -68,26 +76,29 @@ export function LandingCta({
     )
   }
 
+  // canCheckout implies a course; narrowed here so the JSX below stays clean.
+  const priced = course!
+
   return (
     <div className={cn(compact ? 'flex items-center gap-3' : 'inline-flex flex-col items-center')}>
       {compact && (
         <span className="tabular font-display text-xl text-gold-500">
-          {formatPrice(course.price_egp)}
+          {formatPrice(priced.price_egp)}
         </span>
       )}
 
       <Button asChild size="lg" className={cn(compact ? 'flex-1' : 'px-10')}>
-        <Link href={`/checkout/${course.slug}`}>{label}</Link>
+        <Link href={`/checkout/${priced.slug}`}>{label}</Link>
       </Button>
 
       {!compact && (
         <span className="mt-3 flex items-baseline gap-2 text-sm text-cream-50/70">
           <span className="tabular font-display text-lg text-gold-500">
-            {formatPrice(course.price_egp)}
+            {formatPrice(priced.price_egp)}
           </span>
-          {course.compare_at_price_egp ? (
+          {priced.compare_at_price_egp ? (
             <span className="tabular text-cream-50/45 line-through">
-              {formatPrice(course.compare_at_price_egp)}
+              {formatPrice(priced.compare_at_price_egp)}
             </span>
           ) : null}
         </span>
