@@ -9,9 +9,11 @@ export async function middleware(request: NextRequest) {
 export const config = {
   matcher: [
     /*
-     * Everything except static assets and image files. Auth cookies need
-     * refreshing on page requests, not on every icon fetch.
+     * Everything except static assets, image files and the crawler files.
+     * Auth cookies need refreshing on page requests, not on every icon
+     * fetch — and middleware runs on the critical path, so anything
+     * excluded here is one less thing that can slow a request down.
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif)$).*)',
+    '/((?!_next/static|_next/image|favicon.ico|robots.txt|sitemap.xml|.*\\.(?:svg|png|jpg|jpeg|gif|webp|avif|ico|woff|woff2|ttf)$).*)',
   ],
 }
