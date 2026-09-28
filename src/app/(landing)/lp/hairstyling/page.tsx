@@ -7,16 +7,20 @@ import {
   PlayCircle,
 } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
+import { LandingClient } from "@/components/landing/landing-client";
 import { LandingCta } from "@/components/landing/landing-cta";
 import { LeadCapture } from "@/components/landing/lead-capture";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { SectionHeading } from "@/components/ui/section-heading";
+import { brandAssets, HAS_HERO_IMAGE } from "@/config/assets";
+import { includedItems } from "@/config/checkout";
 import { landingCopy } from "@/config/landing/hairstyling";
-import { whatsappLink } from "@/config/site";
+import { academyStats, whatsappLink } from "@/config/site";
 import { getCourseBySlug, getTestimonials } from "@/lib/queries";
-import { formatDuration } from "@/lib/utils";
+import { formatDuration, formatPrice } from "@/lib/utils";
 
 const COURSE_SLUG = "hairstyling-master-class";
 
@@ -41,7 +45,7 @@ export default async function HairstylingLandingPage() {
   return (
     <>
       {/* ---------- Hero + VSL ---------- */}
-      <section className="grain relative overflow-hidden bg-navy-950">
+      <section id="lp-hero" className="grain relative overflow-hidden bg-navy-950">
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(90%_70%_at_50%_0%,rgba(201,162,75,0.2),transparent_60%)]"
           aria-hidden="true"
@@ -62,9 +66,14 @@ export default async function HairstylingLandingPage() {
           </p>
 
           {/* The video is the page. Everything below it exists to be read
-              only by people the video did not already convince. */}
-          <div className="mt-9 overflow-hidden rounded-card ring-1 ring-gold-500/25">
-            {c.vslVideoId ? (
+              only by people the video did not already convince.
+
+              With no video and no photo the block is omitted entirely
+              rather than showing an empty frame: a visible "video goes
+              here" box on a live ad destination reads as an unfinished
+              site, which costs more than the missing video does. */}
+          {c.vslVideoId ? (
+            <div className="mt-9 overflow-hidden rounded-card ring-1 ring-gold-500/25">
               <div className="aspect-video">
                 <iframe
                   src={`https://iframe.mediadelivery.net/embed/${process.env.NEXT_PUBLIC_BUNNY_LIBRARY_ID}/${c.vslVideoId}?autoplay=false`}
@@ -75,18 +84,27 @@ export default async function HairstylingLandingPage() {
                   className="size-full"
                 />
               </div>
-            ) : (
-              <div className="grid aspect-video place-items-center bg-navy-900">
-                <div className="text-center text-cream-50/40">
-                  <PlayCircle className="mx-auto size-14" aria-hidden="true" />
-                  <p className="mt-3 text-sm">مكان فيديو الشرح</p>
-                </div>
-              </div>
-            )}
-          </div>
+            </div>
+          ) : HAS_HERO_IMAGE ? (
+            <div className="mt-9 overflow-hidden rounded-card ring-1 ring-gold-500/25">
+              <Image
+                src={brandAssets.hero}
+                alt=""
+                width={1280}
+                height={720}
+                priority
+                sizes="(min-width: 768px) 48rem, 100vw"
+                className="aspect-video w-full object-cover"
+              />
+            </div>
+          ) : null}
 
           <div className="mt-8">
-            <LandingCta course={course} label={c.hero.cta} />
+            <LandingCta
+              priceEgp={course?.price_egp ?? null}
+              compareAtEgp={course?.compare_at_price_egp ?? null}
+              location="hero"
+            />
           </div>
 
           <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-cream-50/70">
@@ -113,6 +131,33 @@ export default async function HairstylingLandingPage() {
               شهادة إتمام
             </li>
           </ul>
+        </div>
+      </section>
+
+      {/* ---------- Proof strip ----------
+          Three numbers from the in-person training, with the line that
+          says so. The disclaimer is the reason the numbers are usable at
+          all: the academy has no online students yet, and a strip that
+          implied otherwise would be the one false claim on the page. */}
+      <section className="border-b border-navy-900/8 bg-ivory">
+        <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 sm:py-10">
+          <ul className="grid grid-cols-3 gap-3 text-center sm:gap-6">
+            {academyStats
+              .filter((stat) => stat.value)
+              .map((stat) => (
+                <li key={stat.labelAr}>
+                  <p className="tabular font-display text-2xl leading-none text-gold-600 sm:text-3xl">
+                    {stat.value}
+                  </p>
+                  <p className="mt-1.5 text-xs leading-snug text-muted sm:text-sm">
+                    {stat.labelAr}
+                  </p>
+                </li>
+              ))}
+          </ul>
+          <p className="mt-5 text-center text-xs leading-relaxed text-muted">
+            الأرقام دي من التدريب الحضوري — والكورس ده هو نفس المنهج أونلاين.
+          </p>
         </div>
       </section>
 
@@ -185,7 +230,11 @@ export default async function HairstylingLandingPage() {
             ))}
           </ul>
           <div className="mt-12 flex justify-center">
-            <LandingCta course={course} label={c.hero.cta} />
+            <LandingCta
+              priceEgp={course?.price_egp ?? null}
+              compareAtEgp={course?.compare_at_price_egp ?? null}
+              location="mid"
+            />
           </div>
         </div>
       </section>
@@ -308,7 +357,11 @@ export default async function HairstylingLandingPage() {
         </div>
       </section>
 
-      <TestimonialsSection testimonials={testimonials} />
+      <TestimonialsSection
+        testimonials={testimonials}
+        headingAr="الناس قالت إيه"
+        introAr="كل اللي تحت ده رسايل بعتها متدربين حضروا بنفسهم. مفيش ولا تقييم مدفوع ولا مكتوب."
+      />
 
       {/* ---------- Objections ---------- */}
       <section className="bg-ivory">
@@ -381,6 +434,64 @@ export default async function HairstylingLandingPage() {
 
       <LeadCapture courseId={course?.id ?? null} />
 
+      {/* ---------- Pricing ----------
+          What is listed here is read from the course row, so the page
+          cannot promise more lessons than the catalogue holds. Nothing is
+          listed that the academy does not actually ship: no refund window,
+          no access period, no extras — each one confirmed excluded. */}
+      {course && course.price_egp > 0 && (
+        <section id="pricing" className="bg-ivory">
+          <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20">
+            <SectionHeading kicker="الاشتراك" title="الكورس كامل بسعر واحد" align="center" />
+
+            <div className="mt-12 rounded-card bg-white p-6 shadow-soft ring-1 ring-gold-500/25 sm:p-9">
+              {course.compare_at_price_egp &&
+              course.compare_at_price_egp > course.price_egp ? (
+                <div className="flex items-baseline justify-between gap-3 border-b border-navy-900/10 pb-4">
+                  <span className="text-sm text-muted">التدريب الحضوري</span>
+                  <span className="tabular text-base text-muted line-through">
+                    {formatPrice(course.compare_at_price_egp)}
+                  </span>
+                </div>
+              ) : null}
+
+              <div className="flex items-baseline justify-between gap-3 pt-4">
+                <span className="font-semibold text-navy-900">أونلاين</span>
+                <span className="tabular font-display text-3xl text-gold-600 sm:text-4xl">
+                  {formatPrice(course.price_egp)}
+                </span>
+              </div>
+
+              {course.compare_at_price_egp &&
+              course.compare_at_price_egp > course.price_egp ? (
+                <p className="tabular mt-2 text-sm font-semibold text-gold-600">
+                  بتوفّر {formatPrice(course.compare_at_price_egp - course.price_egp)} — ونفس
+                  المنهج بالظبط.
+                </p>
+              ) : null}
+
+              <ul className="mt-7 space-y-3 border-t border-navy-900/10 pt-7">
+                {includedItems(course).map((item) => (
+                  <li key={item} className="flex gap-3 text-sm leading-relaxed text-navy-900/85">
+                    <Check className="mt-0.5 size-4 shrink-0 text-gold-600" aria-hidden="true" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              <div id="pricing-cta" className="mt-9 flex justify-center">
+                <LandingCta
+                  priceEgp={course.price_egp}
+                  compareAtEgp={course.compare_at_price_egp}
+                  location="pricing"
+                  tone="light"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* ---------- Close ---------- */}
       <section className="grain relative overflow-hidden bg-navy-950">
         <div
@@ -396,26 +507,35 @@ export default async function HairstylingLandingPage() {
           </p>
 
           <div className="mt-9 flex justify-center">
-            <LandingCta course={course} label={c.finalCta.cta} />
+            <LandingCta
+              priceEgp={course?.price_egp ?? null}
+              compareAtEgp={course?.compare_at_price_egp ?? null}
+              location="final"
+            />
           </div>
 
-          <p className="mt-6">
+          {/* The one WhatsApp route left on the page, and deliberately
+              secondary: it is for a question, not for buying. Every other
+              CTA now goes to checkout. */}
+          <p className="mt-7">
             <a
               href={whatsappLink("السلام عليكم، عندي سؤال عن كورس تصفيف الشعر")}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm text-cream-50/60 underline underline-offset-4 hover:text-gold-300"
+              className="inline-flex items-center rounded-full border border-cream-50/25 px-6 py-2.5 text-sm text-cream-50/75 transition hover:border-gold-500 hover:text-gold-300"
             >
-              {c.finalCta.secondary}
+              لسه عندي سؤال
             </a>
           </p>
         </div>
       </section>
 
-      {/* Sticky mobile bar — the CTA should never be more than a thumb away. */}
-      <div className="sticky bottom-0 z-40 border-t border-gold-500/25 bg-navy-950/95 p-3 backdrop-blur lg:hidden">
-        <LandingCta course={course} label={c.hero.cta} compact />
-      </div>
+      {/* Sticky bar, scroll depth and view_content all live in one client
+          island so the page itself stays a server component. */}
+      <LandingClient
+        priceEgp={course?.price_egp ?? null}
+        compareAtEgp={course?.compare_at_price_egp ?? null}
+      />
 
       <p className="bg-navy-950 pb-6 text-center text-xs text-cream-50/40">
         <Link

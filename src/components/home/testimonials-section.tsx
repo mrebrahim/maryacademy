@@ -103,9 +103,19 @@ export function TestimonialsSection({
    * where cutting the list off would be the whole point of the page missed.
    */
   layout = 'feature',
+  headingAr,
+  introAr,
 }: {
   testimonials: Testimonial[]
   layout?: 'feature' | 'all'
+  /**
+   * The site is written in MSA; the VSL landing page is written in
+   * Egyptian colloquial. Rather than pick one and break the register of
+   * the other, the section takes an override and each page passes the
+   * voice it is written in.
+   */
+  headingAr?: React.ReactNode
+  introAr?: string
 }) {
   const [index, setIndex] = useState(0)
 
@@ -161,16 +171,18 @@ export function TestimonialsSection({
             id="testimonials-heading"
             kicker="آراء المتدربين"
             title={
-              <>
-                ماذا قالوا
-                <br />
-                عن التجربة
-              </>
+              headingAr ?? (
+                <>
+                  ماذا قالوا
+                  <br />
+                  عن التجربة
+                </>
+              )
             }
           />
           <p className="max-w-md text-base leading-loose text-muted lg:pb-3">
-            كل ما يلي مقتبس من رسائل بعثها متدربون حضروا التدريب بأنفسهم. لا تقييمات مدفوعة ولا
-            مكتوبة.
+            {introAr ??
+              'كل ما يلي مقتبس من رسائل بعثها متدربون حضروا التدريب بأنفسهم. لا تقييمات مدفوعة ولا مكتوبة.'}
           </p>
         </div>
 

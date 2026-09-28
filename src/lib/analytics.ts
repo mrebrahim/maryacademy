@@ -57,3 +57,38 @@ export function trackAddPaymentInfo(params: { courseId: string; method: string; 
 export function trackAbandonedLead(params: { courseId: string }) {
   push('checkout_abandoned_lead', params)
 }
+
+// ---------------------------------------------------------------------
+// Landing page
+// ---------------------------------------------------------------------
+
+/** Fired once when the landing page loads. */
+export function trackViewContent(params: { courseSlug: string }) {
+  push('view_content', params)
+  fbq('ViewContent', {})
+}
+
+/**
+ * Scroll depth. The caller is responsible for firing each threshold once —
+ * a scroll listener that re-fires makes the funnel unreadable.
+ */
+export function trackScrollDepth(depth: 50 | 90) {
+  push(`scroll_${depth}`, { depth })
+}
+
+/**
+ * Which CTA is doing the work. `location` is the whole point: three
+ * buttons with the same label tell you nothing about where people decide.
+ */
+export function trackCtaClick(params: { location: string; courseSlug: string }) {
+  push('cta_click', params)
+}
+
+export function trackGenerateLead(params: { courseSlug: string; source: string }) {
+  push('generate_lead', params)
+  fbq('Lead', {})
+}
+
+export function trackWhatsappClick(params: { location: string }) {
+  push('contact_whatsapp', params)
+}

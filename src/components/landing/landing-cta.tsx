@@ -1,107 +1,110 @@
+'use client'
+
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import { CHECKOUT_ENABLED } from '@/config/features'
+import { offer, type CtaLocation } from '@/config/offer'
 import { whatsappLink } from '@/config/site'
-import type { CourseDetail } from '@/lib/queries'
+import { trackCtaClick } from '@/lib/analytics'
 import { cn, formatPrice } from '@/lib/utils'
 
 /**
- * The landing page's single call to action, repeated down the page.
+ * The landing page's call to action, repeated down the page.
  *
- * Price behaviour matches the rest of the site: the online price is not set
- * yet, so rather than invent one or leave a blank, the button routes to
- * WhatsApp — which is where Marie already closes every sale today. The
- * moment `price_egp` is set in the database the same component starts
- * showing the price and pointing at checkout, with no edit here.
+ * Every instance points at checkout, not at WhatsApp. A WhatsApp CTA turns
+ * a convinced visitor into a manual conversation that has to be worked and
+ * usually is not — the page was doing that in three places. One secondary
+ * WhatsApp link survives, at the very end, for people with a real question.
  *
- * `course` may be null when the database could not be reached. This is a
- * paid-traffic page, so it still has to sell: it falls back to the WhatsApp
- * route rather than rendering nothing.
+ * Destination and labels come from src/config/offer.ts; the price comes
+ * from the database via props. Neither is written inline, so all three
+ * buttons cannot drift apart.
+ *
+ * The WhatsApp fallback only applies if checkout is switched off or the
+ * course has no price — never as the default route.
  */
 export function LandingCta({
-  course,
+  priceEgp,
+  compareAtEgp,
+  location,
   label,
   compact = false,
+  tone = 'dark',
 }: {
-  course: CourseDetail | null
-  label: string
+  priceEgp: number | null
+  compareAtEgp?: number | null
+  location: CtaLocation
+  label?: string
   compact?: boolean
+  /** The pricing card sits on white; every other instance is on navy. */
+  tone?: 'dark' | 'light'
 }) {
-  const hasPrice = (course?.price_egp ?? 0) > 0
-  // Price and payment are separate switches: show the price the moment it
-  // exists, but keep the button on WhatsApp until checkout is real.
-  const canCheckout = Boolean(course) && hasPrice && CHECKOUT_ENABLED
+  const hasPrice = (priceEgp ?? 0) > 0
+  const canCheckout = CHECKOUT_ENABLED && hasPrice
+  const text = label ?? offer.ctaLabelAr
 
-  if (!canCheckout) {
-    return (
-      <div className={cn(compact ? 'flex items-center gap-3' : 'inline-flex flex-col items-center')}>
-        {compact && hasPrice && (
-          <span className="tabular font-display text-xl text-gold-500">
-            {formatPrice(course!.price_egp)}
-          </span>
-        )}
-        <Button asChild size="lg" className={cn(compact ? 'flex-1' : 'px-10')}>
-          <a
-            href={whatsappLink(
-              course
-                ? `السلام عليكم، عايز أحجز في ${course.title_ar}`
-                : 'السلام عليكم، عايز أحجز في كورس تصفيف الشعر',
-            )}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {label}
-          </a>
-        </Button>
-        {!compact && (
-          <span className="mt-3 flex items-baseline gap-2 text-sm text-cream-50/70">
-            {hasPrice ? (
-              <>
-                <span className="tabular font-display text-lg text-gold-500">
-                  {formatPrice(course!.price_egp)}
-                </span>
-                {course!.compare_at_price_egp ? (
-                  <span className="tabular text-cream-50/45 line-through">
-                    {formatPrice(course!.compare_at_price_egp)}
-                  </span>
-                ) : null}
-              </>
-            ) : (
-              <span className="text-xs text-cream-50/55">الحجز والاستفسار عن السعر على واتساب</span>
-            )}
-          </span>
-        )}
-      </div>
-    )
+  function onClick() {
+    trackCtaClick({ location, courseSlug: offer.courseSlug })
   }
 
-  // canCheckout implies a course; narrowed here so the JSX below stays clean.
-  const priced = course!
+  const price = hasPrice ? (
+    <span className="flex items-baseline gap-2">
+      <span
+        className={cn(
+          'tabular font-display',
+          tone === 'light' ? 'text-gold-600' : 'text-gold-500',
+          compact ? 'text-xl' : 'text-lg',
+        )}
+      >
+        {formatPrice(priceEgp!)}
+      </span>
+      {compareAtEgp && compareAtEgp > priceEgp! ? (
+        <span
+          className={cn(
+            'tabular text-sm line-through',
+            tone === 'light' ? 'text-muted' : 'text-cream-50/45',
+          )}
+        >
+          {formatPrice(compareAtEgp)}
+        </span>
+      ) : null}
+    </span>
+  ) : null
 
   return (
     <div className={cn(compact ? 'flex items-center gap-3' : 'inline-flex flex-col items-center')}>
-      {compact && (
-        <span className="tabular font-display text-xl text-gold-500">
-          {formatPrice(priced.price_egp)}
-        </span>
-      )}
+      {compact && price}
 
       <Button asChild size="lg" className={cn(compact ? 'flex-1' : 'px-10')}>
-        <Link href={`/checkout/${priced.slug}`}>{label}</Link>
+        {canCheckout ? (
+          <Link href={offer.checkoutHref} onClick={onClick}>
+            {text}
+          </Link>
+        ) : (
+          <a
+            href={whatsappLink(`السلام عليكم، عايز أحجز في ${offer.courseSlug}`)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onClick}
+          >
+            {text}
+          </a>
+        )}
       </Button>
 
       {!compact && (
-        <span className="mt-3 flex items-baseline gap-2 text-sm text-cream-50/70">
-          <span className="tabular font-display text-lg text-gold-500">
-            {formatPrice(priced.price_egp)}
+        <>
+          {price && <span className="mt-3">{price}</span>}
+          <span
+            className={cn(
+              'mt-2 text-center text-xs leading-relaxed',
+              tone === 'light' ? 'text-muted' : 'text-cream-50/55',
+            )}
+          >
+            {canCheckout ? offer.ctaSubLabelAr : 'الحجز والاستفسار عن السعر على واتساب'}
           </span>
-          {priced.compare_at_price_egp ? (
-            <span className="tabular text-cream-50/45 line-through">
-              {formatPrice(priced.compare_at_price_egp)}
-            </span>
-          ) : null}
-        </span>
+        </>
       )}
     </div>
   )

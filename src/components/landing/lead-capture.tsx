@@ -15,13 +15,18 @@ function Submit() {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" size="lg" disabled={pending} className="w-full">
-      {pending ? 'جارٍ الإرسال…' : 'ابعتلي التفاصيل'}
+      {pending ? 'جارٍ الإرسال…' : 'ابعتلي الدرس المجاني'}
     </Button>
   )
 }
 
 /**
  * Second-chance capture for visitors who will not buy today.
+ *
+ * The offer is a real lesson from the course, not "details and dates".
+ * Nobody hands over an email for a brochure; they will for something they
+ * can judge the teaching by. That does mean the academy has to actually
+ * send one — the promise is only as good as the follow-up behind it.
  *
  * Marie's research says an ad run brings her around 400 messages, very few
  * book, and the rest are lost — she has no way to keep their details or
@@ -41,9 +46,9 @@ export function LeadCapture({ courseId }: { courseId: string | null }) {
     <section className="bg-navy-900">
       <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-20">
         <div className="rounded-card border border-gold-500/25 bg-navy-800 p-6 sm:p-9">
-          <h2 className="display text-2xl text-white sm:text-3xl">لسه مش جاهز دلوقتي؟</h2>
+          <h2 className="display text-2xl text-white sm:text-3xl">خد درس من الكورس مجانًا</h2>
           <p className="mt-4 text-base leading-loose text-cream-50/75">
-            سيب بياناتك، وهنبعتلك تفاصيل الكورس كاملة ومواعيد فتح الحجز. من غير أي التزام.
+            سيب بياناتك ونبعتلك درس كامل من الكورس — تشوف طريقة الشرح بنفسك قبل ما تدفع.
           </p>
 
           {state?.ok ? (
