@@ -21,8 +21,16 @@ import { cn, formatPrice } from '@/lib/utils'
  * from the database via props. Neither is written inline, so all three
  * buttons cannot drift apart.
  *
- * The WhatsApp fallback only applies if checkout is switched off or the
- * course has no price — never as the default route.
+ * The button's destination does NOT depend on whether this page managed to
+ * read a price. It used to, and the result was the bug this replaced: when
+ * the database was unreachable the price came back null, the CTA quietly
+ * fell back to WhatsApp, and the page went on selling — to WhatsApp — with
+ * nothing to show that anything had failed.
+ *
+ * Checkout reads the price itself, server-side, at the moment of purchase.
+ * This page showing a price is a nice-to-have; the route to checkout is
+ * not. So the only thing that can send someone to WhatsApp now is checkout
+ * being switched off outright.
  */
 export function LandingCta({
   priceEgp,
@@ -41,7 +49,8 @@ export function LandingCta({
   tone?: 'dark' | 'light'
 }) {
   const hasPrice = (priceEgp ?? 0) > 0
-  const canCheckout = CHECKOUT_ENABLED && hasPrice
+  // Note: not `&& hasPrice`. See the comment above.
+  const canCheckout = CHECKOUT_ENABLED
   const text = label ?? offer.ctaLabelAr
 
   function onClick() {
