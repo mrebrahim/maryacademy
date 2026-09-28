@@ -21,7 +21,7 @@ export type Category = Pick<Tables<'categories'>, 'id' | 'name_ar' | 'slug' | 'i
 
 export type Testimonial = Pick<
   Tables<'testimonials'>,
-  'id' | 'name' | 'role_ar' | 'body_ar' | 'rating' | 'avatar_url' | 'source'
+  'id' | 'name' | 'role_ar' | 'body_ar' | 'rating' | 'avatar_url' | 'source' | 'video_id'
 >
 
 /**
@@ -88,7 +88,7 @@ export async function getTestimonials(limit = 12): Promise<Testimonial[]> {
     const supabase = createAnonClient()
     const { data, error } = await supabase
       .from('testimonials')
-      .select('id, name, role_ar, body_ar, rating, avatar_url, source')
+      .select('id, name, role_ar, body_ar, rating, avatar_url, source, video_id')
       .eq('is_published', true)
       .order('sort_order')
       .limit(limit)

@@ -5,34 +5,25 @@ import Link from 'next/link'
 import { CheckoutShell } from '@/components/checkout/checkout-shell'
 import { Button } from '@/components/ui/button'
 import { whatsappLink } from '@/config/site'
-import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { index: false } }
 
 /**
- * The end of the flow.
+ * The end of the flow — and it must work for someone with no account,
+ * because that is now the normal case: guests pay first and sign in
+ * afterwards to watch.
  *
  * The copy says the transfer is being matched rather than that payment
  * succeeded, because with InstaPay it has not yet: settlement is confirmed
  * by a person. Telling someone "you're in" and then making them wait is how
  * a support queue is built.
  */
-export default async function CheckoutSuccessPage() {
-  const supabase = await createClient()
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
-
-  // The most recent pending order gives the reference number to quote.
-  const { data: order } = await supabase
-    .from('orders')
-    .select('id, created_at')
-    .order('created_at', { ascending: false })
-    .limit(1)
-    .maybeSingle()
-
-  const reference = order?.id.slice(0, 8).toUpperCase()
+export default async function CheckoutSuccessPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ email?: string }>
+}) {
+  const { email } = await searchParams
 
   return (
     <CheckoutShell step={2}>
@@ -41,29 +32,43 @@ export default async function CheckoutSuccessPage() {
 
         <h1 className="display mt-6 text-2xl text-navy-900 sm:text-3xl">وصلنا طلبك</h1>
 
-        {reference && (
-          <p className="mt-3 text-sm text-muted">
-            رقم الطلب: <span dir="ltr" className="tabular font-semibold text-navy-900">{reference}</span>
-          </p>
-        )}
-
         <p className="mt-5 text-base leading-loose text-muted">
-          بنطابق التحويل دلوقتي. أول ما يتأكد، هتلاقي الدورة في صفحة «دوراتي».
+          بنطابق التحويل دلوقتي. أول ما يتأكد، بنفتحلك الدورة على طول.
         </p>
 
-        {user?.email && (
-          <p className="mt-4 text-sm leading-loose text-muted">
-            بعتنالك الإيميل كمان على{' '}
-            <span dir="ltr" className="font-semibold text-navy-900">
-              {user.email}
-            </span>
-            . لو مش لاقيه، بصّ في الـ spam.
+        <div className="mt-7 rounded-card bg-white p-6 text-start shadow-soft ring-1 ring-navy-900/5">
+          <p className="text-sm font-semibold text-navy-900">إزاي تدخل على الدورة؟</p>
+          <ol className="mt-3 space-y-2.5 text-sm leading-relaxed text-muted">
+            <li>
+              <span className="tabular font-semibold text-navy-900">1.</span> ادخل على صفحة تسجيل
+              الدخول واكتب نفس البريد اللي حجزت بيه
+              {email && (
+                <>
+                  {' — '}
+                  <span dir="ltr" className="font-semibold text-navy-900">
+                    {email}
+                  </span>
+                </>
+              )}
+              .
+            </li>
+            <li>
+              <span className="tabular font-semibold text-navy-900">2.</span> هيوصلك كود على
+              البريد، اكتبه وهيتعمل حسابك.
+            </li>
+            <li>
+              <span className="tabular font-semibold text-navy-900">3.</span> الدورة هتكون مضافة
+              لحسابك أوتوماتيك أول ما نأكّد التحويل.
+            </li>
+          </ol>
+          <p className="mt-4 text-xs leading-relaxed text-muted">
+            مش لازم تعمل ده دلوقتي — مكانك محجوز بالبريد ده.
           </p>
-        )}
+        </div>
 
-        <div className="mt-9">
+        <div className="mt-8">
           <Button asChild size="lg" className="w-full sm:w-auto sm:px-10">
-            <Link href="/learn">ادخل على دوراتي</Link>
+            <Link href="/login">اعمل حسابك دلوقتي</Link>
           </Button>
         </div>
 

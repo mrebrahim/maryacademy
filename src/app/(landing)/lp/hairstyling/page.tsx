@@ -12,8 +12,10 @@ import Link from "next/link";
 
 import { LandingClient } from "@/components/landing/landing-client";
 import { LandingCta } from "@/components/landing/landing-cta";
+import { PreviewClips } from "@/components/landing/preview-clips";
 import { LeadCapture } from "@/components/landing/lead-capture";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
+import { VideoTestimonials } from "@/components/home/video-testimonials";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { brandAssets, HAS_HERO_IMAGE } from "@/config/assets";
 import { includedItems } from "@/config/checkout";
@@ -325,6 +327,8 @@ export default async function HairstylingLandingPage() {
         </section>
       )}
 
+      <PreviewClips clips={c.previewClips} />
+
       {/* ---------- Mechanism ---------- */}
       <section className="grain relative bg-navy-950">
         <div className="relative mx-auto max-w-5xl px-4 py-16 sm:px-6 sm:py-20">
@@ -356,6 +360,13 @@ export default async function HairstylingLandingPage() {
           </div>
         </div>
       </section>
+
+      <VideoTestimonials
+        testimonials={testimonials}
+        headingAr="متدربين بيتكلموا"
+        introAr="ناس حضرت التدريب وبتقول رأيها بنفسها."
+        tone="dark"
+      />
 
       <TestimonialsSection
         testimonials={testimonials}

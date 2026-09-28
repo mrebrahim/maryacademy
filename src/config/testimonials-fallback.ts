@@ -39,6 +39,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-2',
@@ -49,6 +50,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-3',
@@ -59,6 +61,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-4',
@@ -69,6 +72,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-5',
@@ -79,6 +83,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-6',
@@ -89,6 +94,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-7',
@@ -99,6 +105,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-8',
@@ -109,6 +116,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-9',
@@ -118,6 +126,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-10',
@@ -128,6 +137,7 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
   {
     id: 'fallback-11',
@@ -137,5 +147,6 @@ export const fallbackTestimonials: Testimonial[] = [
     rating: 5,
     avatar_url: null,
     source: 'in_person_training',
+    video_id: null,
   },
 ]

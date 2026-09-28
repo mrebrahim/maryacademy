@@ -8,8 +8,9 @@ import { Button } from '@/components/ui/button'
 import { includedItems } from '@/config/checkout'
 import { CHECKOUT_ENABLED } from '@/config/features'
 import { whatsappLink } from '@/config/site'
+import { VideoTestimonials } from '@/components/home/video-testimonials'
 import { availableMethods } from '@/lib/payments/provider'
-import { getCourseBySlug } from '@/lib/queries'
+import { getCourseBySlug, getTestimonials } from '@/lib/queries'
 
 export const metadata: Metadata = { title: 'إتمام الحجز', robots: { index: false } }
 
@@ -37,7 +38,7 @@ export default async function CheckoutPage({
   searchParams: SearchParams
 }) {
   const [{ slug }, utm] = await Promise.all([params, await searchParams])
-  const course = await getCourseBySlug(slug)
+  const [course, testimonials] = await Promise.all([getCourseBySlug(slug), getTestimonials(6)])
 
   // A course with no price must never reach a payment screen — but that is
   // a different situation from not having been able to look one up.
@@ -96,6 +97,16 @@ export default async function CheckoutPage({
           campaign: utm.utm_campaign,
         }}
       />
+
+      {/* Last-moment reassurance, in the strongest form available: the
+          trainees themselves. Renders nothing until videos exist. */}
+      <div className="mt-10 -mx-4 sm:-mx-6">
+        <VideoTestimonials
+          testimonials={testimonials}
+          headingAr="متدربين اشتركوا قبلك"
+          introAr="مش كلام مكتوب — دول ناس حضرت التدريب وبتتكلم بنفسها."
+        />
+      </div>
     </CheckoutShell>
   )
 }

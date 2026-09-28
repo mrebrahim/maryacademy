@@ -74,6 +74,15 @@ const orderSchema = z.object({
     .min(4, 'اكتب رقم أو مرجع العملية زي ما ظهرلك في إنستا باي')
     .max(120),
   couponCode: z.string().trim().max(60).optional().or(z.literal('')),
+  // Guest checkout: these three are the identity the order is recorded
+  // against and later claimed by.
+  name: z.string().trim().min(2, 'اكتب اسمك').max(120),
+  phone: z
+    .string()
+    .trim()
+    .transform((v) => v.replace(/\s/g, ''))
+    .refine((v) => /^01[0125]\d{8}$/.test(v), 'اكتب رقم موبايل مصري صحيح'),
+  email: z.email({ error: 'البريد الإلكتروني مكتوب غلط' }),
 })
 
 export async function submitTransfer(_prev: OrderState, formData: FormData): Promise<OrderState> {
@@ -81,11 +90,10 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
     courseId: formData.get('courseId'),
     reference: formData.get('reference'),
     couponCode: formData.get('couponCode') ?? '',
+    name: formData.get('name'),
+    phone: formData.get('phone'),
+    email: formData.get('email'),
   })
-
-  const name = String(formData.get('name') ?? '').trim()
-  const phone = String(formData.get('phone') ?? '').trim()
-  const email = String(formData.get('email') ?? '').trim()
 
   if (!parsed.success) {
     return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجع البيانات' }
@@ -93,10 +101,16 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
 
   try {
     const supabase = await createClient()
-    const { error } = await supabase.rpc('create_pending_order', {
+    // Works signed in or not: the function records auth.uid() when there is
+    // one, and the email when there is not. The price and the discount are
+    // computed in the database either way.
+    const { error } = await supabase.rpc('create_guest_order', {
       p_course_id: parsed.data.courseId,
-      p_coupon_code: parsed.data.couponCode || undefined,
+      p_name: parsed.data.name,
+      p_phone: parsed.data.phone,
+      p_email: parsed.data.email,
       p_reference: parsed.data.reference,
+      p_coupon_code: parsed.data.couponCode || undefined,
     })
 
     if (error) {
@@ -109,24 +123,15 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       }
       throw error
     }
-
-    // The order exists, so this person is no longer an abandoned lead.
-    // Failure here must not fail the order — they have already paid.
-    const { error: leadError } = await supabase.rpc('capture_checkout_lead', {
-      p_course_id: parsed.data.courseId,
-      p_name: name || undefined,
-      p_phone: phone || undefined,
-      p_email: email || undefined,
-      p_status: 'started',
-    })
-    if (leadError) console.error('[submitTransfer] lead promote', leadError)
   } catch (error) {
     console.error('[submitTransfer]', error)
     return { ok: false, messageAr: 'تعذّر تسجيل الحجز، حاول تاني بعد شوية.' }
   }
 
   revalidatePath('/learn')
-  redirect('/checkout/success')
+  // The email travels to the confirmation page so it can tell them where
+  // the sign-in code is going, without needing a session to read it.
+  redirect(`/checkout/success?email=${encodeURIComponent(parsed.data.email)}`)
 }
 
 // ---------------------------------------------------------------------

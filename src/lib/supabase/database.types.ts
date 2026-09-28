@@ -630,6 +630,7 @@ export type Database = {
           sort_order: number
           source: Database['public']['Enums']['testimonial_source']
           updated_at: string
+          video_id: string | null
         }
         Insert: {
           asset_path?: string | null
@@ -649,6 +650,7 @@ export type Database = {
           sort_order?: number
           source: Database['public']['Enums']['testimonial_source']
           updated_at?: string
+          video_id?: string | null
         }
         Update: {
           asset_path?: string | null
@@ -702,7 +704,19 @@ export type Database = {
         }
         Returns: string | null
       }
+      claim_guest_orders: { Args: { p_user_id: string; p_email: string }; Returns: undefined }
       confirm_order: { Args: { p_order_id: string }; Returns: undefined }
+      create_guest_order: {
+        Args: {
+          p_course_id: string
+          p_name: string
+          p_phone: string
+          p_email: string
+          p_reference?: string
+          p_coupon_code?: string
+        }
+        Returns: string
+      }
       create_pending_order: {
         Args: { p_course_id: string; p_coupon_code?: string; p_reference?: string }
         Returns: string
@@ -725,7 +739,7 @@ export type Database = {
       order_status: 'pending' | 'paid' | 'failed' | 'refunded'
       payment_provider: 'paymob' | 'stripe' | 'manual'
       permission_status: 'pending' | 'granted' | 'denied'
-      testimonial_media: 'text' | 'screenshot' | 'result_photo' | 'certificate'
+      testimonial_media: 'text' | 'screenshot' | 'result_photo' | 'certificate' | 'video'
       testimonial_source: 'in_person_training' | 'online_course'
       user_role: 'student' | 'admin'
     }

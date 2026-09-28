@@ -19,8 +19,20 @@
  */
 
 export const landingCopy = {
-  /** Bunny GUID for the VSL. Until it is set, the player area shows a placeholder. */
+  /** Bunny GUID for the VSL. Until it is set, the hero renders no media. */
   vslVideoId: null as string | null,
+
+  /**
+   * Short clips lifted from the course itself — the single most convincing
+   * thing on the page after the testimonials, because it lets someone judge
+   * the teaching instead of taking a claim on trust.
+   *
+   * Each `videoId` is a Bunny GUID, not a file URL, so a link copied out of
+   * the page is not a permanent public copy of paid content. The section
+   * disappears entirely while the list is empty; it never renders a frame
+   * with nothing in it.
+   */
+  previewClips: [] as { videoId: string; titleAr: string }[],
 
   hero: {
     kicker: 'كورس تصفيف الشعر الاحترافي — أونلاين',

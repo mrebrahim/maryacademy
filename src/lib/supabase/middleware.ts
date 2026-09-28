@@ -27,7 +27,11 @@ import { env } from '@/lib/env'
  *  rather than taking the request down with it. */
 const AUTH_TIMEOUT_MS = 3000
 
-const PROTECTED = ['/learn', '/account', '/admin', '/checkout']
+// /checkout is deliberately absent. Requiring an account before paying is
+// the wrong order for paid traffic: someone arrives from an ad, decides,
+// and is asked to register first. The order is taken as a guest and the
+// account is created when they sign in to watch.
+const PROTECTED = ['/learn', '/account', '/admin']
 const AUTH_PAGES = ['/login', '/verify']
 
 const AUTH_CODE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
