@@ -95,6 +95,51 @@ export type Database = {
         }
         Relationships: []
       }
+      checkout_leads: {
+        Row: {
+          course_id: string | null
+          created_at: string
+          email: string | null
+          id: string
+          name: string | null
+          phone: string | null
+          status: Database['public']['Enums']['checkout_lead_status']
+          updated_at: string
+          user_id: string | null
+          utm_campaign: string | null
+          utm_medium: string | null
+          utm_source: string | null
+        }
+        Insert: {
+          course_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          status?: Database['public']['Enums']['checkout_lead_status']
+          updated_at?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Update: {
+          course_id?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          name?: string | null
+          phone?: string | null
+          status?: Database['public']['Enums']['checkout_lead_status']
+          updated_at?: string
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+        }
+        Relationships: []
+      }
       coupons: {
         Row: {
           code: string
@@ -644,6 +689,19 @@ export type Database = {
       }
     }
     Functions: {
+      capture_checkout_lead: {
+        Args: {
+          p_course_id: string
+          p_name?: string
+          p_phone?: string
+          p_email?: string
+          p_status?: Database['public']['Enums']['checkout_lead_status']
+          p_utm_source?: string
+          p_utm_medium?: string
+          p_utm_campaign?: string
+        }
+        Returns: string | null
+      }
       confirm_order: { Args: { p_order_id: string }; Returns: undefined }
       create_pending_order: {
         Args: { p_course_id: string; p_coupon_code?: string; p_reference?: string }
@@ -656,6 +714,7 @@ export type Database = {
       validate_coupon: { Args: { p_code: string; p_course_id: string }; Returns: Json }
     }
     Enums: {
+      checkout_lead_status: 'abandoned' | 'started' | 'paid'
       content_status: 'draft' | 'published' | 'archived'
       coupon_type: 'percent' | 'fixed'
       course_level: 'beginner' | 'intermediate' | 'advanced'
