@@ -177,6 +177,29 @@ ${values}
         duration_seconds = excluded.duration_seconds,
         bunny_video_id  = excluded.bunny_video_id,
         is_free_preview = excluded.is_free_preview;
+
+  -- The Bunny library is the source of truth for what the course contains.
+  -- Anything left over is a lesson that no longer has a video behind it —
+  -- usually one of the seeded placeholders — and a student seeing a lesson
+  -- that cannot play is worse than not seeing it at all.
+  --
+  -- Progress rows cascade with the lesson, so this is only safe while a
+  -- removed lesson is genuinely not part of the course. It will refuse
+  -- rather than silently discard a student's progress.
+  if exists (
+    select 1
+    from public.lesson_progress lp
+    join public.lessons l on l.id = lp.lesson_id
+    where l.course_id = v_course
+      and l.slug not in (${lessons.map((l) => `'${l.slug}'`).join(', ')})
+  ) then
+    raise exception
+      'Refusing to remove lessons that students have progress on. Reconcile by hand.';
+  end if;
+
+  delete from public.lessons
+   where course_id = v_course
+     and slug not in (${lessons.map((l) => `'${l.slug}'`).join(', ')});
 end $$;
 `
 

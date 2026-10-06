@@ -1,4 +1,4 @@
-import { BookOpen } from 'lucide-react'
+import { ArrowLeft, BookOpen } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -18,9 +18,18 @@ export const metadata: Metadata = {
 export default async function LearnPage() {
   const supabase = await createClient()
 
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
+
+  // Filtered by user_id explicitly. The enrolments policy reads
+  // `user_id = auth.uid() OR is_admin()`, which is right for the admin
+  // panel and wrong here: without this line an admin's "my courses" page
+  // lists every enrolment on the platform as if it were their own.
   const { data: enrollments } = await supabase
     .from('enrollments')
     .select('id, status, progress_percent, course:courses(title_ar, slug, lesson_count)')
+    .eq('user_id', user?.id ?? '')
     .eq('status', 'active')
 
   return (
@@ -54,9 +63,20 @@ export default async function LearnPage() {
                     style={{ width: `${enrollment.progress_percent}%` }}
                   />
                 </div>
-                <p className="tabular mt-2 text-xs text-muted">
-                  {enrollment.progress_percent}% مكتمل
-                </p>
+                <div className="mt-3 flex flex-wrap items-center justify-between gap-4">
+                  <p className="tabular text-xs text-muted">
+                    {enrollment.progress_percent}% مكتمل
+                  </p>
+                  {course?.slug && (
+                    <Button asChild size="sm">
+                      {/* /watch/[slug] resolves to the first unfinished lesson. */}
+                      <Link href={`/watch/${course.slug}`}>
+                        {enrollment.progress_percent > 0 ? 'أكمل الدورة' : 'ابدأ الدورة'}
+                        <ArrowLeft className="size-4" aria-hidden="true" />
+                      </Link>
+                    </Button>
+                  )}
+                </div>
               </li>
             )
           })}

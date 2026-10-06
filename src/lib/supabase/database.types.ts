@@ -722,8 +722,13 @@ export type Database = {
         Returns: string
       }
       generate_certificate_serial: { Args: never; Returns: string }
+      get_lesson_video: { Args: { p_lesson_id: string }; Returns: string | null }
       has_course_access: { Args: { p_course_id: string }; Returns: boolean }
       is_admin: { Args: never; Returns: boolean }
+      mark_lesson_complete: {
+        Args: { p_lesson_id: string; p_watched_seconds?: number }
+        Returns: undefined
+      }
       reject_order: { Args: { p_order_id: string; p_reason?: string }; Returns: undefined }
       validate_coupon: { Args: { p_code: string; p_course_id: string }; Returns: Json }
     }
