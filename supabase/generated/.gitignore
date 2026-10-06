@@ -1,0 +1,3 @@
+# Output of scripts/sync-bunny-lessons.ts — regenerate rather than edit.
+*.sql
+!.gitignore
