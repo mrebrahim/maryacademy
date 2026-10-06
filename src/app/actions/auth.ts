@@ -4,7 +4,7 @@ import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
-import { OTP_LENGTH } from '@/config/auth'
+import { OTP_MAX_LENGTH, OTP_MIN_LENGTH } from '@/config/auth'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -71,7 +71,10 @@ const verifySchema = z.object({
   token: z
     .string()
     .trim()
-    .regex(new RegExp(`^\\d{${OTP_LENGTH}}$`), `الكود مكوّن من ${OTP_LENGTH} أرقام`),
+    .regex(
+      new RegExp(`^\\d{${OTP_MIN_LENGTH},${OTP_MAX_LENGTH}}$`),
+      'اكتب الكود اللي وصلك بالأرقام فقط',
+    ),
   next: z.string().optional(),
 })
 

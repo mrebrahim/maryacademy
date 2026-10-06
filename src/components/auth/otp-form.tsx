@@ -5,7 +5,7 @@ import { useFormStatus } from 'react-dom'
 
 import { requestOtp, verifyOtp, type OtpState } from '@/app/actions/auth'
 import { Button } from '@/components/ui/button'
-import { OTP_LENGTH } from '@/config/auth'
+import { OTP_LENGTH, OTP_MAX_LENGTH } from '@/config/auth'
 import { latinAwareDir } from '@/lib/rtl'
 
 const field =
@@ -85,7 +85,7 @@ export function VerifyOtpForm({ email, next }: { email: string; next?: string })
           name="token"
           inputMode="numeric"
           autoComplete="one-time-code"
-          maxLength={OTP_LENGTH}
+          maxLength={OTP_MAX_LENGTH}
           required
           dir="ltr"
           placeholder={'0'.repeat(OTP_LENGTH)}
