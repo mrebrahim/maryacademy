@@ -90,6 +90,12 @@ export default async function AdminPage() {
         >
           الطلبات المتروكة
         </Link>
+        <Link
+          href="/admin/coupons"
+          className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
+        >
+          أكواد الخصم
+        </Link>
       </div>
     </div>
   )
