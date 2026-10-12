@@ -611,6 +611,57 @@ export type Database = {
         }
         Relationships: []
       }
+      trainer_applications: {
+        Row: {
+          about_ar: string | null
+          admin_note: string | null
+          created_at: string
+          email: string
+          full_name: string
+          id: string
+          phone: string
+          portfolio_url: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          speciality_ar: string
+          status: Database['public']['Enums']['application_status']
+          updated_at: string
+          years_experience: number | null
+        }
+        Insert: {
+          about_ar?: string | null
+          admin_note?: string | null
+          created_at?: string
+          email: string
+          full_name: string
+          id?: string
+          phone: string
+          portfolio_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          speciality_ar: string
+          status?: Database['public']['Enums']['application_status']
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Update: {
+          about_ar?: string | null
+          admin_note?: string | null
+          created_at?: string
+          email?: string
+          full_name?: string
+          id?: string
+          phone?: string
+          portfolio_url?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          speciality_ar?: string
+          status?: Database['public']['Enums']['application_status']
+          updated_at?: string
+          years_experience?: number | null
+        }
+        Relationships: []
+      }
       testimonials: {
         Row: {
           asset_path: string | null
@@ -730,6 +781,18 @@ export type Database = {
         Args: { p_lesson_id: string; p_watched_seconds?: number }
         Returns: undefined
       }
+      submit_trainer_application: {
+        Args: {
+          p_full_name: string
+          p_phone: string
+          p_email: string
+          p_speciality_ar: string
+          p_years_experience?: number
+          p_portfolio_url?: string
+          p_about_ar?: string
+        }
+        Returns: undefined
+      }
       set_lesson_attachments: {
         Args: { p_lesson_id: string; p_attachments: Json }
         Returns: undefined
@@ -738,6 +801,7 @@ export type Database = {
       validate_coupon: { Args: { p_code: string; p_course_id: string }; Returns: Json }
     }
     Enums: {
+      application_status: 'new' | 'reviewing' | 'accepted' | 'rejected'
       checkout_lead_status: 'abandoned' | 'started' | 'paid'
       content_status: 'draft' | 'published' | 'archived'
       coupon_type: 'percent' | 'fixed'

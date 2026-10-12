@@ -27,6 +27,10 @@ delete from public.checkout_leads
 delete from auth.users
  where email = 'guest.test@example.com';
 
+-- The trainer application created while verifying that path.
+delete from public.trainer_applications
+ where lower(email) = 'trainer.test@example.com';
+
 -- Should all be zero except users = 1 (the admin).
 select (select count(*) from auth.users)           as users,
        (select count(*) from public.orders)        as orders,

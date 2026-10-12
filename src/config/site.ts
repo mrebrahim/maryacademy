@@ -58,6 +58,10 @@ export const mainNav = [
   { href: '/about', labelAr: 'عن الأكاديمية' },
   { href: '/testimonials', labelAr: 'آراء المتدربين' },
   { href: '/blog', labelAr: 'المدونة' },
+  // The academy is positioned as a house that gathers specialists, so the
+  // way in for other trainers belongs in the main navigation rather than
+  // buried in the footer.
+  { href: '/teach', labelAr: 'كن مدرّبًا معنا' },
   { href: '/contact', labelAr: 'تواصل معنا' },
 ] as const
 
