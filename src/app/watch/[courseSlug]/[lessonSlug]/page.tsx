@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, Award, MessageCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Award, FileText, MessageCircle } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { offer } from '@/config/offer'
 import { whatsappLink } from '@/config/site'
 import { buildPlaybackUrl } from '@/lib/bunny'
-import { getLessonVideoId, getViewer, getWatchCourse } from '@/lib/learn'
+import { getLessonAttachments, getLessonVideoId, getViewer, getWatchCourse } from '@/lib/learn'
 import { formatDuration } from '@/lib/utils'
 
 /**
@@ -56,7 +56,9 @@ export default async function WatchPage({ params }: { params: Params }) {
   // A locked lesson renders in place rather than redirecting: the person is
   // already looking at the course, and a paywall next to the curriculum
   // sells better than being bounced back to the sales page.
-  const videoId = canWatch ? await getLessonVideoId(lesson.id) : null
+  const [videoId, attachments] = canWatch
+    ? await Promise.all([getLessonVideoId(lesson.id), getLessonAttachments(lesson.id)])
+    : [null, []]
   const playback = canWatch ? buildPlaybackUrl(videoId) : null
   const isDone = viewer.completedLessonIds.has(lesson.id)
 
@@ -92,6 +94,28 @@ export default async function WatchPage({ params }: { params: Params }) {
                 <p className="mt-4 leading-loose text-muted">{lesson.description_ar}</p>
               )}
             </div>
+
+            {/* ---- Attachments ---- */}
+            {attachments.length > 0 && (
+              <div className="mt-7 rounded-card bg-white p-5 shadow-soft ring-1 ring-navy-900/5">
+                <h2 className="text-sm font-semibold text-navy-900">ملفات الدرس</h2>
+                <ul className="mt-3 space-y-2">
+                  {attachments.map((file) => (
+                    <li key={file.url}>
+                      <a
+                        href={file.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 text-sm text-gold-600 underline underline-offset-4 hover:text-gold-500"
+                      >
+                        <FileText className="size-4 shrink-0" aria-hidden="true" />
+                        {file.title}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* ---- Paywall, for a preview viewer who is not subscribed ---- */}
             {!viewer.isEnrolled && (

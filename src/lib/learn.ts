@@ -169,3 +169,32 @@ export async function getLessonVideoId(lessonId: string): Promise<string | null>
 
   return data ?? null
 }
+
+export type LessonAttachment = { title: string; url: string }
+
+/**
+ * Files attached to a lesson. Empty when the caller may not have them —
+ * the database refuses rather than returning a partial list, and a locked
+ * lesson should show no files rather than a teasing count.
+ */
+export async function getLessonAttachments(lessonId: string): Promise<LessonAttachment[]> {
+  const supabase = await createClient()
+  const { data, error } = await supabase.rpc('get_lesson_attachments', { p_lesson_id: lessonId })
+
+  if (error) {
+    if (!error.message.includes('no_access')) {
+      console.error('[getLessonAttachments]', error)
+    }
+    return []
+  }
+
+  if (!Array.isArray(data)) return []
+
+  return data.filter(
+    (item): item is LessonAttachment =>
+      typeof item === 'object' &&
+      item !== null &&
+      typeof (item as LessonAttachment).title === 'string' &&
+      typeof (item as LessonAttachment).url === 'string',
+  )
+}

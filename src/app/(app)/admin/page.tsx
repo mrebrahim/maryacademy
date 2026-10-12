@@ -96,6 +96,12 @@ export default async function AdminPage() {
         >
           أكواد الخصم
         </Link>
+        <Link
+          href="/admin/attachments"
+          className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
+        >
+          ملفات الدروس
+        </Link>
       </div>
     </div>
   )
