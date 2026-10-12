@@ -27,7 +27,16 @@ export const siteConfig = {
     'أكاديمية تدريب أونلاين في تصفيف الشعر والمكياج والعناية بالبشرة، بخبرة تتجاوز خمس سنوات من التدريب الحضوري.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   locale: 'ar_EG',
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '',
+  /**
+   * The academy's WhatsApp number, in international form.
+   *
+   * Defaulted in code rather than left to the environment. It is public
+   * information printed on every page, not a secret, and leaving it to a
+   * variable meant every "talk to us" button on the live site silently
+   * pointed at /contact instead — a dead end for someone who wanted to
+   * buy. The env var still wins, so it can be changed without a deploy.
+   */
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '201027555789',
 } as const
 
 export const whatsappLink = (messageAr = 'السلام عليكم، أرغب في معرفة تفاصيل الدورات') =>

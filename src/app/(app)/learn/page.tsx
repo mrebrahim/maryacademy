@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen } from 'lucide-react'
+import { ArrowLeft, Award, BookOpen } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
@@ -28,7 +28,9 @@ export default async function LearnPage() {
   // lists every enrolment on the platform as if it were their own.
   const { data: enrollments } = await supabase
     .from('enrollments')
-    .select('id, status, progress_percent, course:courses(title_ar, slug, lesson_count)')
+    .select(
+      'id, status, progress_percent, certificate_serial, course:courses(title_ar, slug, lesson_count)',
+    )
     .eq('user_id', user?.id ?? '')
     .eq('status', 'active')
 
@@ -67,15 +69,25 @@ export default async function LearnPage() {
                   <p className="tabular text-xs text-muted">
                     {enrollment.progress_percent}% مكتمل
                   </p>
-                  {course?.slug && (
-                    <Button asChild size="sm">
-                      {/* /watch/[slug] resolves to the first unfinished lesson. */}
-                      <Link href={`/watch/${course.slug}`}>
-                        {enrollment.progress_percent > 0 ? 'أكمل الدورة' : 'ابدأ الدورة'}
-                        <ArrowLeft className="size-4" aria-hidden="true" />
-                      </Link>
-                    </Button>
-                  )}
+                  <div className="flex flex-wrap items-center gap-2">
+                    {enrollment.certificate_serial && course?.slug && (
+                      <Button asChild variant="tertiary" size="sm">
+                        <Link href={`/certificate/${course.slug}`}>
+                          <Award className="size-4" aria-hidden="true" />
+                          الشهادة
+                        </Link>
+                      </Button>
+                    )}
+                    {course?.slug && (
+                      <Button asChild size="sm">
+                        {/* /watch/[slug] resolves to the first unfinished lesson. */}
+                        <Link href={`/watch/${course.slug}`}>
+                          {enrollment.progress_percent > 0 ? 'أكمل الدورة' : 'ابدأ الدورة'}
+                          <ArrowLeft className="size-4" aria-hidden="true" />
+                        </Link>
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </li>
             )

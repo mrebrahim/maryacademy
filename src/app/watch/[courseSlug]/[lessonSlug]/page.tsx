@@ -1,4 +1,4 @@
-import { ArrowLeft, ArrowRight, MessageCircle } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Award, MessageCircle } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -165,8 +165,13 @@ export default async function WatchPage({ params }: { params: Params }) {
                   </Button>
                 ) : (
                   viewer.isEnrolled && (
-                    <Button asChild variant="tertiary" size="md">
-                      <Link href="/learn">خلصت الدورة — ارجع لدوراتي</Link>
+                    <Button asChild size="md">
+                      {/* The certificate page itself says what is left if
+                          the course is not actually finished yet. */}
+                      <Link href={`/certificate/${course.slug}`}>
+                        <Award aria-hidden="true" />
+                        شهادة الإتمام
+                      </Link>
                     </Button>
                   )
                 )}
