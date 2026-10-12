@@ -20,7 +20,12 @@
  */
 import { writeFileSync } from 'node:fs'
 
-import 'dotenv/config'
+import { config } from 'dotenv'
+
+// `.env.local` explicitly, like the other scripts here: `dotenv/config`
+// reads `.env` only, and the Bunny keys live in `.env.local` because it
+// is the gitignored one.
+config({ path: '.env.local' })
 
 const LIBRARY_ID = process.env.BUNNY_STREAM_LIBRARY_ID
 const API_KEY = process.env.BUNNY_STREAM_READONLY_API_KEY ?? process.env.BUNNY_STREAM_API_KEY
