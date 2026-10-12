@@ -5,12 +5,14 @@ import { notFound } from 'next/navigation'
 
 import { CurriculumNav } from '@/components/learn/curriculum-nav'
 import { MarkCompleteForm } from '@/components/learn/lesson-actions'
+import { LessonQuiz } from '@/components/learn/lesson-quiz'
 import { LessonVideo } from '@/components/learn/lesson-video'
 import { Button } from '@/components/ui/button'
 import { offer } from '@/config/offer'
 import { whatsappLink } from '@/config/site'
 import { buildPlaybackUrl } from '@/lib/bunny'
 import { getLessonAttachments, getLessonVideoId, getViewer, getWatchCourse } from '@/lib/learn'
+import { getLessonQuiz } from '@/lib/quizzes'
 import { formatDuration } from '@/lib/utils'
 
 /**
@@ -56,9 +58,13 @@ export default async function WatchPage({ params }: { params: Params }) {
   // A locked lesson renders in place rather than redirecting: the person is
   // already looking at the course, and a paywall next to the curriculum
   // sells better than being bounced back to the sales page.
-  const [videoId, attachments] = canWatch
-    ? await Promise.all([getLessonVideoId(lesson.id), getLessonAttachments(lesson.id)])
-    : [null, []]
+  const [videoId, attachments, quiz] = canWatch
+    ? await Promise.all([
+        getLessonVideoId(lesson.id),
+        getLessonAttachments(lesson.id),
+        getLessonQuiz(lesson.id),
+      ])
+    : [null, [], null]
   const playback = canWatch ? buildPlaybackUrl(videoId) : null
   const isDone = viewer.completedLessonIds.has(lesson.id)
 
@@ -116,6 +122,11 @@ export default async function WatchPage({ params }: { params: Params }) {
                 </ul>
               </div>
             )}
+
+            {/* ---- Exam ----
+                Rendered only when the database handed one over, which it
+                does only for a viewer who may reach the lesson. */}
+            {quiz && <LessonQuiz quiz={quiz} courseSlug={course.slug} />}
 
             {/* ---- Paywall, for a preview viewer who is not subscribed ---- */}
             {!viewer.isEnrolled && (

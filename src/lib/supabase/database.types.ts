@@ -662,6 +662,124 @@ export type Database = {
         }
         Relationships: []
       }
+      quizzes: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          id: string
+          is_active: boolean
+          lesson_id: string
+          pass_percent: number
+          title_ar: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          lesson_id: string
+          pass_percent?: number
+          title_ar?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          id?: string
+          is_active?: boolean
+          lesson_id?: string
+          pass_percent?: number
+          title_ar?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      quiz_questions: {
+        Row: {
+          body_ar: string
+          created_at: string
+          id: string
+          quiz_id: string
+          sort_order: number
+        }
+        Insert: {
+          body_ar: string
+          created_at?: string
+          id?: string
+          quiz_id: string
+          sort_order?: number
+        }
+        Update: {
+          body_ar?: string
+          created_at?: string
+          id?: string
+          quiz_id?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      /**
+       * `is_correct` is in the generated row type because it is in the
+       * table, but no client role may SELECT it — see migration 20. A read
+       * that names it is refused at the database, so the type is a trap:
+       * read questions through `quiz_questions_public` and
+       * `quiz_options_public` instead.
+       */
+      quiz_options: {
+        Row: {
+          body_ar: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          sort_order: number
+        }
+        Insert: {
+          body_ar: string
+          id?: string
+          is_correct?: boolean
+          question_id: string
+          sort_order?: number
+        }
+        Update: {
+          body_ar?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          sort_order?: number
+        }
+        Relationships: []
+      }
+      quiz_attempts: {
+        Row: {
+          answers: Json
+          created_at: string
+          id: string
+          passed: boolean
+          quiz_id: string
+          score_percent: number
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          passed: boolean
+          quiz_id: string
+          score_percent: number
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          passed?: boolean
+          quiz_id?: string
+          score_percent?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
       testimonials: {
         Row: {
           asset_path: string | null
@@ -740,6 +858,24 @@ export type Database = {
         }
         Relationships: []
       }
+      quiz_questions_public: {
+        Row: {
+          body_ar: string | null
+          id: string | null
+          quiz_id: string | null
+          sort_order: number | null
+        }
+        Relationships: []
+      }
+      quiz_options_public: {
+        Row: {
+          body_ar: string | null
+          id: string | null
+          question_id: string | null
+          sort_order: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       capture_checkout_lead: {
@@ -772,7 +908,11 @@ export type Database = {
         Args: { p_course_id: string; p_coupon_code?: string; p_reference?: string }
         Returns: string
       }
+      delete_lesson_quiz: { Args: { p_lesson_id: string }; Returns: undefined }
       generate_certificate_serial: { Args: never; Returns: string }
+      get_quiz_for_admin: { Args: { p_lesson_id: string }; Returns: Json }
+      set_lesson_quiz: { Args: { p_lesson_id: string; p_quiz: Json }; Returns: string }
+      submit_quiz_attempt: { Args: { p_quiz_id: string; p_answers: Json }; Returns: Json }
       get_lesson_attachments: { Args: { p_lesson_id: string }; Returns: Json }
       get_lesson_video: { Args: { p_lesson_id: string }; Returns: string | null }
       has_course_access: { Args: { p_course_id: string }; Returns: boolean }

@@ -109,6 +109,12 @@ export default async function AdminPage() {
           ملفات الدروس
         </Link>
         <Link
+          href="/admin/quizzes"
+          className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
+        >
+          امتحانات الدروس
+        </Link>
+        <Link
           href="/admin/trainers"
           className="rounded-lg border border-navy-900/15 px-5 py-3 text-sm font-semibold text-navy-900 transition hover:border-gold-500"
         >

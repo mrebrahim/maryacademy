@@ -70,6 +70,59 @@ begin
     raise exception 'FAIL: lessons_public exposes a protected column';
   end if;
   raise notice 'PASS: lessons_public carries no protected columns';
+
+  -- ---------------------------------------------------------------
+  -- The exam answer key (migrations 19–21)
+  --
+  -- Privilege checks rather than reads, deliberately: migration 19's
+  -- `revoke select (is_correct)` was a silent no-op against the
+  -- table-level grant Supabase creates by default, and a read-based test
+  -- on a database with no quiz rows would have passed anyway.
+  -- ---------------------------------------------------------------
+
+  -- 7. is_correct is unreadable by every client role
+  if exists (
+    select 1 from information_schema.column_privileges
+    where table_schema = 'public' and table_name = 'quiz_options'
+      and column_name = 'is_correct' and privilege_type = 'SELECT'
+      and grantee in ('anon', 'authenticated')
+  ) then
+    raise exception 'FAIL: a client role can SELECT quiz_options.is_correct';
+  end if;
+  raise notice 'PASS: quiz_options.is_correct is unreadable by anon and authenticated';
+
+  -- 8. ...while the columns a student needs stayed readable, or the exam
+  --    would not render at all
+  select count(*) into n from information_schema.column_privileges
+  where table_schema = 'public' and table_name = 'quiz_options'
+    and privilege_type = 'SELECT' and grantee = 'authenticated'
+    and column_name in ('id', 'question_id', 'body_ar', 'sort_order');
+  if n <> 4 then
+    raise exception 'FAIL: authenticated lost SELECT on the safe quiz_options columns (% of 4)', n;
+  end if;
+  raise notice 'PASS: the answer-free quiz_options columns stay readable';
+
+  -- 9. neither public view carries the key
+  if exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public'
+      and table_name in ('quiz_questions_public', 'quiz_options_public')
+      and column_name = 'is_correct'
+  ) then
+    raise exception 'FAIL: a public quiz view exposes is_correct';
+  end if;
+  raise notice 'PASS: the public quiz views carry no answer key';
+
+  -- 10. a student cannot write their own passing attempt
+  if exists (
+    select 1 from information_schema.table_privileges
+    where table_schema = 'public' and table_name = 'quiz_attempts'
+      and privilege_type in ('INSERT', 'UPDATE', 'DELETE')
+      and grantee in ('anon', 'authenticated')
+  ) then
+    raise exception 'FAIL: a client role can write quiz_attempts directly';
+  end if;
+  raise notice 'PASS: quiz_attempts is written only by submit_quiz_attempt';
 end;
 $$;
 
