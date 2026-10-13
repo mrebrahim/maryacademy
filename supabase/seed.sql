@@ -2,13 +2,22 @@
 -- Marie Ragaie Beauty Academy — seed
 -- Idempotent: safe to re-run.
 --
--- ⚠️ PLACEHOLDER CONTENT
---   * price_egp is 0 — the real price is PRD §13 open decision #1 and has
---     not been supplied. Checkout must refuse a course priced at 0.
---   * bunny_video_id is null on every lesson — PRD §13 open decision #6
---     (Bunny library) is unresolved and no videos have been uploaded.
---   * Lesson titles are a working curriculum for the 13 lessons / ~12h
---     described in the brief; the client should confirm or replace them.
+-- The curriculum here is the real one: one prep lesson plus twelve
+-- complete looks, matching the thirteen videos in Bunny library 770471,
+-- with each lesson's real running time.
+--
+-- ⚠️ Two things are deliberately NOT here:
+--   * price_egp is 0. Checkout refuses a course priced at 0, which is the
+--     safe failure for a fresh database. The live price is set in the
+--     dashboard, not seeded.
+--   * bunny_video_id is null on every lesson. While token authentication
+--     is off, a video id is enough to watch a paid lesson — the library
+--     id is public by design — so the ids live only in the database and
+--     in the gitignored output of `npm run bunny:lessons`.
+--
+-- The look titles are numbers because that is what the videos are called.
+-- Naming each one after the style it teaches needs the academy to say
+-- what it is; nothing in the library states it.
 -- =====================================================================
 
 -- ---------------------------------------------------------------------
@@ -35,8 +44,10 @@ insert into public.courses (
 select
   'دورة تصفيف الشعر الاحترافي',
   'hairstyling-master-class',
-  'من الأساسيات إلى تسريحات العرائس — 13 درسًا عمليًا بالتفصيل',
-  'برنامج عملي متكامل يبدأ من إمساك الفرشاة ويصل إلى تسليم تسريحة عروس كاملة بثقة.',
+  'درس تجهيز + 12 لوك كامل — أكتر من 10 ساعات تنفيذ بالتفصيل',
+  '13 درس بالفيديو، أكتر من 10 ساعات، كلها تنفيذ حقيقي متصوّر بجودة 1080p.
+
+بتبدئي بدرس التجهيزات: الأدوات والتحضير اللي بيسبق أي لوك. وبعديها 12 لوك، كل لوك في درس لوحده من أول الشعر وهو خام لحد الفينش. متوسط الدرس حوالي ساعة — يعني إنتي شايفة كل خطوة وهي بتتعمل، مش بتتشرح بس.',
   c.id,
   'beginner',
   0,            -- ⚠️ placeholder, see header
@@ -45,15 +56,17 @@ select
   now(),
   true,
   false,
-  '["إتقان أساسيات السشوار والفرد والتموّج",
-    "تنفيذ الضفائر بأنواعها بثبات لا يتفكك",
-    "شينيون كلاسيكي ومودرن يثبت طوال اليوم",
-    "تسريحات عرائس كاملة من البداية حتى الفينش",
-    "تركيب الطرحة والإكسسوار باحتراف",
-    "تسعير العمل، التعامل مع العميلة، وبناء بورتفوليو"]'::jsonb,
-  '["لا تُشترط خبرة سابقة",
-    "أدوات أساسية: فرشاة، سشوار، بيبي ليس، دبابيس، إسبراي تثبيت",
-    "موديل أو رأس تدريب للتطبيق"]'::jsonb,
+  -- Every line here has to be something the thirteen videos actually
+  -- deliver. Naming styles the course may or may not cover is how a
+  -- refund conversation starts.
+  '["تجهيز الشعر والأدوات قبل أي لوك",
+    "12 لوك كامل، كل واحد من أول خطوة لحد الفينش",
+    "التنفيذ كامل من غير قطع — متوسط الدرس حوالي ساعة",
+    "توقفي وترجّعي أي خطوة وإنتي بتتمرّني عليها",
+    "شهادة إتمام باسمك بعد ما تخلّصي الدورة"]'::jsonb,
+  '["مفيش خبرة سابقة مطلوبة — الدورة بتبدأ من درس التجهيزات",
+    "أدوات التصفيف اللي بتشتغلي بيها عشان تتمرّني مع الفيديو",
+    "موبايل أو لابتوب وإنترنت"]'::jsonb,
   '["من يبدأ في المجال من الصفر",
     "العاملون في الكوافير الراغبون في إتقان الفينش ورفع أسعارهم",
     "مصممو الطرح الراغبون في إضافة تسريحات الشعر لخدماتهم",
@@ -72,11 +85,11 @@ select
     {"q": "ما طريقة الدفع؟",
      "a": "الدفع عبر إنستا باي، ويُفعَّل الحساب بعد التحويل."},
     {"q": "ما الأدوات المطلوبة؟",
-     "a": "الأساسيات فقط: فرشاة، سشوار، بيبي ليس، دبابيس، وإسبراي تثبيت."},
-    {"q": "هل الدورة مناسبة للمبتدئين تمامًا؟",
-     "a": "نعم، تبدأ الدورة من الصفر وتتدرّج خطوة بخطوة حتى تسريحات العرائس."}]'::jsonb,
+     "a": "الأدوات اللي بتشتغلي بيها عادة. كل لوك بيتنفّذ قدامك بالأدوات الظاهرة في الفيديو."},
+    {"q": "هل الدورة مناسبة للمبتدئين؟",
+     "a": "الدورة بتبدأ بدرس التجهيزات قبل أي لوك، وكل لوك بيتنفّذ قدامك من أول خطوة لحد الفينش من غير اختصار."}]'::jsonb,
   'دورة تصفيف الشعر الاحترافي أونلاين | Marie Ragaie Beauty Academy',
-  'تعلّم تصفيف الشعر من الأساسيات حتى تسريحات العرائس — 13 درسًا عمليًا، شهادة إتمام، ومتابعة مستمرة.'
+  'درس تجهيز و12 لوك كامل بالفيديو — أكتر من 10 ساعات تنفيذ خطوة بخطوة، وشهادة إتمام باسمك.'
 from public.categories c
 where c.slug = 'hair-styling'
 on conflict (slug) do nothing;
@@ -88,10 +101,8 @@ insert into public.modules (course_id, title_ar, sort_order)
 select co.id, m.title_ar, m.sort_order
 from public.courses co
 cross join (values
-  ('الأساسيات', 1),
-  ('التسريحات الأساسية', 2),
-  ('تسريحات المناسبات والعرائس', 3),
-  ('الاحتراف والتعامل مع العملاء', 4)
+  ('التجهيز', 1),
+  ('اللوكات', 2)
 ) as m(title_ar, sort_order)
 where co.slug = 'hairstyling-master-class'
   and not exists (
@@ -100,8 +111,10 @@ where co.slug = 'hairstyling-master-class'
   );
 
 -- ---------------------------------------------------------------------
--- Lessons — 13 lessons, 43200s total (= 12h)
--- Lesson 1 is the single free preview allowed per course (PRD §6.2).
+-- Lessons — 13 lessons, 36,904s total (= 10h 15m), the real running
+-- times from the Bunny library.
+-- Lesson 1 is the single free preview allowed per course (PRD §6.2), and
+-- the prep lesson is the right one to give away: it sells the rest.
 -- ---------------------------------------------------------------------
 insert into public.lessons (
   module_id, course_id, title_ar, slug, description_ar,
@@ -112,32 +125,20 @@ select
   l.duration_seconds, l.sort_order, l.is_free_preview
 from public.courses co
 join (values
-  ('الأساسيات', 'مقدمة الدورة وأدوات العمل', 'intro-and-tools',
-   'ما الذي تتضمنه الدورة، وما الأدوات اللازمة فعلًا وما يمكن تأجيله.', 1800, 1, true),
-  ('الأساسيات', 'تحضير الشعر: الغسيل والتجهيز', 'hair-prep',
-   'تجهيز الشعر قبل أي تسريحة ليثبت ويتحمّل.', 3000, 2, false),
-  ('الأساسيات', 'أساسيات السشوار والفرد', 'blow-dry-basics',
-   'مسك الفرشاة، اتجاه الهواء، والفرد دون إضرار بالشعر.', 3600, 3, false),
-  ('التسريحات الأساسية', 'الكيرلي والويفي بالبيبي ليس', 'curls-and-waves',
-   'أنواع اللفّة والفرق بينها، والحرارة المناسبة لكل نوع شعر.', 3300, 4, false),
-  ('التسريحات الأساسية', 'الضفائر الأساسية', 'basic-braids',
-   'الضفيرة العادية والثلاثية وطريقة الشد الصحيحة.', 2700, 5, false),
-  ('التسريحات الأساسية', 'الضفيرة الفرنسية والهولندية', 'french-dutch-braids',
-   'الفرق بينهما والتنفيذ خطوة بخطوة على شعر حقيقي.', 3300, 6, false),
-  ('التسريحات الأساسية', 'الشينيون الكلاسيكي', 'classic-chignon',
-   'بناء الشينيون من الأساس والتثبيت الذي يتحمّل يومًا كاملًا.', 3600, 7, false),
-  ('تسريحات المناسبات والعرائس', 'الهاف أب هاف داون', 'half-up-half-down',
-   'أكثر التسريحات طلبًا في المناسبات وطريقة ضبط توازنها.', 3000, 8, false),
-  ('تسريحات المناسبات والعرائس', 'تسريحة العروس الكلاسيكية', 'classic-bridal',
-   'لوك عروس كامل من التقسيم حتى الفينش.', 4200, 9, false),
-  ('تسريحات المناسبات والعرائس', 'تسريحة العروس المودرن', 'modern-bridal',
-   'اللوك المودرن المطلوب حاليًا وتنفيذه بأدوات بسيطة.', 4200, 10, false),
-  ('تسريحات المناسبات والعرائس', 'تركيب الطرحة والإكسسوار', 'veil-and-accessories',
-   'تثبيت الطرحة دون الإخلال بالتسريحة، ومواضع الإكسسوار الصحيحة.', 3000, 11, false),
-  ('الاحتراف والتعامل مع العملاء', 'الفينش والتثبيت واللمسات الأخيرة', 'finishing-and-hold',
-   'الفينش الذي يفرق بين العمل الهاوي والمحترف.', 3600, 12, false),
-  ('الاحتراف والتعامل مع العملاء', 'التعامل مع العميلة والتسعير وبناء البورتفوليو', 'clients-pricing-portfolio',
-   'تسعير العمل، التعامل مع طلبات العميلة، وبناء بورتفوليو يجلب العمل.', 3900, 13, false)
+  ('التجهيز', 'التجهيزات', 'prep',
+   'الأدوات والتحضير اللي بيسبق أي لوك.', 771, 1, true),
+  ('اللوكات', 'اللوك الأول',        'look-1',  null, 3302, 2, false),
+  ('اللوكات', 'اللوك الثاني',       'look-2',  null, 2944, 3, false),
+  ('اللوكات', 'اللوك الثالث',       'look-3',  null, 3389, 4, false),
+  ('اللوكات', 'اللوك الرابع',       'look-4',  null, 3252, 5, false),
+  ('اللوكات', 'اللوك الخامس',       'look-5',  null, 4686, 6, false),
+  ('اللوكات', 'اللوك السادس',       'look-6',  null, 2831, 7, false),
+  ('اللوكات', 'اللوك السابع',       'look-7',  null, 3038, 8, false),
+  ('اللوكات', 'اللوك الثامن',       'look-8',  null, 3668, 9, false),
+  ('اللوكات', 'اللوك التاسع',       'look-9',  null, 3238, 10, false),
+  ('اللوكات', 'اللوك العاشر',       'look-10', null, 2368, 11, false),
+  ('اللوكات', 'اللوك الحادي عشر',   'look-11', null, 1469, 12, false),
+  ('اللوكات', 'اللوك الثاني عشر',   'look-12', null, 1948, 13, false)
 ) as l(module_title, title_ar, slug, description_ar, duration_seconds, sort_order, is_free_preview)
   on true
 join public.modules mo
