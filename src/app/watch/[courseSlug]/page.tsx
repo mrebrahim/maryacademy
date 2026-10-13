@@ -21,9 +21,13 @@ export default async function WatchCourseIndex({
 
   const viewer = await getViewer(course.id)
 
+  // An admin has no progress to resume from, so they start at lesson one
+  // rather than at whichever lesson happens to be the free preview.
   const target = viewer.isEnrolled
     ? (course.ordered.find((l) => !viewer.completedLessonIds.has(l.id)) ?? course.ordered[0])
-    : course.ordered.find((l) => l.is_free_preview)
+    : viewer.isAdmin
+      ? course.ordered[0]
+      : course.ordered.find((l) => l.is_free_preview)
 
   if (!target) redirect(`/courses/${course.slug}`)
 

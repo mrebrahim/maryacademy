@@ -53,7 +53,11 @@ export default async function WatchPage({ params }: { params: Params }) {
   const next = index < course.ordered.length - 1 ? course.ordered[index + 1] : null
 
   const viewer = await getViewer(course.id)
-  const canWatch = viewer.isEnrolled || lesson.is_free_preview
+  // Staff may open any lesson without being enrolled — see migration 22.
+  // They are still not a student: no progress, no certificate, and the
+  // banner below says so rather than letting the page imply otherwise.
+  const hasFullAccess = viewer.isEnrolled || viewer.isAdmin
+  const canWatch = hasFullAccess || lesson.is_free_preview
 
   // A locked lesson renders in place rather than redirecting: the person is
   // already looking at the course, and a paywall next to the curriculum
@@ -70,7 +74,7 @@ export default async function WatchPage({ params }: { params: Params }) {
 
   // The next lesson is only reachable if it is unlocked for this viewer.
   const nextHref =
-    next && (viewer.isEnrolled || next.is_free_preview)
+    next && (hasFullAccess || next.is_free_preview)
       ? `/watch/${course.slug}/${next.slug}`
       : null
 
@@ -78,7 +82,7 @@ export default async function WatchPage({ params }: { params: Params }) {
     <div className="min-h-dvh bg-cream-50">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10">
         <Link
-          href={viewer.isEnrolled ? '/learn' : `/courses/${course.slug}`}
+          href={hasFullAccess ? '/learn' : `/courses/${course.slug}`}
           className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-navy-900"
         >
           <ArrowRight className="size-4" aria-hidden="true" />
@@ -128,8 +132,15 @@ export default async function WatchPage({ params }: { params: Params }) {
                 does only for a viewer who may reach the lesson. */}
             {quiz && <LessonQuiz quiz={quiz} courseSlug={course.slug} />}
 
+            {viewer.isAdmin && !viewer.isEnrolled && (
+              <p className="mt-6 rounded-lg bg-navy-900/5 px-4 py-3 text-sm text-navy-900">
+                إنتي بتشوفي الدورة كأدمن — الدروس كلها مفتوحة، ومفيش تقدّم أو شهادة
+                بتتسجّل على حسابك.
+              </p>
+            )}
+
             {/* ---- Paywall, for a preview viewer who is not subscribed ---- */}
-            {!viewer.isEnrolled && (
+            {!hasFullAccess && (
               <div className="mt-8 rounded-card bg-navy-950 p-6 text-white sm:p-8">
                 <h2 className="display text-xl text-white">
                   {lesson.is_free_preview
@@ -174,7 +185,7 @@ export default async function WatchPage({ params }: { params: Params }) {
               )}
 
               <div className="flex items-center gap-2">
-                {previous && (viewer.isEnrolled || previous.is_free_preview) && (
+                {previous && (hasFullAccess || previous.is_free_preview) && (
                   <Button asChild variant="ghost" size="md" className="border border-navy-900/15">
                     <Link href={`/watch/${course.slug}/${previous.slug}`}>
                       <ArrowRight aria-hidden="true" />
@@ -221,7 +232,7 @@ export default async function WatchPage({ params }: { params: Params }) {
               modules={course.modules}
               currentLessonId={lesson.id}
               completedLessonIds={viewer.completedLessonIds}
-              isEnrolled={viewer.isEnrolled}
+              isEnrolled={hasFullAccess}
             />
           </aside>
         </div>

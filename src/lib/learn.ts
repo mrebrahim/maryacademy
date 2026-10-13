@@ -104,6 +104,13 @@ export async function getWatchCourse(slug: string): Promise<WatchCourse | null> 
 export type Viewer = {
   userId: string | null
   isEnrolled: boolean
+  /**
+   * Staff. Kept separate from `isEnrolled` on purpose: an admin may open
+   * every lesson, but they have no enrolment, so no progress, no
+   * certificate and nothing in "my courses". Collapsing the two would
+   * make the player lie to whoever is reviewing the course.
+   */
+  isAdmin: boolean
   enrollmentId: string | null
   completedLessonIds: Set<string>
 }
@@ -116,8 +123,22 @@ export async function getViewer(courseId: string): Promise<Viewer> {
   } = await supabase.auth.getUser()
 
   if (!user) {
-    return { userId: null, isEnrolled: false, enrollmentId: null, completedLessonIds: new Set() }
+    return {
+      userId: null,
+      isEnrolled: false,
+      isAdmin: false,
+      enrollmentId: null,
+      completedLessonIds: new Set(),
+    }
   }
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .maybeSingle()
+
+  const isAdmin = profile?.role === 'admin'
 
   // Filtered by user_id explicitly, not left to RLS: the enrolments policy
   // also admits admins, so without this an admin would be treated as
@@ -131,7 +152,13 @@ export async function getViewer(courseId: string): Promise<Viewer> {
     .maybeSingle()
 
   if (!enrollment) {
-    return { userId: user.id, isEnrolled: false, enrollmentId: null, completedLessonIds: new Set() }
+    return {
+      userId: user.id,
+      isEnrolled: false,
+      isAdmin,
+      enrollmentId: null,
+      completedLessonIds: new Set(),
+    }
   }
 
   const { data: progress } = await supabase
@@ -143,6 +170,7 @@ export async function getViewer(courseId: string): Promise<Viewer> {
   return {
     userId: user.id,
     isEnrolled: true,
+    isAdmin,
     enrollmentId: enrollment.id,
     completedLessonIds: new Set((progress ?? []).map((row) => row.lesson_id)),
   }
