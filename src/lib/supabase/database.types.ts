@@ -198,6 +198,8 @@ export type Database = {
           level: Database['public']['Enums']['course_level']
           pain_points: Json
           price_egp: number
+          /** For buyers outside Egypt, in piastres. 0 = not offered abroad. */
+          price_egp_intl: number
           price_usd: number | null
           promo_video_id: string | null
           published_at: string | null
@@ -227,6 +229,7 @@ export type Database = {
           level?: Database['public']['Enums']['course_level']
           pain_points?: Json
           price_egp?: number
+          price_egp_intl?: number
           price_usd?: number | null
           promo_video_id?: string | null
           published_at?: string | null
@@ -256,6 +259,7 @@ export type Database = {
           level?: Database['public']['Enums']['course_level']
           pain_points?: Json
           price_egp?: number
+          price_egp_intl?: number
           price_usd?: number | null
           promo_video_id?: string | null
           published_at?: string | null
@@ -858,6 +862,8 @@ export type Database = {
       lessons_public: {
         Row: {
           course_id: string | null
+          /** Whether a video is attached — never which one. */
+          has_video: boolean | null
           description_ar: string | null
           duration_seconds: number | null
           id: string | null

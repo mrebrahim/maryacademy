@@ -9,6 +9,7 @@ import { SectionHeading } from '@/components/ui/section-heading'
 import { CHECKOUT_ENABLED } from '@/config/features'
 import { siteConfig, whatsappLink } from '@/config/site'
 import { getCourseBySlug, getPublishedCourseSlugs, getTestimonials } from '@/lib/queries'
+import { PriceNote } from '@/components/ui/price-note'
 import { formatDuration, formatPrice } from '@/lib/utils'
 
 export const revalidate = 3600
@@ -189,6 +190,10 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
               <p className="mt-6 text-base font-semibold text-gold-300">
                 للاستفسار عن السعر والحجز، تواصل معنا عبر واتساب.
               </p>
+            )}
+
+            {hasPrice && (
+              <PriceNote priceEgpIntl={course.price_egp_intl} tone="dark" className="mt-3" />
             )}
 
             {hasPrice && !CHECKOUT_ENABLED && (

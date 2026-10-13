@@ -16,6 +16,7 @@ import { PreviewClips } from "@/components/landing/preview-clips";
 import { LeadCapture } from "@/components/landing/lead-capture";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { VideoTestimonials } from "@/components/home/video-testimonials";
+import { PriceNote } from "@/components/ui/price-note";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { brandAssets, HAS_HERO_IMAGE } from "@/config/assets";
 import { includedItems } from "@/config/checkout";
@@ -472,6 +473,12 @@ export default async function HairstylingLandingPage() {
                   {formatPrice(course.price_egp)}
                 </span>
               </div>
+
+              {/* The second price sits with the first, where someone is
+                  already reading figures — not repeated under all four
+                  CTAs, where it would be noise to the Egyptian buyer who
+                  is most of the traffic. */}
+              <PriceNote priceEgpIntl={course.price_egp_intl} className="mt-2" />
 
               {course.compare_at_price_egp &&
               course.compare_at_price_egp > course.price_egp ? (

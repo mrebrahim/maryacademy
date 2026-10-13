@@ -82,6 +82,7 @@ export default async function CheckoutPage({
         courseId={course.id}
         courseTitle={course.title_ar}
         priceEgp={course.price_egp}
+        priceEgpIntl={course.price_egp_intl ?? 0}
         compareAtEgp={course.compare_at_price_egp}
         included={includedItems(course)}
         // The UI never hardcodes a provider; it renders whatever is live.

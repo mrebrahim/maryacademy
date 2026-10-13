@@ -36,7 +36,7 @@ on conflict (slug) do nothing;
 -- ---------------------------------------------------------------------
 insert into public.courses (
   title_ar, slug, subtitle_ar, description_ar, category_id, level,
-  price_egp, compare_at_price_egp, status, published_at,
+  price_egp, price_egp_intl, compare_at_price_egp, status, published_at,
   certificate_enabled, sequential_unlock,
   what_you_learn, requirements, target_audience, pain_points, faq,
   seo_title, seo_description
@@ -51,6 +51,7 @@ select
   c.id,
   'beginner',
   0,            -- ⚠️ placeholder, see header
+  0,            -- outside Egypt; 0 = not sold abroad
   null,
   'published',
   now(),

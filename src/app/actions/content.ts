@@ -32,6 +32,9 @@ const courseSchema = z.object({
   // Entered in pounds because that is what a person thinks in; stored in
   // piastres like every other amount in the schema.
   priceEgp: z.coerce.number().min(0, 'السعر مينفعش يكون بالسالب'),
+  // Outside Egypt. Blank means the course is not sold abroad, which is a
+  // different thing from costing nothing — hence the empty-string branch.
+  priceEgpIntl: z.coerce.number().min(0).optional().or(z.literal('')),
   compareAtEgp: z.coerce.number().min(0).optional().or(z.literal('')),
   status: z.enum(['draft', 'published', 'archived']),
   certificateEnabled: z.enum(['on', 'off']),
@@ -47,6 +50,7 @@ export async function updateCourse(
     subtitleAr: formData.get('subtitleAr') ?? '',
     descriptionAr: formData.get('descriptionAr') ?? '',
     priceEgp: formData.get('priceEgp'),
+    priceEgpIntl: formData.get('priceEgpIntl') ?? '',
     compareAtEgp: formData.get('compareAtEgp') ?? '',
     status: formData.get('status'),
     certificateEnabled: formData.get('certificateEnabled') ?? 'off',
@@ -58,6 +62,7 @@ export async function updateCourse(
 
   const d = parsed.data
   const price = Math.round(d.priceEgp * 100)
+  const priceIntl = d.priceEgpIntl ? Math.round(Number(d.priceEgpIntl) * 100) : 0
   const compareAt = d.compareAtEgp ? Math.round(Number(d.compareAtEgp) * 100) : null
 
   // Publishing a course with no price would put a buy button in front of
@@ -80,6 +85,7 @@ export async function updateCourse(
         subtitle_ar: d.subtitleAr || null,
         description_ar: d.descriptionAr || null,
         price_egp: price,
+        price_egp_intl: priceIntl,
         compare_at_price_egp: compareAt && compareAt > 0 ? compareAt : null,
         status: d.status,
         certificate_enabled: d.certificateEnabled === 'on',

@@ -16,6 +16,7 @@ type Course = {
   subtitle_ar: string | null
   description_ar: string | null
   price_egp: number
+  price_egp_intl: number
   compare_at_price_egp: number | null
   status: 'draft' | 'published' | 'archived'
   certificate_enabled: boolean
@@ -104,6 +105,28 @@ export function CourseEditor({ course }: { course: Course }) {
             defaultValue={course.price_egp / 100}
             className={field}
           />
+        </div>
+
+        <div>
+          <label
+            htmlFor="priceEgpIntl"
+            className="mb-1.5 block text-sm font-semibold text-navy-900"
+          >
+            السعر لغير المصريين <span className="font-normal text-muted">(بالجنيه)</span>
+          </label>
+          <input
+            id="priceEgpIntl"
+            name="priceEgpIntl"
+            type="number"
+            min={0}
+            step={50}
+            dir="ltr"
+            defaultValue={course.price_egp_intl ? course.price_egp_intl / 100 : ''}
+            className={field}
+          />
+          <p className="mt-1.5 text-xs text-muted">
+            سيبيها فاضية لو الدورة مش بتتباع برّه مصر.
+          </p>
         </div>
 
         <div>

@@ -14,6 +14,7 @@ export type Course = Pick<
   | 'lesson_count'
   | 'total_duration_minutes'
   | 'price_egp'
+  | 'price_egp_intl'
   | 'compare_at_price_egp'
 >
 
@@ -40,7 +41,7 @@ export async function getPublishedCourses(): Promise<Course[]> {
     const { data, error } = await supabase
       .from('courses')
       .select(
-        'id, title_ar, slug, subtitle_ar, thumbnail_url, lesson_count, total_duration_minutes, price_egp, compare_at_price_egp',
+        'id, title_ar, slug, subtitle_ar, thumbnail_url, lesson_count, total_duration_minutes, price_egp, price_egp_intl, compare_at_price_egp',
       )
       .eq('status', 'published')
       .order('published_at', { ascending: false })

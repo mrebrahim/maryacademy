@@ -1,6 +1,6 @@
 'use client'
 
-import { Check, Copy, ExternalLink, Lock, Tag } from 'lucide-react'
+import { Check, Copy, ExternalLink, Lock, MessageCircle, Tag } from 'lucide-react'
 import { useActionState, useEffect, useId, useRef, useState } from 'react'
 import { useFormStatus } from 'react-dom'
 
@@ -13,6 +13,7 @@ import {
 } from '@/app/actions/checkout'
 import { Button } from '@/components/ui/button'
 import { instapay } from '@/config/instapay'
+import { whatsappPaymentsLink } from '@/config/site'
 import { trackAbandonedLead, trackAddPaymentInfo, trackBeginCheckout } from '@/lib/analytics'
 import { latinAwareDir } from '@/lib/rtl'
 import { cn, formatPrice } from '@/lib/utils'
@@ -81,6 +82,7 @@ export function CheckoutForm({
   courseId,
   courseTitle,
   priceEgp,
+  priceEgpIntl,
   compareAtEgp,
   included,
   methods,
@@ -89,6 +91,7 @@ export function CheckoutForm({
   courseId: string
   courseTitle: string
   priceEgp: number
+  priceEgpIntl: number
   compareAtEgp: number | null
   included: string[]
   methods: Method[]
@@ -314,6 +317,32 @@ export function CheckoutForm({
                   </a>
                 </div>
                 <p className="mt-2 text-xs text-muted">باسم: {instapay.name}</p>
+              </div>
+            )}
+
+            {/* Outside Egypt. InstaPay is domestic only and the phone field
+                above takes Egyptian numbers, so this is not a price note —
+                it is the only route these buyers have, and it has to be
+                visible before they try the form and fail. */}
+            {priceEgpIntl > 0 && (
+              <div className="mt-5 rounded-xl border border-navy-900/15 p-4">
+                <p className="text-sm font-semibold text-navy-900">مقيمة خارج مصر؟</p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                  السعر <span className="tabular font-semibold">{formatPrice(priceEgpIntl)}</span>{' '}
+                  أو ما يعادلها بعملتك. إنستا باي بيشتغل جوه مصر بس، فكلّمينا على واتساب
+                  ونرتّبلك التحويل.
+                </p>
+                <a
+                  href={whatsappPaymentsLink(
+                    'السلام عليكم، أنا خارج مصر وعايزة أشترك في الكورس',
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-600 underline underline-offset-4 hover:text-gold-500"
+                >
+                  <MessageCircle className="size-4" aria-hidden="true" />
+                  كلّمينا على واتساب
+                </a>
               </div>
             )}
           </section>

@@ -29,13 +29,18 @@ export default async function AdminContentPage() {
   const { data: courses } = await supabase
     .from('courses')
     .select(
-      'id, slug, title_ar, subtitle_ar, description_ar, price_egp, compare_at_price_egp, status, certificate_enabled, thumbnail_url',
+      'id, slug, title_ar, subtitle_ar, description_ar, price_egp, price_egp_intl, compare_at_price_egp, status, certificate_enabled, thumbnail_url',
     )
     .order('created_at')
 
+  // From the view, not the table: `lessons.bunny_video_id` has no SELECT
+  // privilege for any client role, and naming it here made PostgREST
+  // refuse the whole query — which showed up as every course having no
+  // lessons at all. The view carries `has_video`, which is all this page
+  // ever needed.
   const { data: lessons } = await supabase
-    .from('lessons')
-    .select('id, course_id, title_ar, sort_order, duration_seconds, is_free_preview, bunny_video_id')
+    .from('lessons_public')
+    .select('id, course_id, title_ar, sort_order, duration_seconds, is_free_preview, has_video')
     .order('sort_order')
 
   const rows = courses ?? []
@@ -55,7 +60,7 @@ export default async function AdminContentPage() {
         <div className="mt-10 space-y-12">
           {rows.map((course) => {
             const courseLessons = (lessons ?? []).filter((l) => l.course_id === course.id)
-            const withoutVideo = courseLessons.filter((l) => !l.bunny_video_id).length
+            const withoutVideo = courseLessons.filter((l) => !l.has_video).length
 
             return (
               <section key={course.id}>
@@ -128,16 +133,19 @@ export default async function AdminContentPage() {
                     <p className="px-5 py-8 text-center text-sm text-muted">مفيش دروس لسه.</p>
                   ) : (
                     <ul className="mt-3 divide-y divide-navy-900/8">
+                      {/* Every column of a view is nullable in the generated
+                          types, though the table declares them NOT NULL —
+                          narrowed once here rather than in LessonRow. */}
                       {courseLessons.map((lesson) => (
                         <li key={lesson.id}>
                           <LessonRow
                             lesson={{
-                              id: lesson.id,
-                              title_ar: lesson.title_ar,
-                              sort_order: lesson.sort_order,
-                              duration_seconds: lesson.duration_seconds,
-                              is_free_preview: lesson.is_free_preview,
-                              has_video: Boolean(lesson.bunny_video_id),
+                              id: lesson.id!,
+                              title_ar: lesson.title_ar ?? '',
+                              sort_order: lesson.sort_order ?? 0,
+                              duration_seconds: lesson.duration_seconds ?? 0,
+                              is_free_preview: Boolean(lesson.is_free_preview),
+                              has_video: Boolean(lesson.has_video),
                             }}
                           />
                         </li>
