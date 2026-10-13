@@ -467,12 +467,19 @@ export type Database = {
       orders: {
         Row: {
           amount: number
+          // Guest checkout (migration 15): an order can exist before an
+          // account does, so `user_id` is null until the buyer signs in
+          // with the same address and claims it.
+          contact_email: string | null
+          contact_name: string | null
+          contact_phone: string | null
           coupon_id: string | null
           course_id: string
           created_at: string
           currency: Database['public']['Enums']['currency_code']
           discount_amount: number
           id: string
+          lead_id: string | null
           paid_at: string | null
           provider: Database['public']['Enums']['payment_provider']
           provider_order_id: string | null
@@ -480,14 +487,18 @@ export type Database = {
           raw_payload: Json | null
           status: Database['public']['Enums']['order_status']
           updated_at: string
-          user_id: string
+          user_id: string | null
           utm: Json
         }
         Insert: {
           amount: number
+          contact_email?: string | null
+          contact_name?: string | null
+          contact_phone?: string | null
           coupon_id?: string | null
           course_id: string
           created_at?: string
+          lead_id?: string | null
           currency?: Database['public']['Enums']['currency_code']
           discount_amount?: number
           id?: string
@@ -910,6 +921,7 @@ export type Database = {
       }
       delete_lesson_quiz: { Args: { p_lesson_id: string }; Returns: undefined }
       generate_certificate_serial: { Args: never; Returns: string }
+      get_content_readiness: { Args: never; Returns: Json }
       get_quiz_for_admin: { Args: { p_lesson_id: string }; Returns: Json }
       set_lesson_quiz: { Args: { p_lesson_id: string; p_quiz: Json }; Returns: string }
       submit_quiz_attempt: { Args: { p_quiz_id: string; p_answers: Json }; Returns: Json }

@@ -40,7 +40,7 @@ export default async function AdminQuizPage({ params }: { params: Params }) {
   const course = Array.isArray(lesson.course) ? lesson.course[0] : lesson.course
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <Link
         href="/admin/quizzes"
         className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-navy-900"

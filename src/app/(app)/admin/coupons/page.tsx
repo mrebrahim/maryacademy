@@ -24,7 +24,7 @@ export default async function AdminCouponsPage() {
   const now = Date.now()
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">أكواد الخصم</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         الخصم بيتحسب في قاعدة البيانات وقت الحجز، فالكود مش ممكن يتلاعب بيه من المتصفح.

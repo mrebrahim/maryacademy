@@ -41,7 +41,7 @@ export default async function AdminContentPage() {
   const rows = courses ?? []
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">المحتوى</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         تعديل الدورات وأسعارها وصورها ودروسها. أي تغيير هنا بيظهر على الموقع على طول.

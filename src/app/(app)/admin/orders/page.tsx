@@ -28,7 +28,7 @@ export default async function AdminOrdersPage() {
   const pending = rows.filter((o) => o.status === 'pending')
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">الطلبات</h1>
       <p className="mt-3 text-sm text-muted">
         {pending.length

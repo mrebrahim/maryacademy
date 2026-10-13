@@ -46,7 +46,7 @@ export default async function AdminQuizzesPage() {
   const withExam = rows.filter((l) => byLesson.has(l.id)).length
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">امتحانات الدروس</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         امتحان قصير بعد كل درس، أسئلة اختيار من متعدد. الطالبة بتشوف نتيجتها بس — الإجابات

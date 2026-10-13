@@ -27,7 +27,7 @@ export default async function AdminLeadsPage() {
   const abandoned = rows.filter((l) => l.status === 'abandoned').length
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">الطلبات المتروكة</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         ناس فتحت صفحة الدفع وكتبت بياناتها وما كمّلتش.{' '}

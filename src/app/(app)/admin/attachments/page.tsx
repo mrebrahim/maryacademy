@@ -42,7 +42,7 @@ export default async function AdminAttachmentsPage() {
   const rows = lessons ?? []
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">ملفات الدروس</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         أي ملف الطالب يحمّله مع الدرس — PDF بالخطوات، قائمة منتجات. الملف بيفضل مكانه وإحنا

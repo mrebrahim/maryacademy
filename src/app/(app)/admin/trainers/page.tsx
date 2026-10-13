@@ -28,7 +28,7 @@ export default async function AdminTrainersPage() {
   const open = rows.filter((a) => a.status === 'new' || a.status === 'reviewing').length
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-12 sm:px-6 sm:py-16">
+    <div>
       <h1 className="display text-3xl text-navy-900">طلبات المدرّبين</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
         اللي قدّموا من صفحة «كن مدرّبًا معنا».{' '}
