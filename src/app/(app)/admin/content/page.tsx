@@ -1,10 +1,12 @@
-import { ImageOff } from 'lucide-react'
+import { ArrowLeft, ImageOff, Plus } from 'lucide-react'
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { CourseEditor } from '@/components/admin/course-editor'
 import { LessonRow } from '@/components/admin/lesson-row'
 import { ThumbnailUpload } from '@/components/admin/thumbnail-upload'
+import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = { title: 'المحتوى — لوحة التحكم', robots: { index: false } }
@@ -47,10 +49,20 @@ export default async function AdminContentPage() {
 
   return (
     <div>
-      <h1 className="display text-3xl text-navy-900">المحتوى</h1>
-      <p className="mt-3 max-w-xl leading-loose text-muted">
-        تعديل الدورات وأسعارها وصورها ودروسها. أي تغيير هنا بيظهر على الموقع على طول.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <h1 className="display text-2xl text-navy-900 sm:text-3xl">المحتوى</h1>
+          <p className="mt-3 max-w-xl leading-loose text-muted">
+            تعديل الدورات وأسعارها وصورها ودروسها. أي تغيير هنا بيظهر على الموقع على طول.
+          </p>
+        </div>
+        <Button asChild size="md">
+          <Link href="/admin/content/new">
+            <Plus aria-hidden="true" />
+            دورة جديدة
+          </Link>
+        </Button>
+      </div>
 
       {rows.length === 0 ? (
         <p className="mt-10 rounded-card bg-white px-6 py-10 text-center text-sm text-muted shadow-soft ring-1 ring-navy-900/5">
@@ -128,6 +140,16 @@ export default async function AdminContentPage() {
                     </code>{' '}
                     — مش من هنا، عشان المزامنة الجاية ما تمسحش اللي اتكتب.
                   </p>
+
+                  <div className="mt-3">
+                    <Link
+                      href={`/admin/content/${course.id}/curriculum`}
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-600 transition hover:text-gold-500"
+                    >
+                      ضيفي أو شيلي دروس
+                      <ArrowLeft className="size-4" aria-hidden="true" />
+                    </Link>
+                  </div>
 
                   {courseLessons.length === 0 ? (
                     <p className="px-5 py-8 text-center text-sm text-muted">مفيش دروس لسه.</p>
