@@ -331,30 +331,17 @@ export function CheckoutForm({
                 value={coupon?.ok ? (coupon.code ?? '') : ''}
               />
 
-              <div>
-                <label
-                  htmlFor={`${ids}-reference`}
-                  className="mb-1.5 block text-sm font-semibold text-navy-900"
-                >
-                  رقم أو مرجع العملية
-                </label>
-                <input
-                  id={`${ids}-reference`}
-                  name="reference"
-                  required
-                  dir="ltr"
-                  className={field}
-                />
-                <p className="mt-1.5 text-sm text-muted">
-                  بعد التحويل هيظهرلك رقم للعملية — اكتبه هنا عشان نقدر نطابقه.
+              <div className="rounded-xl bg-cream-50 p-4">
+                <p className="text-sm font-semibold text-navy-900">
+                  بعد ما تحوّلي، ابعتيلنا سكرين شوت التحويل على واتساب
+                </p>
+                <p className="mt-1.5 text-sm leading-relaxed text-muted">
+                  دوسي «أكمل الحجز» الأول، وهنوديكي على واتساب برسالة جاهزة — السكرين
+                  شوت هو اللي بنطابق بيه التحويل ونفتحلك الدورة.
                 </p>
               </div>
 
               <PayButton label="أكمل الحجز" />
-
-              <p className="text-center text-sm leading-relaxed text-muted">
-                بنراجع التحويل ونفتحلك الدورة على طول بعد المطابقة.
-              </p>
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-muted">
                 <Lock className="size-3.5" aria-hidden="true" />

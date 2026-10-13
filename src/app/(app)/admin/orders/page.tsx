@@ -76,10 +76,19 @@ export default async function AdminOrdersPage() {
                 </div>
 
                 <p className="mt-4 border-t border-navy-900/10 pt-4 text-xs text-muted">
-                  مرجع العملية:{' '}
-                  <span dir="ltr" className="tabular font-medium text-navy-900">
-                    {order.provider_txn_id ?? '—'}
-                  </span>
+                  {order.provider_txn_id ? (
+                    <>
+                      مرجع العملية:{' '}
+                      <span dir="ltr" className="tabular font-medium text-navy-900">
+                        {order.provider_txn_id}
+                      </span>
+                    </>
+                  ) : (
+                    // Since the reference field was dropped, matching is done
+                    // against the screenshot sent on WhatsApp — by the email
+                    // above, which is what the order is recorded under.
+                    'طابقي السكرين شوت اللي جه على واتساب بالبريد ده قبل التأكيد'
+                  )}
                 </p>
 
                 {order.status === 'pending' && (

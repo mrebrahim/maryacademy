@@ -54,7 +54,10 @@ export interface PaymentProvider {
 
 /**
  * InstaPay — the live route. Settlement is confirmed by an admin against
- * the reference the student submits.
+ * the transfer screenshot the student sends on WhatsApp. Asking them to
+ * copy a reference number out of the InstaPay app instead was a field
+ * nobody could verify: a typo and a fabrication look identical, and the
+ * screenshot is both easier to send and harder to get wrong.
  */
 export const instaPayProvider: PaymentProvider = {
   id: 'instapay',
@@ -62,13 +65,13 @@ export const instaPayProvider: PaymentProvider = {
     id: 'instapay',
     kind: 'manual',
     labelAr: 'إنستا باي',
-    hintAr: 'تحوّل المبلغ وتكتب رقم العملية، ونفتحلك الدورة بعد المراجعة',
+    hintAr: 'تحوّلي المبلغ وتبعتي سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
     available: true,
   },
   async createPayment() {
     return {
       kind: 'manual',
-      instructionsAr: 'حوّل المبلغ على العنوان ده، وبعدها اكتب رقم أو مرجع العملية.',
+      instructionsAr: 'حوّلي المبلغ على العنوان ده، وبعدها ابعتي سكرين شوت التحويل على واتساب.',
       handle: instapay.handle,
       payLink: instapay.payLink,
     }

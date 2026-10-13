@@ -37,12 +37,36 @@ export const siteConfig = {
    * buy. The env var still wins, so it can be changed without a deploy.
    */
   whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '201027555789',
+  /**
+   * Where payment screenshots go. A separate line from the enquiries
+   * number on purpose: a transfer that nobody matches is a student
+   * waiting, so it should not sit in the same thread as "how much is the
+   * course?".
+   */
+  whatsappPaymentsNumber:
+    process.env.NEXT_PUBLIC_WHATSAPP_PAYMENTS_NUMBER ?? '201279162671',
 } as const
 
+const toWhatsapp = (number: string, messageAr: string) =>
+  number ? `https://wa.me/${number.replace(/\D/g, '')}?text=${encodeURIComponent(messageAr)}` : '/contact'
+
 export const whatsappLink = (messageAr = 'السلام عليكم، أرغب في معرفة تفاصيل الدورات') =>
-  siteConfig.whatsappNumber
-    ? `https://wa.me/${siteConfig.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(messageAr)}`
-    : '/contact'
+  toWhatsapp(siteConfig.whatsappNumber, messageAr)
+
+/** The payment-proof line. Falls back to the main number if unset. */
+export const whatsappPaymentsLink = (messageAr: string) =>
+  toWhatsapp(siteConfig.whatsappPaymentsNumber || siteConfig.whatsappNumber, messageAr)
+
+/**
+ * The ready-made message a student sends with their transfer screenshot.
+ * It carries the email the order was recorded against, because that is
+ * what the order is matched on — a screenshot on its own only proves that
+ * *somebody* paid.
+ */
+export const paymentProofMessage = (email?: string) =>
+  ['لقد اشتركت وهذه اسكرين شوت من الدفع', email ? `البريد: ${email}` : null]
+    .filter(Boolean)
+    .join('\n')
 
 export const academyStats = [
   { value: '+400', labelAr: 'متدرب ومتدربة', contextAr: 'في التدريب الحضوري' },

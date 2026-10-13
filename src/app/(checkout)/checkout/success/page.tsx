@@ -1,10 +1,10 @@
-import { CheckCircle2 } from 'lucide-react'
+import { CheckCircle2, MessageCircle } from 'lucide-react'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { CheckoutShell } from '@/components/checkout/checkout-shell'
 import { Button } from '@/components/ui/button'
-import { whatsappLink } from '@/config/site'
+import { paymentProofMessage, whatsappLink, whatsappPaymentsLink } from '@/config/site'
 
 export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { index: false } }
 
@@ -17,6 +17,10 @@ export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { 
  * succeeded, because with InstaPay it has not yet: settlement is confirmed
  * by a person. Telling someone "you're in" and then making them wait is how
  * a support queue is built.
+ *
+ * The screenshot is that person's only evidence, so sending it is the one
+ * thing on this page that cannot be skipped — it comes before the account
+ * steps, which genuinely can wait.
  */
 export default async function CheckoutSuccessPage({
   searchParams,
@@ -33,8 +37,26 @@ export default async function CheckoutSuccessPage({
         <h1 className="display mt-6 text-2xl text-navy-900 sm:text-3xl">وصلنا طلبك</h1>
 
         <p className="mt-5 text-base leading-loose text-muted">
-          بنطابق التحويل دلوقتي. أول ما يتأكد، بنفتحلك الدورة على طول.
+          فاضل خطوة واحدة: ابعتيلنا سكرين شوت التحويل على واتساب عشان نطابقه ونفتحلك
+          الدورة.
         </p>
+
+        <div className="mt-7 rounded-card bg-navy-950 p-6 text-start">
+          <p className="text-sm font-semibold text-white">ابعتي السكرين شوت دلوقتي</p>
+          <p className="mt-2 text-sm leading-relaxed text-cream-50/75">
+            هتلاقي رسالة جاهزة مكتوبة — ارفقي معاها صورة التحويل وابعتي.
+          </p>
+          <Button asChild size="lg" className="mt-5 w-full">
+            <a
+              href={whatsappPaymentsLink(paymentProofMessage(email))}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <MessageCircle aria-hidden="true" />
+              ابعتي صورة التحويل على واتساب
+            </a>
+          </Button>
+        </div>
 
         <div className="mt-7 rounded-card bg-white p-6 text-start shadow-soft ring-1 ring-navy-900/5">
           <p className="text-sm font-semibold text-navy-900">إزاي تدخل على الدورة؟</p>
@@ -62,13 +84,13 @@ export default async function CheckoutSuccessPage({
             </li>
           </ol>
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            مش لازم تعمل ده دلوقتي — مكانك محجوز بالبريد ده.
+            مش لازم تعملي ده دلوقتي — مكانك محجوز بالبريد ده.
           </p>
         </div>
 
         <div className="mt-8">
-          <Button asChild size="lg" className="w-full sm:w-auto sm:px-10">
-            <Link href="/login">اعمل حسابك دلوقتي</Link>
+          <Button asChild variant="tertiary" size="lg" className="w-full sm:w-auto sm:px-10">
+            <Link href="/login">اعملي حسابك دلوقتي</Link>
           </Button>
         </div>
 

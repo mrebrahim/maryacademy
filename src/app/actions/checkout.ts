@@ -68,11 +68,6 @@ export type OrderState = { ok: boolean; messageAr: string } | null
 
 const orderSchema = z.object({
   courseId: z.uuid(),
-  reference: z
-    .string()
-    .trim()
-    .min(4, 'اكتب رقم أو مرجع العملية زي ما ظهرلك في إنستا باي')
-    .max(120),
   couponCode: z.string().trim().max(60).optional().or(z.literal('')),
   // Guest checkout: these three are the identity the order is recorded
   // against and later claimed by.
@@ -88,7 +83,6 @@ const orderSchema = z.object({
 export async function submitTransfer(_prev: OrderState, formData: FormData): Promise<OrderState> {
   const parsed = orderSchema.safeParse({
     courseId: formData.get('courseId'),
-    reference: formData.get('reference'),
     couponCode: formData.get('couponCode') ?? '',
     name: formData.get('name'),
     phone: formData.get('phone'),
@@ -109,7 +103,6 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       p_name: parsed.data.name,
       p_phone: parsed.data.phone,
       p_email: parsed.data.email,
-      p_reference: parsed.data.reference,
       p_coupon_code: parsed.data.couponCode || undefined,
     })
 
