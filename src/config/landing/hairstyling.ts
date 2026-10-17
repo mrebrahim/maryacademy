@@ -34,19 +34,26 @@ export const landingCopy = {
    * `lessons.bunny_video_id` is for — so a lesson belongs here only when
    * the academy means to give it away.
    *
-   *   * التجهيزات is already the course's one free preview, so publishing
-   *     it changes nothing.
-   *   * اللوك الثاني is a paid 49-minute lesson, listed here on the
-   *     academy's explicit instruction as the hook. Replace the id with a
-   *     short cut of it to stop giving the whole thing away.
+   *   * التجهيزات is the course's one free preview, so publishing it
+   *     whole changes nothing.
+   *   * اللوك الثاني is a paid 49-minute lesson, capped at two minutes by
+   *     `maxSeconds`. The cap shapes the page; it does not protect the
+   *     file — see src/components/landing/capped-video.tsx. A separately
+   *     uploaded two-minute cut is the only version that does, and
+   *     swapping its id in here (and dropping `maxSeconds`) is the whole
+   *     change.
    *
    * The section disappears entirely while the list is empty; it never
    * renders a frame with nothing in it.
    */
   previewClips: [
     { videoId: '1194f2a6-073c-4c98-8acd-ec8d2820191e', titleAr: 'التجهيزات — الدرس الأول كامل' },
-    { videoId: 'a94346cf-9196-4924-82d6-f17bc031da4c', titleAr: 'اللوك الثاني — الدرس كامل' },
-  ] as { videoId: string; titleAr: string }[],
+    {
+      videoId: 'a94346cf-9196-4924-82d6-f17bc031da4c',
+      titleAr: 'من اللوك الثاني — أول دقيقتين',
+      maxSeconds: 120,
+    },
+  ] as { videoId: string; titleAr: string; maxSeconds?: number }[],
 
   hero: {
     kicker: 'كورس تصفيف الشعر الاحترافي — أونلاين',

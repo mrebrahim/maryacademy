@@ -1,3 +1,4 @@
+import { CappedVideo } from '@/components/landing/capped-video'
 import { SectionHeading } from '@/components/ui/section-heading'
 
 /**
@@ -10,7 +11,8 @@ import { SectionHeading } from '@/components/ui/section-heading'
 export function PreviewClips({
   clips,
 }: {
-  clips: { videoId: string; titleAr: string }[]
+  /** `maxSeconds` stops a paid lesson part-way; omit it to play in full. */
+  clips: { videoId: string; titleAr: string; maxSeconds?: number }[]
 }) {
   if (clips.length === 0) return null
 
@@ -24,24 +26,39 @@ export function PreviewClips({
           id="preview-clips"
           kicker="من جوه الكورس"
           title="شوف طريقة الشرح بنفسك"
-          subtitle="دروس كاملة من الكورس نفسه — مش تيزر ولا إعلان."
+          subtitle="من الكورس نفسه — مش تيزر ولا إعلان."
           align="center"
         />
 
-        <ul className="mt-12 grid gap-6 sm:grid-cols-2">
+        <ul
+          className={
+            clips.length === 1
+              ? 'mx-auto mt-12 grid max-w-2xl gap-6'
+              : 'mt-12 grid gap-6 sm:grid-cols-2'
+          }
+        >
           {clips.map((clip) => (
             <li key={clip.videoId}>
               <figure>
-                <div className="relative aspect-video overflow-hidden rounded-card bg-navy-900 ring-1 ring-gold-500/20">
-                  <iframe
-                    src={`https://iframe.mediadelivery.net/embed/${libraryId}/${clip.videoId}?autoplay=false&preload=false`}
+                {clip.maxSeconds ? (
+                  <CappedVideo
+                    videoId={clip.videoId}
+                    libraryId={libraryId}
                     title={clip.titleAr}
-                    loading="lazy"
-                    allow="accelerometer; gyroscope; encrypted-media; picture-in-picture; fullscreen"
-                    allowFullScreen
-                    className="absolute inset-0 size-full border-0"
+                    maxSeconds={clip.maxSeconds}
                   />
-                </div>
+                ) : (
+                  <div className="relative aspect-video overflow-hidden rounded-card bg-navy-900 ring-1 ring-gold-500/20">
+                    <iframe
+                      src={`https://iframe.mediadelivery.net/embed/${libraryId}/${clip.videoId}?autoplay=false&preload=false`}
+                      title={clip.titleAr}
+                      loading="lazy"
+                      allow="accelerometer; gyroscope; encrypted-media; picture-in-picture; fullscreen"
+                      allowFullScreen
+                      className="absolute inset-0 size-full border-0"
+                    />
+                  </div>
+                )}
                 <figcaption className="mt-3 text-sm text-navy-900">{clip.titleAr}</figcaption>
               </figure>
             </li>
