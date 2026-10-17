@@ -24,7 +24,7 @@ export function PreviewClips({
           id="preview-clips"
           kicker="من جوه الكورس"
           title="شوف طريقة الشرح بنفسك"
-          subtitle="دقايق من دروس حقيقية — مش إعلان."
+          subtitle="دروس كاملة من الكورس نفسه — مش تيزر ولا إعلان."
           align="center"
         />
 

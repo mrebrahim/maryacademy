@@ -23,16 +23,30 @@ export const landingCopy = {
   vslVideoId: null as string | null,
 
   /**
-   * Short clips lifted from the course itself — the single most convincing
-   * thing on the page after the testimonials, because it lets someone judge
-   * the teaching instead of taking a claim on trust.
+   * Lessons shown from inside the course — the single most convincing
+   * thing on the page after the testimonials, because it lets someone
+   * judge the teaching instead of taking a claim on trust.
    *
-   * Each `videoId` is a Bunny GUID, not a file URL, so a link copied out of
-   * the page is not a permanent public copy of paid content. The section
-   * disappears entirely while the list is empty; it never renders a frame
-   * with nothing in it.
+   * ⚠️ Anything listed here is PUBLIC, permanently. The id lands in the
+   * page source of a page built to be seen by strangers, and token
+   * authentication is off, so whoever reads it can play the whole video
+   * anywhere. That is the opposite of what the SELECT revoke on
+   * `lessons.bunny_video_id` is for — so a lesson belongs here only when
+   * the academy means to give it away.
+   *
+   *   * التجهيزات is already the course's one free preview, so publishing
+   *     it changes nothing.
+   *   * اللوك الثاني is a paid 49-minute lesson, listed here on the
+   *     academy's explicit instruction as the hook. Replace the id with a
+   *     short cut of it to stop giving the whole thing away.
+   *
+   * The section disappears entirely while the list is empty; it never
+   * renders a frame with nothing in it.
    */
-  previewClips: [] as { videoId: string; titleAr: string }[],
+  previewClips: [
+    { videoId: '1194f2a6-073c-4c98-8acd-ec8d2820191e', titleAr: 'التجهيزات — الدرس الأول كامل' },
+    { videoId: 'a94346cf-9196-4924-82d6-f17bc031da4c', titleAr: 'اللوك الثاني — الدرس كامل' },
+  ] as { videoId: string; titleAr: string }[],
 
   hero: {
     kicker: 'كورس تصفيف الشعر الاحترافي — أونلاين',
