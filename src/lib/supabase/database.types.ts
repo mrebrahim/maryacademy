@@ -862,8 +862,6 @@ export type Database = {
       lessons_public: {
         Row: {
           course_id: string | null
-          /** Whether a video is attached — never which one. */
-          has_video: boolean | null
           description_ar: string | null
           duration_seconds: number | null
           id: string | null
@@ -928,6 +926,7 @@ export type Database = {
       delete_lesson_quiz: { Args: { p_lesson_id: string }; Returns: undefined }
       generate_certificate_serial: { Args: never; Returns: string }
       get_content_readiness: { Args: never; Returns: Json }
+      get_lesson_video_flags: { Args: { p_course_id: string }; Returns: Json }
       get_quiz_for_admin: { Args: { p_lesson_id: string }; Returns: Json }
       set_lesson_quiz: { Args: { p_lesson_id: string; p_quiz: Json }; Returns: string }
       submit_quiz_attempt: { Args: { p_quiz_id: string; p_answers: Json }; Returns: Json }

@@ -35,15 +35,30 @@ export default async function AdminContentPage() {
     )
     .order('created_at')
 
-  // From the view, not the table: `lessons.bunny_video_id` has no SELECT
-  // privilege for any client role, and naming it here made PostgREST
-  // refuse the whole query — which showed up as every course having no
-  // lessons at all. The view carries `has_video`, which is all this page
-  // ever needed.
+  // Lessons from the view; the video flag from a function.
+  //
+  // Not from the table — `lessons.bunny_video_id` has no SELECT privilege
+  // for any client role, and naming it made PostgREST refuse the whole
+  // query, which showed up as every course having no lessons. And not
+  // from the view either: `lessons_public` is security_invoker, so a
+  // column it touches must be readable by whoever is asking, even inside
+  // a boolean. Putting the flag there took the view down for every reader
+  // on the site. A SECURITY DEFINER function is the only place a
+  // protected column can be looked at.
   const { data: lessons } = await supabase
     .from('lessons_public')
-    .select('id, course_id, title_ar, sort_order, duration_seconds, is_free_preview, has_video')
+    .select('id, course_id, title_ar, sort_order, duration_seconds, is_free_preview')
     .order('sort_order')
+
+  const videoFlags = Object.assign(
+    {},
+    ...(await Promise.all(
+      (courses ?? []).map(async (course) => {
+        const { data } = await supabase.rpc('get_lesson_video_flags', { p_course_id: course.id })
+        return (data ?? {}) as Record<string, boolean>
+      }),
+    )),
+  ) as Record<string, boolean>
 
   const rows = courses ?? []
 
@@ -72,7 +87,7 @@ export default async function AdminContentPage() {
         <div className="mt-10 space-y-12">
           {rows.map((course) => {
             const courseLessons = (lessons ?? []).filter((l) => l.course_id === course.id)
-            const withoutVideo = courseLessons.filter((l) => !l.has_video).length
+            const withoutVideo = courseLessons.filter((l) => !videoFlags[l.id ?? '']).length
 
             return (
               <section key={course.id}>
@@ -167,7 +182,7 @@ export default async function AdminContentPage() {
                               sort_order: lesson.sort_order ?? 0,
                               duration_seconds: lesson.duration_seconds ?? 0,
                               is_free_preview: Boolean(lesson.is_free_preview),
-                              has_video: Boolean(lesson.has_video),
+                              has_video: Boolean(videoFlags[lesson.id ?? '']),
                             }}
                           />
                         </li>
