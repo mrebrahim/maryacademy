@@ -7,6 +7,7 @@ import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { CHECKOUT_ENABLED } from '@/config/features'
+import { promoEmbedUrl } from '@/config/video'
 import { siteConfig, whatsappLink } from '@/config/site'
 import { getCourseBySlug, getPublishedCourseSlugs, getTestimonials } from '@/lib/queries'
 import { PriceNote } from '@/components/ui/price-note'
@@ -65,6 +66,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
   // rather than displaying a placeholder number. PRD §6.1: never show or
   // trust a price that did not come from the database.
   const hasPrice = course.price_egp > 0
+  const promoUrl = promoEmbedUrl(course.promo_video_id)
   // The price shows as soon as it is set; the button only moves to checkout
   // once the payment flow exists, so it never points at a missing route.
   const canCheckout = hasPrice && CHECKOUT_ENABLED
@@ -169,11 +171,28 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
           {/* Price / CTA card */}
           <aside className="rounded-card border border-gold-500/30 bg-navy-800 p-6 lg:sticky lg:top-24 lg:self-start">
-            <div className="aspect-video rounded-lg bg-navy-900/60 ring-1 ring-white/5">
-              <div className="grid size-full place-items-center text-cream-50/40">
-                <PlayCircle className="size-12" aria-hidden="true" />
+            {/* The promo video, when the course carries one. Same embed
+                the landing page uses — the library id is public by design
+                and appears in every Bunny embed URL, so this is not the
+                protected `bunny_video_id` of a paid lesson. */}
+            {promoUrl ? (
+              <div className="aspect-video overflow-hidden rounded-lg ring-1 ring-white/5">
+                <iframe
+                  src={promoUrl}
+                  title={course.title_ar}
+                  loading="lazy"
+                  allow="accelerometer; gyroscope; encrypted-media; picture-in-picture; fullscreen"
+                  allowFullScreen
+                  className="size-full"
+                />
               </div>
-            </div>
+            ) : (
+              <div className="aspect-video rounded-lg bg-navy-900/60 ring-1 ring-white/5">
+                <div className="grid size-full place-items-center text-cream-50/40">
+                  <PlayCircle className="size-12" aria-hidden="true" />
+                </div>
+              </div>
+            )}
 
             {hasPrice ? (
               <div className="mt-6 flex items-baseline gap-3">
@@ -264,7 +283,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
           <SectionHeading
             kicker="المنهج"
             title="محتوى الدورة"
-            subtitle={`${course.lesson_count} درسًا على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
+            subtitle={`${course.lesson_count} درس — ${formatDuration(course.total_duration_minutes * 60)}`}
           />
 
           <div className="mt-12 space-y-4">

@@ -17,6 +17,7 @@ import { LeadCapture } from "@/components/landing/lead-capture";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { VideoTestimonials } from "@/components/home/video-testimonials";
 import { PriceNote } from "@/components/ui/price-note";
+import { promoEmbedUrl } from "@/config/video";
 import { SectionHeading } from "@/components/ui/section-heading";
 import { brandAssets, HAS_HERO_IMAGE } from "@/config/assets";
 import { includedItems } from "@/config/checkout";
@@ -44,6 +45,12 @@ export default async function HairstylingLandingPage() {
   ]);
 
   const c = landingCopy;
+
+  // The VSL comes from the database first, so uploading one and setting
+  // it on the course lights up this page and the course page together —
+  // no code change, no second place to forget. The config override stays
+  // for a campaign that wants a different video on this page only.
+  const vslUrl = promoEmbedUrl(c.vslVideoId ?? course?.promo_video_id);
 
   return (
     <>
@@ -75,11 +82,11 @@ export default async function HairstylingLandingPage() {
               rather than showing an empty frame: a visible "video goes
               here" box on a live ad destination reads as an unfinished
               site, which costs more than the missing video does. */}
-          {c.vslVideoId ? (
+          {vslUrl ? (
             <div className="mt-9 overflow-hidden rounded-card ring-1 ring-gold-500/25">
               <div className="aspect-video">
                 <iframe
-                  src={`https://iframe.mediadelivery.net/embed/${process.env.NEXT_PUBLIC_BUNNY_LIBRARY_ID}/${c.vslVideoId}?autoplay=false`}
+                  src={vslUrl}
                   title={c.hero.headline}
                   loading="lazy"
                   allow="accelerometer; gyroscope; encrypted-media; picture-in-picture; fullscreen"
@@ -275,7 +282,7 @@ export default async function HairstylingLandingPage() {
             <SectionHeading
               kicker="المحتوى"
               title="اللي جوّه الكورس"
-              subtitle={`${course.lesson_count} درسًا على ${course.modules.length} أجزاء — ${formatDuration(course.total_duration_minutes * 60)}`}
+              subtitle={`${course.lesson_count} درس — ${formatDuration(course.total_duration_minutes * 60)}`}
               align="center"
             />
 
