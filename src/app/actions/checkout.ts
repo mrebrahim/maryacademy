@@ -88,6 +88,9 @@ const orderSchema = z.object({
 })
 
 export async function submitTransfer(_prev: OrderState, formData: FormData): Promise<OrderState> {
+  let orderId: string | null = null
+  let orderValue = 0
+
   const parsed = orderSchema.safeParse({
     courseId: formData.get('courseId'),
     couponCode: formData.get('couponCode') ?? '',
@@ -111,7 +114,7 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
     // Works signed in or not: the function records auth.uid() when there is
     // one, and the email when there is not. The price and the discount are
     // computed in the database either way.
-    const { error } = await supabase.rpc('create_guest_order', {
+    const { data: newOrderId, error } = await supabase.rpc('create_guest_order', {
       p_course_id: parsed.data.courseId,
       p_name: parsed.data.name,
       p_phone: parsed.data.phone,
@@ -134,6 +137,28 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       }
       throw error
     }
+
+    orderId = newOrderId ?? null
+
+    // The value that travels with the ad event. Read from the course row
+    // rather than taken from the form — `courses` is publicly readable,
+    // so this costs nothing and keeps a browser from naming its own
+    // conversion value. It is the list price for the chosen band, not the
+    // couponed total; the authoritative revenue figure is the server-side
+    // purchase, reported when the transfer is confirmed.
+    const { data: course } = await supabase
+      .from('courses')
+      .select('price_egp, price_egp_intl')
+      .eq('id', parsed.data.courseId)
+      .maybeSingle()
+
+    if (course) {
+      const minor =
+        parsed.data.region === 'intl' && course.price_egp_intl > 0
+          ? course.price_egp_intl
+          : course.price_egp
+      orderValue = minor / 100
+    }
   } catch (error) {
     console.error('[submitTransfer]', error)
     return { ok: false, messageAr: 'تعذّر تسجيل الحجز، حاول تاني بعد شوية.' }
@@ -141,8 +166,16 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
 
   revalidatePath('/learn')
   // The email travels to the confirmation page so it can tell them where
-  // the sign-in code is going, without needing a session to read it.
-  redirect(`/checkout/success?email=${encodeURIComponent(parsed.data.email)}`)
+  // the sign-in code is going, without needing a session to read it. The
+  // order id and amount travel too, so that page can report one
+  // order_submitted event — a guest has no session, so it cannot read the
+  // order back from the database to find them.
+  const params = new URLSearchParams({ email: parsed.data.email })
+  if (orderId) {
+    params.set('order', orderId)
+    if (orderValue > 0) params.set('value', String(orderValue))
+  }
+  redirect(`/checkout/success?${params.toString()}`)
 }
 
 // ---------------------------------------------------------------------

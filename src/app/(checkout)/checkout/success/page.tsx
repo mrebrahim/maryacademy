@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import { CheckoutShell } from '@/components/checkout/checkout-shell'
+import { OrderSubmitted } from '@/components/checkout/order-submitted'
 import { Button } from '@/components/ui/button'
 import { paymentProofMessage, whatsappLink } from '@/config/site'
 
@@ -25,12 +26,14 @@ export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { 
 export default async function CheckoutSuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ email?: string }>
+  searchParams: Promise<{ email?: string; order?: string; value?: string }>
 }) {
-  const { email } = await searchParams
+  const { email, order, value } = await searchParams
 
   return (
     <CheckoutShell step={2}>
+      {order && <OrderSubmitted orderId={order} value={Number(value) || 0} />}
+
       <div className="mx-auto max-w-lg py-8 text-center sm:py-12">
         <CheckCircle2 className="mx-auto size-14 text-gold-500" aria-hidden="true" />
 

@@ -21,6 +21,15 @@ export const metadata: Metadata = {
     title: siteConfig.nameAr,
     description: siteConfig.descriptionAr,
   },
+  verification: {
+    other: {
+      // Meta domain verification. Not a secret — it is a public meta tag
+      // whose only job is to prove this domain belongs to the business
+      // account. Without it, iOS traffic loses most of its attribution
+      // and nobody can configure which events this domain may send.
+      'facebook-domain-verification': 'wajcny7b7n6iyeso7yijyqogarhgeq',
+    },
+  },
 }
 
 export const viewport: Viewport = {

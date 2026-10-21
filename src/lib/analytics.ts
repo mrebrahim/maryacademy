@@ -111,6 +111,27 @@ export function trackAddPaymentInfo(params: { courseId: string; method: string; 
   })
 }
 
+/**
+ * The order is in: details submitted, amount known, transfer not yet
+ * matched. This is the event ad campaigns should optimise on while the
+ * pixel has no purchase history — it happens in the same session, it
+ * happens often enough to learn from, and it is the last thing the buyer
+ * does on the site.
+ *
+ * It is NOT a purchase, and it must never be named one. Roughly some
+ * share of these never transfer, and an ad account told they all did will
+ * spend against a number that was never real. `reportPurchase` fires
+ * separately, server-side, when an admin confirms the money arrived.
+ */
+export function trackOrderSubmitted(params: { orderId: string; value: number }) {
+  emit({
+    ga4: 'order_submitted',
+    meta: 'CompleteRegistration',
+    tiktok: 'PlaceAnOrder',
+    params: { ...params, currency: 'EGP' },
+  })
+}
+
 /** Fired when contact details are captured, before any payment attempt. */
 export function trackAbandonedLead(params: { courseId: string }) {
   emit({ ga4: 'checkout_abandoned_lead', params })
