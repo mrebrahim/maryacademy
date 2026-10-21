@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
+import { ViewContentPing } from '@/components/analytics/view-content'
 import { TestimonialsSection } from '@/components/home/testimonials-section'
 import { Button } from '@/components/ui/button'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -113,6 +114,7 @@ export default async function CourseSalesPage({ params }: { params: Promise<{ sl
 
   return (
     <>
+      <ViewContentPing courseSlug={course.slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
