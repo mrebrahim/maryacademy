@@ -14,7 +14,7 @@ function Save() {
   const { pending } = useFormStatus()
   return (
     <Button type="submit" size="md" disabled={pending}>
-      {pending ? 'لحظة…' : 'اعملي الدورة'}
+      {pending ? 'لحظة…' : 'اعمل الدورة'}
     </Button>
   )
 }
@@ -91,7 +91,7 @@ export function NewCourseForm({ categories }: { categories: { id: string; name_a
             min={0}
             step={50}
             dir="ltr"
-            placeholder="سيبيها فاضية"
+            placeholder="سيبها فاضية"
             className={cn(field, 'mt-1.5')}
           />
         </label>

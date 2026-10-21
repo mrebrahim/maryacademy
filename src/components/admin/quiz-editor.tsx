@@ -133,7 +133,7 @@ export function QuizEditor({ lessonId, initial }: { lessonId: string; initial: E
 
           <label className="mt-4 block">
             <span className="text-sm font-semibold text-navy-900">
-              تعليمات للطالبة <span className="font-normal text-muted">(اختياري)</span>
+              تعليمات للطالب <span className="font-normal text-muted">(اختياري)</span>
             </span>
             <textarea
               value={quiz.description_ar ?? ''}
@@ -164,7 +164,7 @@ export function QuizEditor({ lessonId, initial }: { lessonId: string; initial: E
                 onChange={(e) => patch({ is_active: e.target.checked })}
                 className="size-4 accent-gold-500"
               />
-              ظاهر للطالبات
+              ظاهر للطلاب
             </label>
           </div>
         </div>
@@ -285,7 +285,7 @@ export function QuizEditor({ lessonId, initial }: { lessonId: string; initial: E
             <form action={deleteAction} className="flex flex-wrap items-center gap-4">
               <input type="hidden" name="lessonId" value={lessonId} />
               <p className="text-sm text-navy-900">
-                هيتمسح الامتحان ونتايج الطالبات فيه. أكيد؟
+                هيتمسح الامتحان ونتايج الطلاب فيه. أكيد؟
               </p>
               <DeleteButton />
               <button

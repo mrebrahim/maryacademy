@@ -60,7 +60,7 @@ export default async function LearnPage() {
       {isAdmin && (adminCourses?.length ?? 0) > 0 && (
         <section className="mt-8">
           <p className="text-sm text-muted">
-            دي كل الدورات المنشورة — مفتوحة ليكي كأدمن للمراجعة، من غير ما يتسجّل
+            دي كل الدورات المنشورة — مفتوحة لك كأدمن للمراجعة، من غير ما يتسجّل
             تقدّم أو شهادة.
           </p>
           <ul className="mt-4 space-y-3">
@@ -75,7 +75,7 @@ export default async function LearnPage() {
                 </div>
                 <Button asChild variant="tertiary" size="sm">
                   <Link href={`/watch/${course.slug}`}>
-                    راجعي الدورة
+                    راجع الدورة
                     <ArrowLeft className="size-4" aria-hidden="true" />
                   </Link>
                 </Button>

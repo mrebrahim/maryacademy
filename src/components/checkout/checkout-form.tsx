@@ -226,8 +226,8 @@ export function CheckoutForm({
                 {touched.phone && !phoneValid && (
                   <p className="mt-1.5 text-sm text-red-600">
                     {region === 'intl'
-                      ? 'اكتبي رقم موبايل صحيح بكود الدولة'
-                      : 'اكتبي رقم موبايل مصري صحيح — 11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015'}
+                      ? 'اكتب رقم موبايل صحيح بكود الدولة'
+                      : 'اكتب رقم موبايل مصري صحيح — 11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015'}
                   </p>
                 )}
               </div>
@@ -276,8 +276,8 @@ export function CheckoutForm({
               somewhere else is visibly a mismatch at the moment an admin
               reviews it, which is where the real control has always been. */}
           <section className="rounded-2xl bg-white p-5 shadow-soft ring-1 ring-navy-900/5 sm:p-6">
-            <h2 className="text-lg text-navy-900">إنتي بتشتركي من فين؟</h2>
-            <p className="mt-1.5 text-sm text-muted">السعر بيختلف، فاختاري الأول.</p>
+            <h2 className="text-lg text-navy-900">إنت بتشترك من فين؟</h2>
+            <p className="mt-1.5 text-sm text-muted">السعر بيختلف، فاختار الأول.</p>
 
             <div className="mt-5 grid gap-3 sm:grid-cols-2">
               {([
@@ -382,7 +382,7 @@ export function CheckoutForm({
             {method === 'vodafone_cash' && (
               <div className="mt-5 rounded-xl bg-cream-50 p-4">
                 <p className="text-sm leading-relaxed text-navy-900">
-                  حوّلي <span className="tabular font-semibold">{formatPrice(total)}</span> على رقم
+                  حوّل <span className="tabular font-semibold">{formatPrice(total)}</span> على رقم
                   المحفظة ده:
                 </p>
                 <p dir="ltr" className="tabular mt-3 text-lg font-semibold text-navy-900">
@@ -421,10 +421,10 @@ export function CheckoutForm({
                 before they try the form and fail. */}
             {region === 'intl' && (
               <div className="mt-5 rounded-xl border border-navy-900/15 p-4">
-                <p className="text-sm font-semibold text-navy-900">إنتي برّه مصر</p>
+                <p className="text-sm font-semibold text-navy-900">إنت برّه مصر</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
                   السعر <span className="tabular font-semibold">{formatPrice(priceEgpIntl)}</span>{' '}
-                  أو ما يعادلها بعملتك. إنستا باي وفودافون كاش بيشتغلوا جوه مصر بس، فكلّمينا
+                  أو ما يعادلها بعملتك. إنستا باي وفودافون كاش بيشتغلوا جوه مصر بس، فكلّمنا
                   على واتساب ونرتّبلك التحويل.
                 </p>
                 <a
@@ -436,7 +436,7 @@ export function CheckoutForm({
                   className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-gold-600 underline underline-offset-4 hover:text-gold-500"
                 >
                   <MessageCircle className="size-4" aria-hidden="true" />
-                  كلّمينا على واتساب
+                  كلّمنا على واتساب
                 </a>
               </div>
             )}
@@ -461,10 +461,10 @@ export function CheckoutForm({
 
               <div className="rounded-xl bg-cream-50 p-4">
                 <p className="text-sm font-semibold text-navy-900">
-                  بعد ما تحوّلي، ابعتيلنا سكرين شوت التحويل على واتساب
+                  بعد ما تحوّل، ابعتلنا سكرين شوت التحويل على واتساب
                 </p>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
-                  دوسي «أكمل الحجز» الأول، وهنوديكي على واتساب برسالة جاهزة — السكرين
+                  دوس «أكمل الحجز» الأول، وهنوديك على واتساب برسالة جاهزة — السكرين
                   شوت هو اللي بنطابق بيه التحويل ونفتحلك الدورة.
                 </p>
               </div>
@@ -473,7 +473,7 @@ export function CheckoutForm({
                 <PayButton label="أكمل الحجز" />
               ) : (
                 <p className="rounded-xl bg-cream-50 px-4 py-3 text-center text-sm text-navy-900">
-                  اختاري بلدك فوق الأول عشان نكمّل.
+                  اختار بلدك فوق الأول عشان نكمّل.
                 </p>
               )}
 

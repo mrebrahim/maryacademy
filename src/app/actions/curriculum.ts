@@ -63,7 +63,7 @@ export async function createCourse(
   })
 
   if (!parsed.success) {
-    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجعي البيانات' }
+    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجع البيانات' }
   }
 
   const d = parsed.data
@@ -89,7 +89,7 @@ export async function createCourse(
 
     if (error) {
       if (error.code === DUPLICATE) {
-        return { ok: false, messageAr: 'الرابط ده مستخدم في دورة تانية — غيّريه.' }
+        return { ok: false, messageAr: 'الرابط ده مستخدم في دورة تانية — غيّره.' }
       }
       if (error.code === '42501') return { ok: false, messageAr: 'الصلاحية دي للإدارة فقط.' }
       throw error
@@ -98,7 +98,7 @@ export async function createCourse(
     courseId = data.id
   } catch (error) {
     console.error('[createCourse]', error)
-    return { ok: false, messageAr: 'تعذّر إنشاء الدورة، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر إنشاء الدورة، حاول تاني.' }
   }
 
   revalidatePath('/admin/content')
@@ -113,7 +113,7 @@ export async function createCourse(
 
 const moduleSchema = z.object({
   courseId: z.uuid(),
-  titleAr: z.string().trim().min(2, 'اكتبي اسم الجزء').max(200),
+  titleAr: z.string().trim().min(2, 'اكتب اسم الجزء').max(200),
 })
 
 export async function createModule(
@@ -126,7 +126,7 @@ export async function createModule(
   })
 
   if (!parsed.success) {
-    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجعي البيانات' }
+    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجع البيانات' }
   }
 
   try {
@@ -152,7 +152,7 @@ export async function createModule(
     }
   } catch (error) {
     console.error('[createModule]', error)
-    return { ok: false, messageAr: 'تعذّر إضافة الجزء، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر إضافة الجزء، حاول تاني.' }
   }
 
   revalidatePath(`/admin/content/${parsed.data.courseId}/curriculum`)
@@ -167,7 +167,7 @@ export async function deleteModule(
     .object({ courseId: z.uuid(), moduleId: z.uuid() })
     .safeParse({ courseId: formData.get('courseId'), moduleId: formData.get('moduleId') })
 
-  if (!parsed.success) return { ok: false, messageAr: 'راجعي البيانات' }
+  if (!parsed.success) return { ok: false, messageAr: 'راجع البيانات' }
 
   try {
     const supabase = await createClient()
@@ -181,14 +181,14 @@ export async function deleteModule(
       .eq('module_id', parsed.data.moduleId)
 
     if ((count ?? 0) > 0) {
-      return { ok: false, messageAr: 'شيلي الدروس اللي جوه الجزء ده الأول.' }
+      return { ok: false, messageAr: 'شيل الدروس اللي جوه الجزء ده الأول.' }
     }
 
     const { error } = await supabase.from('modules').delete().eq('id', parsed.data.moduleId)
     if (error) throw error
   } catch (error) {
     console.error('[deleteModule]', error)
-    return { ok: false, messageAr: 'تعذّر المسح، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر المسح، حاول تاني.' }
   }
 
   revalidatePath(`/admin/content/${parsed.data.courseId}/curriculum`)
@@ -202,7 +202,7 @@ export async function deleteModule(
 const lessonSchema = z.object({
   courseId: z.uuid(),
   moduleId: z.uuid(),
-  titleAr: z.string().trim().min(2, 'اكتبي اسم الدرس').max(200),
+  titleAr: z.string().trim().min(2, 'اكتب اسم الدرس').max(200),
   slug: z
     .string()
     .trim()
@@ -227,7 +227,7 @@ export async function createLesson(
   })
 
   if (!parsed.success) {
-    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجعي البيانات' }
+    return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجع البيانات' }
   }
 
   const d = parsed.data
@@ -260,14 +260,14 @@ export async function createLesson(
 
     if (error) {
       if (error.code === DUPLICATE) {
-        return { ok: false, messageAr: `الرابط «${slug}» مستخدم في درس تاني — اكتبي رابط تاني.` }
+        return { ok: false, messageAr: `الرابط «${slug}» مستخدم في درس تاني — اكتب رابط تاني.` }
       }
       if (error.code === '42501') return { ok: false, messageAr: 'الصلاحية دي للإدارة فقط.' }
       throw error
     }
   } catch (error) {
     console.error('[createLesson]', error)
-    return { ok: false, messageAr: 'تعذّر إضافة الدرس، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر إضافة الدرس، حاول تاني.' }
   }
 
   revalidatePath(`/admin/content/${d.courseId}/curriculum`)
@@ -283,7 +283,7 @@ export async function deleteLesson(
     .object({ courseId: z.uuid(), lessonId: z.uuid() })
     .safeParse({ courseId: formData.get('courseId'), lessonId: formData.get('lessonId') })
 
-  if (!parsed.success) return { ok: false, messageAr: 'راجعي البيانات' }
+  if (!parsed.success) return { ok: false, messageAr: 'راجع البيانات' }
 
   try {
     const supabase = await createClient()
@@ -297,14 +297,14 @@ export async function deleteLesson(
       .eq('lesson_id', parsed.data.lessonId)
 
     if ((count ?? 0) > 0) {
-      return { ok: false, messageAr: 'فيه طالبات بدأوا الدرس ده — مينفعش يتمسح.' }
+      return { ok: false, messageAr: 'فيه طلاب بدأوا الدرس ده — مينفعش يتمسح.' }
     }
 
     const { error } = await supabase.from('lessons').delete().eq('id', parsed.data.lessonId)
     if (error) throw error
   } catch (error) {
     console.error('[deleteLesson]', error)
-    return { ok: false, messageAr: 'تعذّر المسح، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر المسح، حاول تاني.' }
   }
 
   revalidatePath(`/admin/content/${parsed.data.courseId}/curriculum`)
@@ -325,7 +325,7 @@ export async function setFreePreview(
     .object({ courseId: z.uuid(), lessonId: z.uuid() })
     .safeParse({ courseId: formData.get('courseId'), lessonId: formData.get('lessonId') })
 
-  if (!parsed.success) return { ok: false, messageAr: 'راجعي البيانات' }
+  if (!parsed.success) return { ok: false, messageAr: 'راجع البيانات' }
 
   try {
     const supabase = await createClient()
@@ -346,7 +346,7 @@ export async function setFreePreview(
     if (error) throw error
   } catch (error) {
     console.error('[setFreePreview]', error)
-    return { ok: false, messageAr: 'تعذّر التغيير، حاولي تاني.' }
+    return { ok: false, messageAr: 'تعذّر التغيير، حاول تاني.' }
   }
 
   revalidatePath(`/admin/content/${parsed.data.courseId}/curriculum`)

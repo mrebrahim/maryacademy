@@ -66,13 +66,13 @@ export const instaPayProvider: PaymentProvider = {
     id: 'instapay',
     kind: 'manual',
     labelAr: 'إنستا باي',
-    hintAr: 'تحوّلي المبلغ وتبعتي سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
+    hintAr: 'تحوّل المبلغ وتبعت سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
     available: true,
   },
   async createPayment() {
     return {
       kind: 'manual',
-      instructionsAr: 'حوّلي المبلغ على العنوان ده، وبعدها ابعتي سكرين شوت التحويل على واتساب.',
+      instructionsAr: 'حوّل المبلغ على العنوان ده، وبعدها ابعت سكرين شوت التحويل على واتساب.',
       handle: instapay.handle,
       payLink: instapay.payLink,
     }
@@ -90,13 +90,13 @@ export const vodafoneCashProvider: PaymentProvider = {
     id: 'vodafone_cash',
     kind: 'manual',
     labelAr: 'فودافون كاش',
-    hintAr: 'تحوّلي على المحفظة وتبعتي سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
+    hintAr: 'تحوّل على المحفظة وتبعت سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
     available: true,
   },
   async createPayment() {
     return {
       kind: 'manual',
-      instructionsAr: 'حوّلي المبلغ على الرقم ده، وبعدها ابعتي سكرين شوت التحويل على واتساب.',
+      instructionsAr: 'حوّل المبلغ على الرقم ده، وبعدها ابعت سكرين شوت التحويل على واتساب.',
       handle: vodafoneCash.number,
     }
   },

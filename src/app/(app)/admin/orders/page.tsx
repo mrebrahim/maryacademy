@@ -87,7 +87,7 @@ export default async function AdminOrdersPage() {
                     // Since the reference field was dropped, matching is done
                     // against the screenshot sent on WhatsApp — by the email
                     // above, which is what the order is recorded under.
-                    'طابقي السكرين شوت اللي جه على واتساب بالبريد ده قبل التأكيد'
+                    'طابق السكرين شوت اللي جه على واتساب بالبريد ده قبل التأكيد'
                   )}
                 </p>
 

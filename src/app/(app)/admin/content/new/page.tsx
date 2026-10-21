@@ -27,7 +27,7 @@ export default async function NewCoursePage() {
 
       <h1 className="display mt-6 text-2xl text-navy-900 sm:text-3xl">دورة جديدة</h1>
       <p className="mt-3 max-w-xl text-sm leading-loose text-muted">
-        الدورة بتتعمل كمسودة — مش هتظهر لحد لحد ما تضيفي الدروس وتنشريها. الوصف وصورة
+        الدورة بتتعمل كمسودة — مش هتظهر لحد لحد ما تضيف الدروس وتنشرها. الوصف وصورة
         الغلاف وباقي التفاصيل بتتكتب بعد كده من صفحة المحتوى.
       </p>
 

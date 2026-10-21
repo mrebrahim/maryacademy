@@ -125,7 +125,7 @@ export function CourseEditor({ course }: { course: Course }) {
             className={field}
           />
           <p className="mt-1.5 text-xs text-muted">
-            سيبيها فاضية لو الدورة مش بتتباع برّه مصر.
+            سيبها فاضية لو الدورة مش بتتباع برّه مصر.
           </p>
         </div>
 

@@ -134,7 +134,7 @@ export default async function WatchPage({ params }: { params: Params }) {
 
             {viewer.isAdmin && !viewer.isEnrolled && (
               <p className="mt-6 rounded-lg bg-navy-900/5 px-4 py-3 text-sm text-navy-900">
-                إنتي بتشوفي الدورة كأدمن — الدروس كلها مفتوحة، ومفيش تقدّم أو شهادة
+                إنت بتشوف الدورة كأدمن — الدروس كلها مفتوحة، ومفيش تقدّم أو شهادة
                 بتتسجّل على حسابك.
               </p>
             )}

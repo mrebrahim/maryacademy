@@ -61,7 +61,7 @@ export function CurriculumEditor({
     <div className="space-y-6">
       {modules.length === 0 && (
         <p className="rounded-card bg-white p-6 text-sm text-muted shadow-soft ring-1 ring-navy-900/5">
-          الدورة لسه فاضية. ابدئي بإضافة جزء — زي «التجهيز» أو «اللوكات» — وبعدها ضيفي
+          الدورة لسه فاضية. ابدأ بإضافة جزء — زي «التجهيز» أو «اللوكات» — وبعدها ضيف
           الدروس جواه.
         </p>
       )}
@@ -163,7 +163,7 @@ export function CurriculumEditor({
           className={cn(field, 'min-w-48 flex-1')}
         />
         <Button type="submit" variant="tertiary" size="sm">
-          <Pending idle="ضيفي جزء" busy="لحظة…" />
+          <Pending idle="ضيف جزء" busy="لحظة…" />
         </Button>
         {moduleState && !moduleState.ok && (
           <p className="text-sm text-red-600">{moduleState.messageAr}</p>
@@ -224,7 +224,7 @@ function NewLessonForm({
 
       <div className="flex flex-wrap items-center gap-3">
         <Button type="submit" size="sm">
-          <Pending idle="ضيفي الدرس" busy="لحظة…" />
+          <Pending idle="ضيف الدرس" busy="لحظة…" />
         </Button>
         <button
           type="button"
@@ -249,9 +249,9 @@ function PreviewButton({ courseId, lessonId }: { courseId: string; lessonId: str
       <button
         type="submit"
         className="text-xs text-muted underline underline-offset-4 transition hover:text-gold-600"
-        title="اعمليه المعاينة المجانية للدورة"
+        title="اعمله المعاينة المجانية للدورة"
       >
-        <Pending idle="اعمليه معاينة" busy="…" />
+        <Pending idle="اعمله معاينة" busy="…" />
       </button>
       {state && !state.ok && <span className="text-xs text-red-600">{state.messageAr}</span>}
     </form>
@@ -267,7 +267,7 @@ function DeleteLessonButton({ courseId, lessonId }: { courseId: string; lessonId
       <input type="hidden" name="lessonId" value={lessonId} />
       <button
         type="submit"
-        aria-label="امسحي الدرس"
+        aria-label="امسح الدرس"
         className="grid size-8 shrink-0 place-items-center rounded-lg text-muted transition hover:bg-red-50 hover:text-red-600"
       >
         <Trash2 className="size-4" aria-hidden="true" />
@@ -289,7 +289,7 @@ function DeleteModuleButton({ courseId, moduleId }: { courseId: string; moduleId
         className="inline-flex items-center gap-1.5 text-sm text-muted transition hover:text-red-600"
       >
         <Trash2 className="size-4" aria-hidden="true" />
-        <Pending idle="امسحي الجزء" busy="لحظة…" />
+        <Pending idle="امسح الجزء" busy="لحظة…" />
       </button>
       {state && !state.ok && <span className="text-xs text-red-600">{state.messageAr}</span>}
     </form>

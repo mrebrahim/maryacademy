@@ -161,7 +161,7 @@ export default async function AdminContentPage() {
                       href={`/admin/content/${course.id}/curriculum`}
                       className="inline-flex items-center gap-1.5 text-sm font-semibold text-gold-600 transition hover:text-gold-500"
                     >
-                      ضيفي أو شيلي دروس
+                      ضيف أو شيل دروس
                       <ArrowLeft className="size-4" aria-hidden="true" />
                     </Link>
                   </div>

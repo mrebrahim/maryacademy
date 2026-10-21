@@ -109,7 +109,7 @@ export function CappedVideo({
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-navy-950/95 px-6 text-center">
           <Lock className="size-8 text-gold-500" aria-hidden="true" />
           <p className="text-base font-semibold text-white">
-            كده شوفتي أول دقيقتين — باقي الدرس في الكورس
+            كده شوفت أول دقيقتين — باقي الدرس في الكورس
           </p>
           <Button asChild size="md">
             <a href={offer.checkoutHref}>{offer.ctaLabelAr}</a>

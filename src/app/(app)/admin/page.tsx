@@ -99,7 +99,7 @@ export default async function AdminPage() {
     },
     {
       icon: Users,
-      label: 'طالبات مشتركات',
+      label: 'طلاب مشتركين',
       value: String(students.length),
       note: students.length ? 'اشتراكات نشطة' : 'لسه مفيش اشتراكات',
     },
@@ -126,15 +126,15 @@ export default async function AdminPage() {
             <div>
               <p className="font-semibold">
                 <span className="tabular">{pending.length}</span>{' '}
-                {pending.length === 1 ? 'طالبة حوّلت ومستنية' : 'طالبات حوّلوا ومستنيين'}
+                {pending.length === 1 ? 'طالب حوّل ومستني' : 'طلاب حوّلوا ومستنيين'}
               </p>
               <p className="mt-1 text-sm text-cream-50/70">
-                طابقي السكرين شوت اللي جه على واتساب وافتحيلها الدورة.
+                طابق السكرين شوت اللي جه على واتساب وافتحله الدورة.
               </p>
             </div>
           </div>
           <span className="flex items-center gap-1.5 text-sm font-semibold text-gold-300">
-            راجعي الطلبات
+            راجع الطلبات
             <ArrowLeft className="size-4" aria-hidden="true" />
           </span>
         </Link>
@@ -217,7 +217,7 @@ export default async function AdminPage() {
         <section className="rounded-card bg-white p-5 shadow-soft ring-1 ring-navy-900/5 sm:p-6">
           <div className="flex items-center gap-2">
             <TrendingDown className="size-4 text-gold-500" aria-hidden="true" />
-            <h2 className="text-base font-semibold text-navy-900">فين الطالبات بيقفوا</h2>
+            <h2 className="text-base font-semibold text-navy-900">فين الطلاب بيقفوا</h2>
           </div>
           <p className="mt-1 text-xs text-muted">
             عدد اللي خلّصوا كل درس. أول رقم بينزل فجأة هو الدرس اللي محتاج مراجعة.
@@ -225,7 +225,7 @@ export default async function AdminPage() {
 
           {students.length === 0 ? (
             <p className="mt-5 text-sm text-muted">
-              لسه مفيش طالبات، فمفيش بيانات. الجدول ده هيشتغل لوحده أول ما حد يبدأ.
+              لسه مفيش طلاب، فمفيش بيانات. الجدول ده هيشتغل لوحده أول ما حد يبدأ.
             </p>
           ) : (
             <ol className="mt-5 space-y-2">

@@ -57,7 +57,7 @@ const groups = [
     items: [
       {
         href: '/admin/trainers',
-        labelAr: 'طلبات المدرّبات',
+        labelAr: 'طلبات المدرّبين',
         icon: UserPlus,
         badge: 'newApplications',
       },

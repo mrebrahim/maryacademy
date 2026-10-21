@@ -49,7 +49,7 @@ export default async function AdminQuizzesPage() {
     <div>
       <h1 className="display text-3xl text-navy-900">امتحانات الدروس</h1>
       <p className="mt-3 max-w-xl leading-loose text-muted">
-        امتحان قصير بعد كل درس، أسئلة اختيار من متعدد. الطالبة بتشوف نتيجتها بس — الإجابات
+        امتحان قصير بعد كل درس، أسئلة اختيار من متعدد. الطالب بيشوف نتيجته بس — الإجابات
         الصح مش بتوصل المتصفح أصلاً، التصحيح بيحصل عندنا.
       </p>
       <p className="tabular mt-2 text-sm text-muted">

@@ -83,7 +83,7 @@ const orderSchema = z.object({
     .string()
     .trim()
     .transform((v) => v.replace(/\s/g, ''))
-    .refine((v) => v.length >= 6, 'اكتبي رقم موبايل صحيح'),
+    .refine((v) => v.length >= 6, 'اكتب رقم موبايل صحيح'),
   email: z.email({ error: 'البريد الإلكتروني مكتوب غلط' }),
 })
 
@@ -103,7 +103,7 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
   }
 
   if (parsed.data.region === 'eg' && !/^01[0125]\d{8}$/.test(parsed.data.phone)) {
-    return { ok: false, messageAr: 'اكتبي رقم موبايل مصري صحيح' }
+    return { ok: false, messageAr: 'اكتب رقم موبايل مصري صحيح' }
   }
 
   try {
@@ -130,7 +130,7 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
         return { ok: false, messageAr: 'الدورة دي مش متاحة للحجز حاليًا.' }
       }
       if (error.message.includes('not_sold_internationally')) {
-        return { ok: false, messageAr: 'الدورة دي بتتباع جوه مصر بس حاليًا — كلّمينا على واتساب.' }
+        return { ok: false, messageAr: 'الدورة دي بتتباع جوه مصر بس حاليًا — كلّمنا على واتساب.' }
       }
       throw error
     }

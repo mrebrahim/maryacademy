@@ -37,14 +37,14 @@ export default async function CheckoutSuccessPage({
         <h1 className="display mt-6 text-2xl text-navy-900 sm:text-3xl">وصلنا طلبك</h1>
 
         <p className="mt-5 text-base leading-loose text-muted">
-          فاضل خطوة واحدة: ابعتيلنا سكرين شوت التحويل على واتساب عشان نطابقه ونفتحلك
+          فاضل خطوة واحدة: ابعتلنا سكرين شوت التحويل على واتساب عشان نطابقه ونفتحلك
           الدورة.
         </p>
 
         <div className="mt-7 rounded-card bg-navy-950 p-6 text-start">
-          <p className="text-sm font-semibold text-white">ابعتي السكرين شوت دلوقتي</p>
+          <p className="text-sm font-semibold text-white">ابعت السكرين شوت دلوقتي</p>
           <p className="mt-2 text-sm leading-relaxed text-cream-50/75">
-            هتلاقي رسالة جاهزة مكتوبة — ارفقي معاها صورة التحويل وابعتي.
+            هتلاقي رسالة جاهزة مكتوبة — ارفق معاها صورة التحويل وابعت.
           </p>
           <Button asChild size="lg" className="mt-5 w-full">
             <a
@@ -53,7 +53,7 @@ export default async function CheckoutSuccessPage({
               rel="noopener noreferrer"
             >
               <MessageCircle aria-hidden="true" />
-              ابعتي صورة التحويل على واتساب
+              ابعت صورة التحويل على واتساب
             </a>
           </Button>
         </div>
@@ -84,13 +84,13 @@ export default async function CheckoutSuccessPage({
             </li>
           </ol>
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            مش لازم تعملي ده دلوقتي — مكانك محجوز بالبريد ده.
+            مش لازم تعمل ده دلوقتي — مكانك محجوز بالبريد ده.
           </p>
         </div>
 
         <div className="mt-8">
           <Button asChild variant="tertiary" size="lg" className="w-full sm:w-auto sm:px-10">
-            <Link href="/login">اعملي حسابك دلوقتي</Link>
+            <Link href="/login">اعمل حسابك دلوقتي</Link>
           </Button>
         </div>
 
