@@ -6,7 +6,6 @@ import {
   FacebookIcon,
   InstagramIcon,
   TiktokIcon,
-  YoutubeIcon,
 } from '@/components/ui/social-icons'
 import { legalNav, mainNav, siteConfig } from '@/config/site'
 
@@ -18,12 +17,26 @@ const COURSE_LINKS = [
   { href: '/courses', labelAr: 'Skin Care' },
 ] as const
 
-// TODO: swap in the academy's real profile URLs once the client supplies them.
+/**
+ * The academy's real profiles. These were placeholders pointing at the
+ * bare platform homepages — a footer icon that sends a visitor to
+ * instagram.com rather than to the account is worse than no icon.
+ *
+ * The share and tracking parameters the client pasted (`?srtk=`, `?_r=`,
+ * `?_t=`) are stripped: they identify the device that shared the link and
+ * belong to nobody who reads this page.
+ *
+ * No YouTube row — the academy does not have a channel. An icon linking
+ * to an empty one reads as abandoned.
+ */
 const SOCIALS = [
-  { href: 'https://instagram.com/', label: 'إنستجرام', icon: InstagramIcon },
-  { href: 'https://facebook.com/', label: 'فيسبوك', icon: FacebookIcon },
-  { href: 'https://tiktok.com/', label: 'تيك توك', icon: TiktokIcon },
-  { href: 'https://youtube.com/', label: 'يوتيوب', icon: YoutubeIcon },
+  {
+    href: 'https://www.instagram.com/marie_ragaie_hairstylist',
+    label: 'إنستجرام',
+    icon: InstagramIcon,
+  },
+  { href: 'https://www.facebook.com/share/1DtCM5od9c/', label: 'فيسبوك', icon: FacebookIcon },
+  { href: 'https://www.tiktok.com/@mariehairstylist', label: 'تيك توك', icon: TiktokIcon },
 ] as const
 
 export function SiteFooter() {
