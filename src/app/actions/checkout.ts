@@ -69,14 +69,21 @@ export type OrderState = { ok: boolean; messageAr: string } | null
 const orderSchema = z.object({
   courseId: z.uuid(),
   couponCode: z.string().trim().max(60).optional().or(z.literal('')),
+  // Where the buyer says she is. It selects a price band in the database;
+  // it never carries an amount.
+  region: z.enum(['eg', 'intl']),
+  method: z.enum(['instapay', 'vodafone_cash']).optional().or(z.literal('')),
   // Guest checkout: these three are the identity the order is recorded
   // against and later claimed by.
   name: z.string().trim().min(2, 'اكتب اسمك').max(120),
+  // Egyptian numbers are checked only for Egyptian buyers. The rule used
+  // to be unconditional, which made the form unsubmittable for exactly
+  // the people the international price exists for.
   phone: z
     .string()
     .trim()
     .transform((v) => v.replace(/\s/g, ''))
-    .refine((v) => /^01[0125]\d{8}$/.test(v), 'اكتب رقم موبايل مصري صحيح'),
+    .refine((v) => v.length >= 6, 'اكتبي رقم موبايل صحيح'),
   email: z.email({ error: 'البريد الإلكتروني مكتوب غلط' }),
 })
 
@@ -84,6 +91,8 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
   const parsed = orderSchema.safeParse({
     courseId: formData.get('courseId'),
     couponCode: formData.get('couponCode') ?? '',
+    region: formData.get('region'),
+    method: formData.get('method') ?? '',
     name: formData.get('name'),
     phone: formData.get('phone'),
     email: formData.get('email'),
@@ -91,6 +100,10 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
 
   if (!parsed.success) {
     return { ok: false, messageAr: parsed.error.issues[0]?.message ?? 'راجع البيانات' }
+  }
+
+  if (parsed.data.region === 'eg' && !/^01[0125]\d{8}$/.test(parsed.data.phone)) {
+    return { ok: false, messageAr: 'اكتبي رقم موبايل مصري صحيح' }
   }
 
   try {
@@ -104,6 +117,8 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       p_phone: parsed.data.phone,
       p_email: parsed.data.email,
       p_coupon_code: parsed.data.couponCode || undefined,
+      p_international: parsed.data.region === 'intl',
+      p_provider: parsed.data.method || 'instapay',
     })
 
     if (error) {
@@ -113,6 +128,9 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       }
       if (error.message.includes('course_not_priced')) {
         return { ok: false, messageAr: 'الدورة دي مش متاحة للحجز حاليًا.' }
+      }
+      if (error.message.includes('not_sold_internationally')) {
+        return { ok: false, messageAr: 'الدورة دي بتتباع جوه مصر بس حاليًا — كلّمينا على واتساب.' }
       }
       throw error
     }

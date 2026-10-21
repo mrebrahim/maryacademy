@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 import { CheckoutShell } from '@/components/checkout/checkout-shell'
 import { Button } from '@/components/ui/button'
-import { paymentProofMessage, whatsappLink, whatsappPaymentsLink } from '@/config/site'
+import { paymentProofMessage, whatsappLink } from '@/config/site'
 
 export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { index: false } }
 
@@ -48,7 +48,7 @@ export default async function CheckoutSuccessPage({
           </p>
           <Button asChild size="lg" className="mt-5 w-full">
             <a
-              href={whatsappPaymentsLink(paymentProofMessage(email))}
+              href={whatsappLink(paymentProofMessage(email))}
               target="_blank"
               rel="noopener noreferrer"
             >

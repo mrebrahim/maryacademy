@@ -2,6 +2,7 @@
 
 import { revalidatePath } from 'next/cache'
 
+import { reportPurchase } from '@/lib/conversions'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -25,12 +26,36 @@ export async function confirmOrder(
     const supabase = await createClient()
     const { error } = await supabase.rpc('confirm_order', { p_order_id: orderId })
     if (error) throw error
+
+    // The one moment money is known to have arrived, which is why the
+    // purchase is reported from here and never from the browser. Read
+    // after the confirmation so a failed confirmation reports nothing.
+    const { data: order } = await supabase
+      .from('orders')
+      .select('id, amount, contact_email, contact_phone, course:courses(slug)')
+      .eq('id', orderId)
+      .maybeSingle()
+
+    if (order) {
+      const course = Array.isArray(order.course) ? order.course[0] : order.course
+      // Deliberately awaited: a server action's process can be torn down
+      // the moment it returns, and a floating promise would be killed
+      // mid-flight. Every call inside has its own timeout.
+      await reportPurchase({
+        orderId: order.id,
+        value: order.amount / 100,
+        email: order.contact_email,
+        phone: order.contact_phone,
+        courseSlug: course?.slug ?? null,
+      })
+    }
   } catch (error) {
     console.error('[confirmOrder]', error)
     return { ok: false, messageAr: 'تعذّر تأكيد الطلب.' }
   }
 
   revalidatePath('/admin/orders')
+  revalidatePath('/admin')
   return { ok: true, messageAr: 'تم التأكيد وفُتح الوصول للدورة.' }
 }
 

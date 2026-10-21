@@ -12,8 +12,8 @@ import {
   type OrderState,
 } from '@/app/actions/checkout'
 import { Button } from '@/components/ui/button'
-import { instapay } from '@/config/instapay'
-import { whatsappPaymentsLink } from '@/config/site'
+import { instapay, vodafoneCash } from '@/config/manual-payments'
+import { whatsappLink } from '@/config/site'
 import { trackAbandonedLead, trackAddPaymentInfo, trackBeginCheckout } from '@/lib/analytics'
 import { latinAwareDir } from '@/lib/rtl'
 import { cn, formatPrice } from '@/lib/utils'
@@ -100,6 +100,10 @@ export function CheckoutForm({
   const [coupon, couponAction] = useActionState<CouponState, FormData>(applyCoupon, null)
   const [order, orderAction] = useActionState<OrderState, FormData>(submitTransfer, null)
 
+  // Where the buyer says she is. Null until she answers, because the
+  // price depends on it and showing one before she has chosen means
+  // showing the wrong one to half the people.
+  const [region, setRegion] = useState<'eg' | 'intl' | null>(null)
   const [showCoupon, setShowCoupon] = useState(false)
   const [method, setMethod] = useState(methods[0]?.id ?? 'instapay')
   const [touched, setTouched] = useState<Record<string, boolean>>({})
@@ -109,11 +113,17 @@ export function CheckoutForm({
   const [payVisible, setPayVisible] = useState(false)
   const ids = useId()
 
+  const listPrice = region === 'intl' && priceEgpIntl > 0 ? priceEgpIntl : priceEgp
   const discount = coupon?.ok ? (coupon.discountAmount ?? 0) : 0
-  const total = Math.max(0, priceEgp - discount)
-  const saving = compareAtEgp && compareAtEgp > priceEgp ? compareAtEgp - priceEgp : 0
+  const total = Math.max(0, listPrice - discount)
+  const saving = compareAtEgp && compareAtEgp > listPrice ? compareAtEgp - listPrice : 0
 
-  const phoneValid = EG_PHONE.test(values.phone.replace(/\s/g, ''))
+  // Outside Egypt the number will not match an Egyptian pattern, and
+  // rejecting it would block the very buyers the second price is for.
+  const phoneValid =
+    region === 'intl'
+      ? values.phone.replace(/\s/g, '').length >= 6
+      : EG_PHONE.test(values.phone.replace(/\s/g, ''))
   const emailValid = /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(values.email)
 
   useEffect(() => {
@@ -215,7 +225,9 @@ export function CheckoutForm({
                 />
                 {touched.phone && !phoneValid && (
                   <p className="mt-1.5 text-sm text-red-600">
-                    اكتب رقم موبايل مصري صحيح — ١١ رقم يبدأ بـ 010 أو 011 أو 012 أو 015
+                    {region === 'intl'
+                      ? 'اكتبي رقم موبايل صحيح بكود الدولة'
+                      : 'اكتبي رقم موبايل مصري صحيح — 11 رقم يبدأ بـ 010 أو 011 أو 012 أو 015'}
                   </p>
                 )}
               </div>
@@ -252,8 +264,77 @@ export function CheckoutForm({
             </div>
           </section>
 
-          {/* ---- Payment method ---- */}
+          {/* ---- Where she is, which decides the price ----
+
+              Asked before the price is shown, at the academy's request:
+              buyers abroad were paying the Egyptian price and sending the
+              transfer as if they were in Egypt.
+
+              Worth being clear that this is a declaration, not a check —
+              nothing here can stop someone choosing "من مصر". What it does
+              is put the claim on the order, so a transfer that arrives from
+              somewhere else is visibly a mismatch at the moment an admin
+              reviews it, which is where the real control has always been. */}
           <section className="rounded-2xl bg-white p-5 shadow-soft ring-1 ring-navy-900/5 sm:p-6">
+            <h2 className="text-lg text-navy-900">إنتي بتشتركي من فين؟</h2>
+            <p className="mt-1.5 text-sm text-muted">السعر بيختلف، فاختاري الأول.</p>
+
+            <div className="mt-5 grid gap-3 sm:grid-cols-2">
+              {([
+                { id: 'eg' as const, labelAr: 'من مصر', price: priceEgp },
+                { id: 'intl' as const, labelAr: 'من برّه مصر', price: priceEgpIntl },
+              ])
+                .filter((option) => option.price > 0)
+                .map((option) => (
+                  <label
+                    key={option.id}
+                    className={cn(
+                      'flex cursor-pointer items-center justify-between gap-3 rounded-xl border p-4 transition',
+                      region === option.id
+                        ? 'border-gold-500 bg-gold-500/8'
+                        : 'border-navy-900/12 hover:border-gold-500/50',
+                    )}
+                  >
+                    <span className="flex items-center gap-3">
+                      <input
+                        type="radio"
+                        name="region"
+                        value={option.id}
+                        checked={region === option.id}
+                        onChange={() => setRegion(option.id)}
+                        className="sr-only"
+                      />
+                      <span
+                        className={cn(
+                          'grid size-5 shrink-0 place-items-center rounded-full border-2',
+                          region === option.id ? 'border-gold-500' : 'border-navy-900/25',
+                        )}
+                        aria-hidden="true"
+                      >
+                        {region === option.id && (
+                          <span className="size-2.5 rounded-full bg-gold-500" />
+                        )}
+                      </span>
+                      <span className="font-semibold text-navy-900">{option.labelAr}</span>
+                    </span>
+                    {region === option.id && (
+                      <span className="tabular font-display text-lg text-gold-600">
+                        {formatPrice(option.price)}
+                      </span>
+                    )}
+                  </label>
+                ))}
+            </div>
+          </section>
+
+          {/* ---- Payment method ---- */}
+          <section
+            className={cn(
+              'rounded-2xl bg-white p-5 shadow-soft ring-1 ring-navy-900/5 transition sm:p-6',
+              !region && 'pointer-events-none opacity-40',
+            )}
+            aria-hidden={!region}
+          >
             <h2 className="text-lg text-navy-900">طريقة الدفع</h2>
 
             <div className="mt-5 space-y-3">
@@ -297,6 +378,20 @@ export function CheckoutForm({
               ))}
             </div>
 
+            {/* ---- Vodafone Cash instructions ---- */}
+            {method === 'vodafone_cash' && (
+              <div className="mt-5 rounded-xl bg-cream-50 p-4">
+                <p className="text-sm leading-relaxed text-navy-900">
+                  حوّلي <span className="tabular font-semibold">{formatPrice(total)}</span> على رقم
+                  المحفظة ده:
+                </p>
+                <p dir="ltr" className="tabular mt-3 text-lg font-semibold text-navy-900">
+                  {vodafoneCash.number}
+                </p>
+                <p className="mt-2 text-xs text-muted">باسم: {vodafoneCash.name}</p>
+              </div>
+            )}
+
             {/* ---- InstaPay instructions ---- */}
             {method === 'instapay' && (
               <div className="mt-5 rounded-xl bg-cream-50 p-4">
@@ -320,20 +415,20 @@ export function CheckoutForm({
               </div>
             )}
 
-            {/* Outside Egypt. InstaPay is domestic only and the phone field
-                above takes Egyptian numbers, so this is not a price note —
-                it is the only route these buyers have, and it has to be
-                visible before they try the form and fail. */}
-            {priceEgpIntl > 0 && (
+            {/* Outside Egypt, both wallets are domestic and the phone field
+                above takes Egyptian numbers, so this is not a note — it is
+                the only route these buyers have, and it has to appear
+                before they try the form and fail. */}
+            {region === 'intl' && (
               <div className="mt-5 rounded-xl border border-navy-900/15 p-4">
-                <p className="text-sm font-semibold text-navy-900">مقيمة خارج مصر؟</p>
+                <p className="text-sm font-semibold text-navy-900">إنتي برّه مصر</p>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">
                   السعر <span className="tabular font-semibold">{formatPrice(priceEgpIntl)}</span>{' '}
-                  أو ما يعادلها بعملتك. إنستا باي بيشتغل جوه مصر بس، فكلّمينا على واتساب
-                  ونرتّبلك التحويل.
+                  أو ما يعادلها بعملتك. إنستا باي وفودافون كاش بيشتغلوا جوه مصر بس، فكلّمينا
+                  على واتساب ونرتّبلك التحويل.
                 </p>
                 <a
-                  href={whatsappPaymentsLink(
+                  href={whatsappLink(
                     'السلام عليكم، أنا خارج مصر وعايزة أشترك في الكورس',
                   )}
                   target="_blank"
@@ -347,13 +442,17 @@ export function CheckoutForm({
             )}
           </section>
 
-          {/* ---- Reference + pay ---- */}
+          {/* ---- Pay ---- */}
           <section
             ref={payRef}
             className="rounded-2xl bg-white p-5 shadow-soft ring-1 ring-navy-900/5 sm:p-6"
           >
             <form id={`${ids}-pay`} action={orderAction} className="space-y-4">
               <input type="hidden" name="courseId" value={courseId} />
+              {/* The declaration decides which price the DATABASE charges;
+                  the figure on screen is never sent. */}
+              <input type="hidden" name="region" value={region ?? ''} />
+              <input type="hidden" name="method" value={method} />
               <input
                 type="hidden"
                 name="couponCode"
@@ -370,11 +469,17 @@ export function CheckoutForm({
                 </p>
               </div>
 
-              <PayButton label="أكمل الحجز" />
+              {region ? (
+                <PayButton label="أكمل الحجز" />
+              ) : (
+                <p className="rounded-xl bg-cream-50 px-4 py-3 text-center text-sm text-navy-900">
+                  اختاري بلدك فوق الأول عشان نكمّل.
+                </p>
+              )}
 
               <p className="flex items-center justify-center gap-1.5 text-xs text-muted">
                 <Lock className="size-3.5" aria-hidden="true" />
-                التحويل بيتم على تطبيق إنستا باي — مفيش بيانات بنكية بتتخزّن عندنا.
+                التحويل بيتم من تطبيقك مباشرة — مفيش بيانات بنكية بتتخزّن عندنا.
               </p>
 
               {order && !order.ok && (
@@ -398,13 +503,13 @@ export function CheckoutForm({
               <div className="flex items-baseline justify-between gap-3">
                 <span className="font-semibold text-navy-900">الإجمالي</span>
                 <span className="flex items-baseline gap-2">
-                  {compareAtEgp && compareAtEgp > priceEgp && (
+                  {region && compareAtEgp && compareAtEgp > listPrice && (
                     <span className="tabular text-sm text-muted line-through">
                       {formatPrice(compareAtEgp)}
                     </span>
                   )}
                   <span className="tabular font-display text-2xl text-gold-600">
-                    {formatPrice(total)}
+                    {region ? formatPrice(total) : '—'}
                   </span>
                 </span>
               </div>
@@ -489,7 +594,7 @@ export function CheckoutForm({
           <span className="flex flex-col">
             <span className="text-[11px] text-muted">الإجمالي</span>
             <span className="tabular font-display text-lg leading-none text-gold-600">
-              {formatPrice(total)}
+              {region ? formatPrice(total) : '—'}
             </span>
           </span>
           <Button

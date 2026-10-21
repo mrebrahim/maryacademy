@@ -1,6 +1,6 @@
 import 'server-only'
 
-import { instapay } from '@/config/instapay'
+import { instapay, vodafoneCash } from '@/config/manual-payments'
 
 /**
  * Payment providers.
@@ -17,10 +17,11 @@ import { instapay } from '@/config/instapay'
  *                 reference. Nobody can confirm it but a human, so access
  *                 follows an admin's confirmation, not the click.
  *
- * InstaPay is 'manual' because InstaPay has no merchant checkout API. That
- * is a fact about the rails, not a gap in this code, and it is why the
- * checkout copy says the account opens after review rather than promising
- * instant access it cannot deliver.
+ * InstaPay and Vodafone Cash are both 'manual' because neither has a
+ * merchant checkout API at this size. That is a fact about the rails, not
+ * a gap in this code, and it is why the checkout copy says the account
+ * opens after review rather than promising instant access it cannot
+ * deliver.
  */
 
 export type PaymentKind = 'manual' | 'redirect'
@@ -43,7 +44,7 @@ export type PaymentOrder = {
 }
 
 export type PaymentResult =
-  | { kind: 'manual'; instructionsAr: string; handle: string; payLink: string }
+  | { kind: 'manual'; instructionsAr: string; handle: string; payLink?: string }
   | { kind: 'redirect'; url: string }
 
 export interface PaymentProvider {
@@ -79,6 +80,29 @@ export const instaPayProvider: PaymentProvider = {
 }
 
 /**
+ * Vodafone Cash. Same shape as InstaPay — transfer, screenshot, review —
+ * and the second route the academy asked for, because plenty of buyers
+ * have a wallet and no bank app.
+ */
+export const vodafoneCashProvider: PaymentProvider = {
+  id: 'vodafone_cash',
+  method: {
+    id: 'vodafone_cash',
+    kind: 'manual',
+    labelAr: 'فودافون كاش',
+    hintAr: 'تحوّلي على المحفظة وتبعتي سكرين شوت على واتساب، ونفتحلك الدورة بعد المطابقة',
+    available: true,
+  },
+  async createPayment() {
+    return {
+      kind: 'manual',
+      instructionsAr: 'حوّلي المبلغ على الرقم ده، وبعدها ابعتي سكرين شوت التحويل على واتساب.',
+      handle: vodafoneCash.number,
+    }
+  },
+}
+
+/**
  * Local development only. Returns a redirect straight to the success page
  * so the whole flow can be walked through without moving real money.
  * Refuses to be selected in production — a mock that ships is a free course.
@@ -100,7 +124,7 @@ export const mockProvider: PaymentProvider = {
   },
 }
 
-const providers: PaymentProvider[] = [instaPayProvider, mockProvider]
+const providers: PaymentProvider[] = [instaPayProvider, vodafoneCashProvider, mockProvider]
 
 export function availableMethods(): PaymentMethod[] {
   return providers.map((p) => p.method).filter((m) => m.available)

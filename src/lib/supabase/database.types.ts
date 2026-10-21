@@ -477,6 +477,7 @@ export type Database = {
           contact_email: string | null
           contact_name: string | null
           contact_phone: string | null
+          is_international: boolean
           coupon_id: string | null
           course_id: string
           created_at: string
@@ -916,6 +917,9 @@ export type Database = {
           p_email: string
           p_reference?: string
           p_coupon_code?: string
+          /** Picks the price band; never carries an amount. */
+          p_international?: boolean
+          p_provider?: string
         }
         Returns: string
       }

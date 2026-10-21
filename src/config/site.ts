@@ -36,29 +36,26 @@ export const siteConfig = {
    * pointed at /contact instead — a dead end for someone who wanted to
    * buy. The env var still wins, so it can be changed without a deploy.
    */
-  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '201027555789',
-  /**
-   * Where payment screenshots go. A separate line from the enquiries
-   * number on purpose: a transfer that nobody matches is a student
-   * waiting, so it should not sit in the same thread as "how much is the
-   * course?".
-   */
-  whatsappPaymentsNumber:
-    process.env.NEXT_PUBLIC_WHATSAPP_PAYMENTS_NUMBER ?? '201279162671',
+  whatsappNumber: process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '201515767751',
 } as const
 
-const toWhatsapp = (number: string, messageAr: string) =>
-  number ? `https://wa.me/${number.replace(/\D/g, '')}?text=${encodeURIComponent(messageAr)}` : '/contact'
-
+/**
+ * One WhatsApp number for everything.
+ *
+ * There were two for a while — enquiries and payment screenshots — on the
+ * reasoning that an unmatched transfer should not be buried under "how
+ * much is the course?". The academy asked for one line instead, and the
+ * number that was here before was a personal one, so the split went with
+ * it. `paymentProofMessage` still labels those messages, which is what
+ * actually makes them findable in a single thread.
+ */
 export const whatsappLink = (messageAr = 'السلام عليكم، أرغب في معرفة تفاصيل الدورات') =>
-  toWhatsapp(siteConfig.whatsappNumber, messageAr)
-
-/** The payment-proof line. Falls back to the main number if unset. */
-export const whatsappPaymentsLink = (messageAr: string) =>
-  toWhatsapp(siteConfig.whatsappPaymentsNumber || siteConfig.whatsappNumber, messageAr)
+  siteConfig.whatsappNumber
+    ? `https://wa.me/${siteConfig.whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(messageAr)}`
+    : '/contact'
 
 /**
- * The ready-made message a student sends with their transfer screenshot.
+ * The ready-made message a student sends with her transfer screenshot.
  * It carries the email the order was recorded against, because that is
  * what the order is matched on — a screenshot on its own only proves that
  * *somebody* paid.
