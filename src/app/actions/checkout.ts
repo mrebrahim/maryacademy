@@ -135,6 +135,23 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
       if (error.message.includes('not_sold_internationally')) {
         return { ok: false, messageAr: 'الدورة دي بتتباع جوه مصر بس حاليًا — كلّمنا على واتساب.' }
       }
+
+      // PGRST202 means PostgREST could not find a function matching these
+      // argument names — in practice, code deployed ahead of its
+      // migration. Worth its own branch: the generic "try again later"
+      // sends everyone away from a checkout that will never work until
+      // somebody runs some SQL, and nothing in the message hints at that.
+      if (error.code === 'PGRST202') {
+        console.error(
+          '[submitTransfer] create_guest_order signature mismatch — run the migration that adds p_international and p_provider',
+          error,
+        )
+        return {
+          ok: false,
+          messageAr: 'فيه مشكلة في الحجز عندنا — كلّمنا على واتساب ونسجّلك فورًا.',
+        }
+      }
+
       throw error
     }
 
