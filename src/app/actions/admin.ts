@@ -59,6 +59,49 @@ export async function confirmOrder(
   return { ok: true, messageAr: 'تم التأكيد وفُتح الوصول للدورة.' }
 }
 
+/**
+ * Permanently removes an order — for the rows left behind by testing the
+ * checkout, which are not cosmetic: each one counts a student who does
+ * not exist and revenue that never arrived, in the two figures the
+ * academy will read the launch by.
+ *
+ * `delete_order` re-checks `is_admin()` in the database and copies the
+ * deleted row into `audit_log` before dropping it, so this is reversible
+ * by hand even though it is not reversible from the screen.
+ *
+ * Rejecting and deleting are different things and both are kept:
+ * rejecting records that a real buyer's transfer did not check out,
+ * which is history worth keeping. Deleting is for orders that should
+ * never have counted at all.
+ */
+export async function deleteOrder(
+  _prev: AdminActionState,
+  formData: FormData,
+): Promise<AdminActionState> {
+  const orderId = String(formData.get('orderId') ?? '')
+
+  try {
+    const supabase = await createClient()
+    const { data, error } = await supabase.rpc('delete_order', { p_order_id: orderId })
+    if (error) throw error
+
+    // false means the row was already gone — two tabs, or two clicks.
+    // Not a failure the admin should have to interpret.
+    if (data === false) {
+      revalidatePath('/admin/orders')
+      return { ok: true, messageAr: 'الطلب ده كان متمسوح خلاص.' }
+    }
+  } catch (error) {
+    console.error('[deleteOrder]', error)
+    return { ok: false, messageAr: 'تعذّر مسح الطلب.' }
+  }
+
+  revalidatePath('/admin/orders')
+  revalidatePath('/admin')
+  revalidatePath('/learn')
+  return { ok: true, messageAr: 'اتمسح الطلب.' }
+}
+
 export async function rejectOrder(
   _prev: AdminActionState,
   formData: FormData,

@@ -928,6 +928,7 @@ export type Database = {
         Returns: string
       }
       delete_lesson_quiz: { Args: { p_lesson_id: string }; Returns: undefined }
+      delete_order: { Args: { p_order_id: string }; Returns: boolean }
       generate_certificate_serial: { Args: never; Returns: string }
       get_content_readiness: { Args: never; Returns: Json }
       get_lesson_video_flags: { Args: { p_course_id: string }; Returns: Json }

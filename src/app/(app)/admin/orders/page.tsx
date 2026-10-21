@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { DeleteOrderButton } from '@/components/admin/delete-order'
 import { OrderActions } from '@/components/admin/order-actions'
 import { createClient } from '@/lib/supabase/server'
 import { formatPrice } from '@/lib/utils'
@@ -19,7 +20,7 @@ export default async function AdminOrdersPage() {
   const { data: orders } = await supabase
     .from('orders')
     .select(
-      'id, amount, discount_amount, status, provider_txn_id, created_at, course:courses(title_ar), buyer:profiles(full_name, phone)',
+      'id, amount, discount_amount, status, provider_txn_id, created_at, contact_email, contact_name, contact_phone, course:courses(title_ar), buyer:profiles(full_name, phone)',
     )
     .order('created_at', { ascending: false })
     .limit(100)
@@ -53,11 +54,23 @@ export default async function AdminOrdersPage() {
               >
                 <div className="flex flex-wrap items-start justify-between gap-4">
                   <div>
-                    <p className="font-semibold text-navy-900">{buyer?.full_name ?? '—'}</p>
+                    {/* Guests have no profile, so the contact fields on the
+                        order are the primary source and the profile is the
+                        fallback — not the other way round. Without the email
+                        printed here there is no way to match a WhatsApp
+                        screenshot, or to tell a test row from a real buyer. */}
+                    <p className="font-semibold text-navy-900">
+                      {order.contact_name ?? buyer?.full_name ?? '—'}
+                    </p>
                     <p className="mt-1 text-sm text-muted">{course?.title_ar}</p>
-                    {buyer?.phone && (
+                    {order.contact_email && (
+                      <p dir="ltr" className="mt-1 text-xs font-medium text-navy-900">
+                        {order.contact_email}
+                      </p>
+                    )}
+                    {(order.contact_phone ?? buyer?.phone) && (
                       <p dir="ltr" className="tabular mt-1 text-xs text-muted">
-                        {buyer.phone}
+                        {order.contact_phone ?? buyer?.phone}
                       </p>
                     )}
                   </div>
@@ -96,6 +109,13 @@ export default async function AdminOrdersPage() {
                     <OrderActions orderId={order.id} />
                   </div>
                 )}
+
+                {/* On every row, not only pending ones: the orders left
+                    behind by testing the checkout were confirmed, which is
+                    exactly why they distort the revenue figure. */}
+                <div className="mt-4 flex justify-end">
+                  <DeleteOrderButton orderId={order.id} isPaid={order.status === 'paid'} />
+                </div>
               </li>
             )
           })}
