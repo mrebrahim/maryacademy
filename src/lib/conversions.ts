@@ -26,6 +26,18 @@ import { createHash } from 'node:crypto'
 const META_PIXEL_ID = process.env.FB_PIXEL_ID ?? process.env.NEXT_PUBLIC_FB_PIXEL_ID
 const META_TOKEN = process.env.FB_CONVERSIONS_API_TOKEN
 
+/**
+ * Set this ONLY while watching the Test Events tab, and unset it the
+ * moment the test passes.
+ *
+ * Meta treats any event carrying a test code as a test: it shows up in
+ * Test Events and is excluded from everything real — reporting,
+ * optimisation, attribution. Left in place, every confirmed sale would
+ * vanish from the ad account while appearing to work perfectly, which is
+ * the worst kind of broken because nothing errors.
+ */
+const META_TEST_EVENT_CODE = process.env.FB_TEST_EVENT_CODE
+
 const GA4_ID = process.env.GA4_MEASUREMENT_ID ?? process.env.NEXT_PUBLIC_GA4_ID
 const GA4_SECRET = process.env.GA4_API_SECRET
 
@@ -100,6 +112,7 @@ export async function reportPurchase(event: PurchaseEvent) {
         'meta',
         `https://graph.facebook.com/v21.0/${META_PIXEL_ID}/events?access_token=${META_TOKEN}`,
         {
+          test_event_code: META_TEST_EVENT_CODE || undefined,
           data: [
             {
               event_name: 'Purchase',
