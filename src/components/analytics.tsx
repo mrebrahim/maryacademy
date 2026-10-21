@@ -28,8 +28,28 @@ const GTM_ID = process.env.NEXT_PUBLIC_GTM_ID
 const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID
 const PIXEL_ID = process.env.NEXT_PUBLIC_FB_PIXEL_ID
 const TIKTOK_ID = process.env.NEXT_PUBLIC_TIKTOK_PIXEL_ID
+const CLARITY_ID = process.env.NEXT_PUBLIC_CLARITY_ID
+
+/**
+ * Clarity records sessions — clicks, scrolls, mouse movement, a replay of
+ * the screen. That is fine on the pages built to be seen by strangers and
+ * wrong everywhere else:
+ *
+ *   /admin  — the orders screen shows students' names, emails and phone
+ *             numbers. Recording it ships other people's personal data to
+ *             a third party, which nothing on this site asks them to
+ *             consent to.
+ *   /learn, /watch, /account — a student's own progress and paid content.
+ *
+ * So it runs on the marketing pages and checkout, and stops at the sign-in
+ * boundary.
+ */
+const NO_RECORDING = ['/admin', '/learn', '/watch', '/account']
 
 export function Analytics() {
+  const pathname = usePathname()
+  const mayRecord = !NO_RECORDING.some((prefix) => pathname.startsWith(prefix))
+
   return (
     <>
       {GTM_ID && (
@@ -98,6 +118,16 @@ n=document.createElement("script");n.type="text/javascript";n.async=!0;n.src=r+"
 e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
 ttq.load('${TIKTOK_ID}');ttq.page();
 }(window, document, 'ttq');`}
+        </Script>
+      )}
+
+      {CLARITY_ID && mayRecord && (
+        <Script id="clarity" strategy="afterInteractive">
+          {`(function(c,l,a,r,i,t,y){
+c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+})(window, document, 'clarity', 'script', '${CLARITY_ID}');`}
         </Script>
       )}
 
