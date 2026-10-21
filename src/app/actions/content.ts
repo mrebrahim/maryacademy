@@ -3,7 +3,11 @@
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
+import { offer } from '@/config/offer'
 import { createClient } from '@/lib/supabase/server'
+
+/** The ad destination for `offer.courseSlug`. */
+const LANDING_PATH = '/lp/hairstyling'
 
 /**
  * Course and lesson editing from the admin panel.
@@ -102,12 +106,42 @@ export async function updateCourse(
     return { ok: false, messageAr: 'تعذّر الحفظ، حاول تاني.' }
   }
 
-  // The marketing pages cache for an hour; without these the change would
-  // not show until that expired.
+  await revalidateCoursePages(d.id)
+  return { ok: true, messageAr: 'اتحفظ' }
+}
+
+/**
+ * Clears the cached copies of every page that prints a course's details.
+ *
+ * The marketing pages are pre-rendered and cached for an hour. That is
+ * right for traffic and wrong for a price: after a change, the landing
+ * page and the course page can keep quoting the old figure while checkout
+ * — which reads the database per request — charges the new one. A buyer
+ * who sees two prices on the same site is a buyer who writes in, and the
+ * one she saw first is the one she will argue for.
+ *
+ * `/` and `/courses` were already cleared; the two pages that actually
+ * carry the price were not, which is the whole problem.
+ */
+async function revalidateCoursePages(courseId: string) {
   revalidatePath('/')
   revalidatePath('/courses')
   revalidatePath('/admin/content')
-  return { ok: true, messageAr: 'اتحفظ' }
+
+  try {
+    const supabase = await createClient()
+    const { data } = await supabase
+      .from('courses')
+      .select('slug')
+      .eq('id', courseId)
+      .maybeSingle()
+
+    if (data?.slug) revalidatePath(`/courses/${data.slug}`)
+    if (data?.slug === offer.courseSlug) revalidatePath(LANDING_PATH)
+  } catch (error) {
+    // A failed revalidation is an hour of stale copy, not a failed save.
+    console.error('[revalidateCoursePages]', error)
+  }
 }
 
 // ---------------------------------------------------------------------
@@ -158,6 +192,7 @@ export async function updateLesson(
 
   revalidatePath('/admin/content')
   revalidatePath('/courses')
+  revalidatePath(LANDING_PATH)
   return { ok: true, messageAr: 'اتحفظ' }
 }
 
@@ -216,8 +251,6 @@ export async function uploadCourseThumbnail(
     return { ok: false, messageAr: 'تعذّر رفع الصورة، حاول تاني.' }
   }
 
-  revalidatePath('/')
-  revalidatePath('/courses')
-  revalidatePath('/admin/content')
+  await revalidateCoursePages(courseId)
   return { ok: true, messageAr: 'اترفعت الصورة' }
 }
