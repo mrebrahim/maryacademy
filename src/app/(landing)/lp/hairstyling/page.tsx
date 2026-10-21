@@ -13,7 +13,6 @@ import Link from "next/link";
 import { LandingClient } from "@/components/landing/landing-client";
 import { LandingCta } from "@/components/landing/landing-cta";
 import { PreviewClips } from "@/components/landing/preview-clips";
-import { LeadCapture } from "@/components/landing/lead-capture";
 import { TestimonialsSection } from "@/components/home/testimonials-section";
 import { VideoTestimonials } from "@/components/home/video-testimonials";
 import { PriceNote } from "@/components/ui/price-note";
@@ -450,8 +449,6 @@ export default async function HairstylingLandingPage() {
           </div>
         </div>
       </section>
-
-      <LeadCapture courseId={course?.id ?? null} />
 
       {/* ---------- Pricing ----------
           What is listed here is read from the course row, so the page
