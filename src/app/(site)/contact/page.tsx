@@ -44,7 +44,7 @@ export default function ContactPage() {
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="size-5 shrink-0 text-gold-500" aria-hidden="true" />
-                <span dir="ltr">info@marieragaieacademy.com</span>
+                <span dir="ltr">{siteConfig.email}</span>
               </li>
             </ul>
           </div>

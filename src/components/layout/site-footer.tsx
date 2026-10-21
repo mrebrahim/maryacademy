@@ -64,7 +64,7 @@ export function SiteFooter() {
               </li>
               <li className="flex items-center gap-2">
                 <Mail className="size-4 shrink-0 text-gold-500" aria-hidden="true" />
-                <span dir="ltr">info@marieragaieacademy.com</span>
+                <span dir="ltr">{siteConfig.email}</span>
               </li>
               <li className="flex items-center gap-2">
                 <MapPin className="size-4 shrink-0 text-gold-500" aria-hidden="true" />

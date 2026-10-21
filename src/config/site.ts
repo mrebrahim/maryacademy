@@ -26,6 +26,13 @@ export const siteConfig = {
   descriptionAr:
     'أكاديمية تدريب أونلاين في تصفيف الشعر والمكياج والعناية بالبشرة، بخبرة تتجاوز خمس سنوات من التدريب الحضوري.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
+  /**
+   * Printed in the footer, on /contact and on both legal pages, so it is
+   * defined once — three copies of an address is how two of them end up
+   * out of date. ⚠️ This domain is not the site's domain; confirm the
+   * mailbox exists before anyone is told to write to it about their data.
+   */
+  email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? 'info@marieragaieacademy.com',
   locale: 'ar_EG',
   /**
    * The academy's WhatsApp number, in international form.
