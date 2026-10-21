@@ -6,6 +6,7 @@ import { CheckoutShell } from '@/components/checkout/checkout-shell'
 import { OrderSubmitted } from '@/components/checkout/order-submitted'
 import { Button } from '@/components/ui/button'
 import { paymentProofMessage, whatsappLink } from '@/config/site'
+import { readHandoffEmail } from '@/lib/handoff-email'
 
 export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { index: false } }
 
@@ -26,9 +27,12 @@ export const metadata: Metadata = { title: 'استلمنا طلبك', robots: { 
 export default async function CheckoutSuccessPage({
   searchParams,
 }: {
-  searchParams: Promise<{ email?: string; order?: string; value?: string }>
+  searchParams: Promise<{ order?: string; value?: string }>
 }) {
-  const { email, order, value } = await searchParams
+  const { order, value } = await searchParams
+  // Never from the query string: the pixels report the page URL with every
+  // event, so an email there is unhashed PII sent to three ad platforms.
+  const email = await readHandoffEmail()
 
   return (
     <CheckoutShell step={2}>

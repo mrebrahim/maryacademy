@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 
 import { VerifyOtpForm } from '@/components/auth/otp-form'
 import { OTP_LENGTH } from '@/config/auth'
+import { readHandoffEmail } from '@/lib/handoff-email'
 
 export const metadata: Metadata = {
   title: 'تأكيد الدخول',
@@ -13,12 +14,17 @@ export const metadata: Metadata = {
 export default async function VerifyPage({
   searchParams,
 }: {
-  searchParams: Promise<{ email?: string; next?: string }>
+  searchParams: Promise<{ next?: string }>
 }) {
-  const { email, next } = await searchParams
+  const { next } = await searchParams
+  // From a cookie, never the query string: a tracking pixel reports the
+  // page URL with every event, so `?email=` is unhashed PII sent to the
+  // ad platforms.
+  const email = await readHandoffEmail()
 
-  // Landing here without an email means the flow was skipped or the link was
-  // shared — start over rather than showing an unusable form.
+  // Landing here without one means the flow was skipped, the link was
+  // shared, or the ten-minute handoff expired — start over rather than
+  // showing a form that cannot work.
   if (!email) redirect('/login')
 
   return (

@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
 import { OTP_MAX_LENGTH, OTP_MIN_LENGTH } from '@/config/auth'
+import { setHandoffEmail } from '@/lib/handoff-email'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -61,9 +62,12 @@ export async function requestOtp(_prev: OtpState, formData: FormData): Promise<O
     return { ok: false, messageAr: 'تعذّر إرسال الكود، يرجى المحاولة بعد قليل.' }
   }
 
-  // The email is carried to the verify screen in the URL, not in the state,
-  // so a refresh does not lose it.
-  redirect(`/verify?email=${encodeURIComponent(email)}`)
+  // Carried to the verify screen in an httpOnly cookie, not in the state
+  // (which a refresh loses) and not in the URL (which every tracking pixel
+  // reports with each event, handing the address to Meta unhashed). See
+  // src/lib/handoff-email.ts.
+  await setHandoffEmail(email)
+  redirect('/verify')
 }
 
 const verifySchema = z.object({

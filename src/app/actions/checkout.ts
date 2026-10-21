@@ -4,6 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import { setHandoffEmail } from '@/lib/handoff-email'
 import { createClient } from '@/lib/supabase/server'
 
 /**
@@ -182,17 +183,25 @@ export async function submitTransfer(_prev: OrderState, formData: FormData): Pro
   }
 
   revalidatePath('/learn')
-  // The email travels to the confirmation page so it can tell them where
-  // the sign-in code is going, without needing a session to read it. The
-  // order id and amount travel too, so that page can report one
-  // order_submitted event — a guest has no session, so it cannot read the
-  // order back from the database to find them.
-  const params = new URLSearchParams({ email: parsed.data.email })
+
+  // The email travels in an httpOnly cookie, NOT in the query string. It
+  // is personally identifying data, and every tracking pixel on the
+  // confirmation page reports the page URL with each event it fires — so
+  // `?email=` handed a real address, unhashed, to Meta and the rest. See
+  // src/lib/handoff-email.ts.
+  await setHandoffEmail(parsed.data.email)
+
+  // The order id and amount do travel in the URL: a random UUID and a
+  // price are not personal data, and the confirmation page needs both to
+  // report one order_submitted event — a guest has no session, so it
+  // cannot read the order back from the database.
+  const params = new URLSearchParams()
   if (orderId) {
     params.set('order', orderId)
     if (orderValue > 0) params.set('value', String(orderValue))
   }
-  redirect(`/checkout/success?${params.toString()}`)
+  const query = params.toString()
+  redirect(query ? `/checkout/success?${query}` : '/checkout/success')
 }
 
 // ---------------------------------------------------------------------
