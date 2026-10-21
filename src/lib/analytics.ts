@@ -45,6 +45,50 @@ type Fanout = {
   params?: EventParams
 }
 
+/** How long to keep waiting for a tracker's script to arrive. */
+const SDK_WAIT_MS = 8000
+const SDK_POLL_MS = 250
+
+/**
+ * Runs `send` as soon as the tracker exists, rather than dropping the call
+ * when it does not exist yet.
+ *
+ * This is not defensive padding — it is a bug fix. The pixels load with
+ * `afterInteractive`, so they are fetched AFTER React hydrates. An event
+ * fired from a mount effect on a small, fast page therefore ran while
+ * `window.fbq` was still undefined, and `window.fbq?.(…)` threw nothing,
+ * logged nothing and sent nothing. It looked exactly like working code.
+ *
+ * That is how `CompleteRegistration` went missing on the confirmation
+ * page: the page is tiny, it hydrated before the pixel script landed, and
+ * the one event the ad campaign is meant to optimise on was silently
+ * discarded on every single order.
+ *
+ * Eight seconds is for a bad mobile connection in Egypt, which is most of
+ * the traffic. After that the event is genuinely lost, and that is the
+ * right place to stop — a tracker that has not loaded in eight seconds is
+ * blocked, not slow.
+ */
+function whenAvailable(ready: () => boolean, send: () => void) {
+  const attempt = () => {
+    if (!ready()) return false
+    try {
+      send()
+    } catch {
+      // A tracker that throws must not take the page with it.
+    }
+    return true
+  }
+
+  if (attempt()) return
+
+  let waited = 0
+  const timer = window.setInterval(() => {
+    waited += SDK_POLL_MS
+    if (attempt() || waited >= SDK_WAIT_MS) window.clearInterval(timer)
+  }, SDK_POLL_MS)
+}
+
 function emit({ ga4, meta, tiktok, params = {} }: Fanout) {
   if (typeof window === 'undefined') return
 
@@ -55,6 +99,8 @@ function emit({ ga4, meta, tiktok, params = {} }: Fanout) {
     if (value !== undefined) clean[key] = value
   }
 
+  // The dataLayer is a plain array and can be created here, so a GTM
+  // container that loads later still replays it. No waiting needed.
   try {
     window.dataLayer = window.dataLayer ?? []
     window.dataLayer.push({ event: ga4, ...clean })
@@ -62,26 +108,23 @@ function emit({ ga4, meta, tiktok, params = {} }: Fanout) {
     /* never take the page with it */
   }
 
-  try {
-    window.gtag?.('event', ga4, clean)
-  } catch {
-    /* as above */
-  }
+  whenAvailable(
+    () => typeof window.gtag === 'function',
+    () => window.gtag?.('event', ga4, clean),
+  )
 
   if (meta) {
-    try {
-      window.fbq?.('track', meta, clean)
-    } catch {
-      /* as above */
-    }
+    whenAvailable(
+      () => typeof window.fbq === 'function',
+      () => window.fbq?.('track', meta, clean),
+    )
   }
 
   if (tiktok) {
-    try {
-      window.ttq?.track(tiktok, clean)
-    } catch {
-      /* as above */
-    }
+    whenAvailable(
+      () => typeof window.ttq?.track === 'function',
+      () => window.ttq?.track(tiktok, clean),
+    )
   }
 }
 
